@@ -30,6 +30,17 @@ h1 small{ display:block; font:600 11px/1.2 var(--f-body); letter-spacing:.16em; 
 .chip{ border:1.5px solid var(--line); background:transparent; border-radius:999px; padding:5px 12px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px }
 .chip i{ width:9px; height:9px; border-radius:50%; display:inline-block }
 .chip[aria-pressed="true"]{ background:var(--ink); color:var(--panel); border-color:var(--ink) }
+.row2{ flex-basis:100%; min-width:0; max-width:100%; display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px }
+.search{ position:relative; flex:0 1 270px; min-width:0 }
+.search input{ width:100%; border:1.5px solid var(--line); border-radius:999px; padding:7px 14px 7px 34px; font:inherit; font-size:14px; background:var(--bg); color:var(--ink) }
+.search input:focus{ outline:none; border-color:var(--ink) }
+.search svg{ position:absolute; left:12px; top:50%; width:15px; height:15px; transform:translateY(-50%); stroke:var(--muted) }
+.filters.themes{ margin-left:0 }
+.chip.t{ font-weight:500; border-style:dashed }
+.chip.t[aria-pressed="true"]{ background:var(--d8); border-color:var(--d8); color:#fff; border-style:solid }
+.count{ font-size:12.5px; color:var(--muted); white-space:nowrap }
+.empty{ padding:18px 16px; color:var(--muted); font-size:14px }
+.item .tm{ display:block; font-size:11.5px; font-weight:400; color:var(--muted); margin-top:1px }
 .chip.hotelbtn{ border-color:var(--hotel) }
 .chip.hotelbtn i{ background:var(--hotel) }
 
@@ -95,7 +106,10 @@ aside{ border-left:1px solid var(--line); background:var(--panel); overflow-y:au
   .filters::-webkit-scrollbar{ display:none }
   .chip{ flex:none; padding:7px 13px }
   h1{ font-size:20px }
-  .mapwrap{ height:calc(100svh - 110px); max-height:680px }
+  .mapwrap{ height:calc(100svh - 150px); max-height:680px; min-height:360px }
+  .search{ flex:1 1 100% }
+  .filters.themes{ margin-left:-16px; flex:none }
+  .count{ display:none }
   .card{ bottom:calc(16px + env(safe-area-inset-bottom, 0px)) }
   .hotelmk .lbl{ left:auto; right:46px }
 }
@@ -112,6 +126,14 @@ aside{ border-left:1px solid var(--line); background:var(--panel); overflow-y:au
     <button class="chip" data-f="9" aria-pressed="false"><i style="background:var(--d9)"></i>Mar 9</button>
     <button class="chip hotelbtn" id="gohotel"><i></i>Hotel</button>
     <button class="chip metrobtn" id="metro" aria-pressed="true"><span class="roundel" aria-hidden="true"></span>Metro</button>
+  </div>
+  <div class="row2">
+    <label class="search" for="q">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+      <input id="q" type="search" placeholder="Cerca: Big Ben, gratis, donut…" autocomplete="off" enterkeyhint="search" aria-label="Cerca tra le cose da vedere">
+    </label>
+    <div class="filters themes" id="themes" role="group" aria-label="Filtra per tema"></div>
+    <span class="count" id="count" aria-live="polite"></span>
   </div>
 </header>
 <main>
@@ -130,7 +152,7 @@ aside{ border-left:1px solid var(--line); background:var(--panel); overflow-y:au
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-const PLACES = [{"id": "hotel", "n": "Hampton by Hilton London City", "d": "hotel", "c": "hotel", "lat": 51.51671, "lon": -0.06986, "cost": "colazione inclusa", "t": "Il nostro hotel dal 6 al 9 febbraio. 12-20 Osborn Street, E1 6TE, metro Aldgate East. Check-in dalle 15:00, check-out entro le 11:00. Da qui Tower, City e St Paul's si raggiungono a piedi."}, {"id": "skygarden", "n": "Sky Garden", "d": "6", "c": "viste", "lat": 51.5112, "lon": -0.0835, "cost": "gratis", "s": 1, "t": "Vista a 360° sul Tamigi, Tower Bridge e lo Shard, ai piani 35-36 del \"Walkie Talkie\". Prenotazione obbligatoria, circa 3 settimane prima. Lo slot al tramonto (~16:50) è il più bello. Se è esaurito: walk-in o Music Nights (da £12, verificare l'età minima)."}, {"id": "horizon22", "n": "Horizon 22", "d": "6", "c": "viste", "lat": 51.51436, "lon": -0.08314, "cost": "gratis", "s": 1, "t": "La terrazza panoramica più alta di Londra, a 10 minuti dall'hotel. Piano B (o bis) dello Sky Garden. Si prenota online. Va bene anche martedì 9 mattina."}, {"id": "towerbridge", "n": "Dentro Tower Bridge", "d": "6", "c": "viste", "lat": 51.5055, "lon": -0.0754, "cost": "~£15,80", "t": "Le passerelle in alto e il pavimento di vetro sopra il traffico. Già nel programma di sabato."}, {"id": "trinity", "n": "Trinity Square", "d": "6", "c": "viste", "lat": 51.5099, "lon": -0.0778, "cost": "gratis", "s": 1, "t": "Un colonnato enorme che al mattino prende una luce bellissima. A 10 minuti a piedi dall'hotel: prima tappa perfetta."}, {"id": "abingdon", "n": "Abingdon Street", "d": "7", "c": "viste", "lat": 51.49779, "lon": -0.12572, "cost": "gratis", "t": "Il Big Ben da un'angolazione diversa e senza la folla di Parliament Square."}, {"id": "westbridge", "n": "Westminster Bridge", "d": "7", "c": "viste", "lat": 51.5008, "lon": -0.1219, "cost": "gratis", "t": "La foto classica con Big Ben e Parlamento. Meglio presto, prima dei gruppi."}, {"id": "mountst", "n": "Mount Street", "d": "7", "c": "viste", "lat": 51.50952, "lon": -0.15184, "cost": "gratis", "t": "Via elegantissima di Mayfair dove si vedono quasi sempre supercar parcheggiate. Deviazione da Green Park."}, {"id": "hide", "n": "La scala di Hide", "d": "7", "c": "viste", "lat": 51.50617, "lon": -0.14433, "cost": "—", "t": "Scala a spirale in legno dentro un ristorante di lusso su Piccadilly: solo una sbirciata, se ci si passa davanti."}, {"id": "wiq", "n": "West India Quay", "d": "8", "c": "viste", "lat": 51.507, "lon": -0.0204, "cost": "gratis", "t": "Grattacieli di Canary Wharf che si specchiano nell'acqua, sulla strada per Greenwich. Il momento giusto è l'ora blu, verso le 17:00."}, {"id": "onc", "n": "One New Change rooftop", "d": "9", "c": "viste", "lat": 51.51385, "lon": -0.09504, "cost": "gratis", "s": 1, "t": "Si sale con l'ascensore del centro commerciale e la cupola di St Paul's sembra a un passo. Giro perfetto per l'ultima mattina: Millennium Bridge → St Paul's → terrazza."}, {"id": "towerpier", "n": "Uber Boat da Tower Pier", "d": "8", "c": "trasporti", "lat": 51.50751, "lon": -0.07968, "cost": "~£10-12", "s": 1, "t": "Il battello sul Tamigi passa davanti a tutti i monumenti. Da Tower Pier, vicino all'hotel, si arriva a Canary Wharf e Greenwich. Biglietto dall'app o online: al molo costa di più."}, {"id": "westpier", "n": "Uber Boat da Westminster", "d": "7", "c": "trasporti", "lat": 51.5017, "lon": -0.1235, "cost": "~£10-12", "t": "Dal molo accanto al London Eye: 35 minuti fino a Canary Wharf, con vista su tutta la città dal fiume."}, {"id": "greenwich", "n": "Greenwich", "d": "8", "c": "trasporti", "lat": 51.4834, "lon": -0.0096, "cost": "—", "t": "Arrivo del battello per l'opzione C di lunedì: Cutty Sark, Royal Observatory e mercato."}, {"id": "cablecar", "n": "Funivia sul Tamigi", "d": "8", "c": "trasporti", "lat": 51.5, "lon": 0.0085, "cost": "da verificare", "t": "IFS Cloud Cable Car, da Greenwich Peninsula ai Royal Docks: pochi minuti sospesi sopra il fiume, con una vista che lascia senza fiato."}, {"id": "nhm", "n": "Natural History Museum", "d": "8", "c": "musei", "lat": 51.4967, "lon": -0.1764, "cost": "gratis", "s": 1, "t": "Dinosauri, la balena, le gemme. Contare 2-2,5 ore. Opzione D di lunedì."}, {"id": "science", "n": "Science Museum", "d": "8", "c": "musei", "lat": 51.4978, "lon": -0.1745, "cost": "gratis", "t": "Accanto al Natural History. C'è il simulatore di terremoto."}, {"id": "british", "n": "British Museum", "d": "8", "c": "musei", "lat": 51.5194, "lon": -0.127, "cost": "gratis", "t": "Stele di Rosetta, mummie, la testa dell'Isola di Pasqua. Meglio prenotare lo slot."}, {"id": "leighton", "n": "Leighton House", "d": "8", "c": "musei", "lat": 51.49861, "lon": -0.20316, "cost": "~£14", "t": "Una casa-museo con una sala dorata in stile orientale, vicino ai musei di Kensington."}, {"id": "diana", "n": "Diana Memorial Fountain", "d": "8", "c": "musei", "lat": 51.5048, "lon": -0.1708, "cost": "gratis", "t": "In Hyde Park, vicino a Kensington Palace. Passeggiata a piedi dai musei."}, {"id": "natgallery", "n": "National Gallery", "d": "7", "c": "musei", "lat": 51.5089, "lon": -0.1283, "cost": "gratis", "t": "Su Trafalgar Square. Il piano B se piove, già nel programma."}, {"id": "iwm", "n": "Imperial War Museum", "d": "7", "c": "musei", "lat": 51.4958, "lon": -0.1086, "cost": "gratis", "t": "Aerei e carri armati appesi: alternativa gratuita alle Churchill War Rooms."}, {"id": "abbey", "n": "Westminster Abbey alle funzioni", "d": "7", "c": "musei", "lat": 51.4994, "lon": -0.1273, "cost": "gratis", "s": 1, "t": "Durante le funzioni (es. i vespri cantati) si entra senza pagare. È un momento religioso, non una visita."}, {"id": "guards", "n": "Cambio della Guardia", "d": "7", "c": "musei", "lat": 51.5014, "lon": -0.1419, "cost": "gratis", "t": "Buckingham Palace, ore 11. Di solito c'è la domenica: controllare il calendario ufficiale per il 7 febbraio."}, {"id": "outernet", "n": "Outernet", "d": "7", "c": "musei", "lat": 51.51564, "lon": -0.12979, "cost": "gratis", "t": "Sale con schermi LED dal pavimento al soffitto: si entra dentro le immagini. 10 minuti da Covent Garden."}, {"id": "lego", "n": "LEGO Store", "d": "7", "c": "musei", "lat": 51.5104, "lon": -0.1312, "cost": "gratis", "t": "Il negozio LEGO più grande del mondo, a Leicester Square, con costruzioni giganti."}, {"id": "witness", "n": "The Witness for the Prosecution", "d": "7", "c": "musei", "lat": 51.5019, "lon": -0.1189, "cost": "a pagamento", "t": "Agatha Christie recitato in una vera aula di tribunale a County Hall, col pubblico che fa da giuria. Di sera. Verificare l'età minima."}, {"id": "mailrail", "n": "Mail Rail", "d": "x", "c": "musei", "lat": 51.52472, "lon": -0.11399, "cost": "a pagamento", "t": "Un trenino nei tunnel dove un tempo viaggiava la posta di Londra. Se avanza tempo."}, {"id": "breadahead", "n": "Bread Ahead", "d": "6", "c": "cibo", "lat": 51.50596, "lon": -0.09041, "cost": "~£4,50", "s": 1, "t": "Al Borough Market, il giorno del pranzo al mercato: il donut alla crème brûlée. Attenzione a non sporcarsi."}, {"id": "sevendials", "n": "Seven Dials Market", "d": "7", "c": "cibo", "lat": 51.51402, "lon": -0.12604, "cost": "economico", "t": "Mercato coperto di street food a Covent Garden: ognuno sceglie il suo."}, {"id": "chinatown", "n": "Chinatown: Bunsik e Bun House", "d": "7", "c": "cibo", "lat": 51.5115, "lon": -0.131, "cost": "economico", "t": "Corn dog coreani e bun al vapore ripieni, tra Covent Garden e Leicester Square."}, {"id": "soho", "n": "Bagel e cookies a Soho", "d": "7", "c": "cibo", "lat": 51.5136, "lon": -0.134, "cost": "<£10", "t": "Bagel ripieni enormi e i cookies al cioccolato di Crème. Per i burger c'è Shake Shack a Leicester Square."}];
+const PLACES = [{"id": "hotel", "n": "Hampton by Hilton London City", "d": "hotel", "c": "hotel", "lat": 51.51671, "lon": -0.06986, "cost": "colazione inclusa", "t": "Il nostro hotel dal 6 al 9 febbraio. 12-20 Osborn Street, E1 6TE, metro Aldgate East. Check-in dalle 15:00, check-out entro le 11:00. Da qui Tower, City e St Paul's si raggiungono a piedi.", "tm": []}, {"id": "skygarden", "n": "Sky Garden", "d": "6", "c": "viste", "lat": 51.5112, "lon": -0.0835, "cost": "gratis", "s": 1, "t": "Vista a 360° sul Tamigi, Tower Bridge e lo Shard, ai piani 35-36 del \"Walkie Talkie\". Prenotazione obbligatoria, circa 3 settimane prima. Lo slot al tramonto (~16:50) è il più bello. Se è esaurito: walk-in o Music Nights (da £12, verificare l'età minima).", "tm": ["Panorami"]}, {"id": "horizon22", "n": "Horizon 22", "d": "6", "c": "viste", "lat": 51.51436, "lon": -0.08314, "cost": "gratis", "s": 1, "t": "La terrazza panoramica più alta di Londra, a 10 minuti dall'hotel. Piano B (o bis) dello Sky Garden. Si prenota online. Va bene anche martedì 9 mattina.", "tm": ["Panorami"]}, {"id": "towerbridge", "n": "Dentro Tower Bridge", "d": "6", "c": "viste", "lat": 51.5055, "lon": -0.0754, "cost": "~£15,80", "t": "Le passerelle in alto e il pavimento di vetro sopra il traffico. Già nel programma di sabato.", "tm": ["Panorami", "Monumenti"]}, {"id": "trinity", "n": "Trinity Square", "d": "6", "c": "viste", "lat": 51.5099, "lon": -0.0778, "cost": "gratis", "s": 1, "t": "Un colonnato enorme che al mattino prende una luce bellissima. A 10 minuti a piedi dall'hotel: prima tappa perfetta.", "tm": ["Foto"]}, {"id": "abingdon", "n": "Abingdon Street", "d": "7", "c": "viste", "lat": 51.49779, "lon": -0.12572, "cost": "gratis", "t": "Il Big Ben da un'angolazione diversa e senza la folla di Parliament Square.", "tm": ["Foto", "Monumenti"]}, {"id": "westbridge", "n": "Westminster Bridge", "d": "7", "c": "viste", "lat": 51.5008, "lon": -0.1219, "cost": "gratis", "t": "La foto classica con Big Ben e Parlamento. Meglio presto, prima dei gruppi.", "tm": ["Foto", "Monumenti"]}, {"id": "mountst", "n": "Mount Street", "d": "7", "c": "viste", "lat": 51.50952, "lon": -0.15184, "cost": "gratis", "t": "Via elegantissima di Mayfair dove si vedono quasi sempre supercar parcheggiate. Deviazione da Green Park.", "tm": ["Foto"]}, {"id": "hide", "n": "La scala di Hide", "d": "7", "c": "viste", "lat": 51.50617, "lon": -0.14433, "cost": "—", "t": "Scala a spirale in legno dentro un ristorante di lusso su Piccadilly: solo una sbirciata, se ci si passa davanti.", "tm": ["Foto"]}, {"id": "wiq", "n": "West India Quay", "d": "8", "c": "viste", "lat": 51.507, "lon": -0.0204, "cost": "gratis", "t": "Grattacieli di Canary Wharf che si specchiano nell'acqua, sulla strada per Greenwich. Il momento giusto è l'ora blu, verso le 17:00.", "tm": ["Foto"]}, {"id": "onc", "n": "One New Change rooftop", "d": "9", "c": "viste", "lat": 51.51385, "lon": -0.09504, "cost": "gratis", "s": 1, "t": "Si sale con l'ascensore del centro commerciale e la cupola di St Paul's sembra a un passo. Giro perfetto per l'ultima mattina: Millennium Bridge → St Paul's → terrazza.", "tm": ["Panorami", "Foto"]}, {"id": "towerpier", "n": "Uber Boat da Tower Pier", "d": "8", "c": "trasporti", "lat": 51.50751, "lon": -0.07968, "cost": "~£10-12", "s": 1, "t": "Il battello sul Tamigi passa davanti a tutti i monumenti. Da Tower Pier, vicino all'hotel, si arriva a Canary Wharf e Greenwich. Biglietto dall'app o online: al molo costa di più.", "tm": ["Trasporti", "Esperienze"]}, {"id": "westpier", "n": "Uber Boat da Westminster", "d": "7", "c": "trasporti", "lat": 51.5017, "lon": -0.1235, "cost": "~£10-12", "t": "Dal molo accanto al London Eye: 35 minuti fino a Canary Wharf, con vista su tutta la città dal fiume.", "tm": ["Trasporti", "Esperienze"]}, {"id": "greenwich", "n": "Greenwich", "d": "8", "c": "trasporti", "lat": 51.4834, "lon": -0.0096, "cost": "—", "t": "Arrivo del battello per l'opzione C di lunedì: Cutty Sark, Royal Observatory e mercato.", "tm": ["Trasporti", "Monumenti"]}, {"id": "cablecar", "n": "Funivia sul Tamigi", "d": "8", "c": "trasporti", "lat": 51.5, "lon": 0.0085, "cost": "da verificare", "t": "IFS Cloud Cable Car, da Greenwich Peninsula ai Royal Docks: pochi minuti sospesi sopra il fiume, con una vista che lascia senza fiato.", "tm": ["Trasporti", "Panorami", "Esperienze"]}, {"id": "nhm", "n": "Natural History Museum", "d": "8", "c": "musei", "lat": 51.4967, "lon": -0.1764, "cost": "gratis", "s": 1, "t": "Dinosauri, la balena, le gemme. Contare 2-2,5 ore. Opzione D di lunedì.", "tm": ["Musei"]}, {"id": "science", "n": "Science Museum", "d": "8", "c": "musei", "lat": 51.4978, "lon": -0.1745, "cost": "gratis", "t": "Accanto al Natural History. C'è il simulatore di terremoto.", "tm": ["Musei", "Esperienze"]}, {"id": "british", "n": "British Museum", "d": "8", "c": "musei", "lat": 51.5194, "lon": -0.127, "cost": "gratis", "t": "Stele di Rosetta, mummie, la testa dell'Isola di Pasqua. Meglio prenotare lo slot.", "tm": ["Musei"]}, {"id": "leighton", "n": "Leighton House", "d": "8", "c": "musei", "lat": 51.49861, "lon": -0.20316, "cost": "~£14", "t": "Una casa-museo con una sala dorata in stile orientale, vicino ai musei di Kensington.", "tm": ["Musei"]}, {"id": "diana", "n": "Diana Memorial Fountain", "d": "8", "c": "musei", "lat": 51.5048, "lon": -0.1708, "cost": "gratis", "t": "In Hyde Park, vicino a Kensington Palace. Passeggiata a piedi dai musei.", "tm": ["Parchi"]}, {"id": "natgallery", "n": "National Gallery", "d": "7", "c": "musei", "lat": 51.5089, "lon": -0.1283, "cost": "gratis", "t": "Su Trafalgar Square. Il piano B se piove, già nel programma.", "tm": ["Musei"]}, {"id": "iwm", "n": "Imperial War Museum", "d": "7", "c": "musei", "lat": 51.4958, "lon": -0.1086, "cost": "gratis", "t": "Aerei e carri armati appesi: alternativa gratuita alle Churchill War Rooms.", "tm": ["Musei"]}, {"id": "abbey", "n": "Westminster Abbey alle funzioni", "d": "7", "c": "musei", "lat": 51.4994, "lon": -0.1273, "cost": "gratis", "s": 1, "t": "Durante le funzioni (es. i vespri cantati) si entra senza pagare. È un momento religioso, non una visita.", "tm": ["Monumenti"]}, {"id": "guards", "n": "Cambio della Guardia", "d": "7", "c": "musei", "lat": 51.5014, "lon": -0.1419, "cost": "gratis", "t": "Buckingham Palace, ore 11. Di solito c'è la domenica: controllare il calendario ufficiale per il 7 febbraio.", "tm": ["Monumenti", "Esperienze"]}, {"id": "outernet", "n": "Outernet", "d": "7", "c": "musei", "lat": 51.51564, "lon": -0.12979, "cost": "gratis", "t": "Sale con schermi LED dal pavimento al soffitto: si entra dentro le immagini. 10 minuti da Covent Garden.", "tm": ["Esperienze"]}, {"id": "lego", "n": "LEGO Store", "d": "7", "c": "musei", "lat": 51.5104, "lon": -0.1312, "cost": "gratis", "t": "Il negozio LEGO più grande del mondo, a Leicester Square, con costruzioni giganti.", "tm": ["Esperienze"]}, {"id": "witness", "n": "The Witness for the Prosecution", "d": "7", "c": "musei", "lat": 51.5019, "lon": -0.1189, "cost": "a pagamento", "t": "Agatha Christie recitato in una vera aula di tribunale a County Hall, col pubblico che fa da giuria. Di sera. Verificare l'età minima.", "tm": ["Esperienze"]}, {"id": "mailrail", "n": "Mail Rail", "d": "x", "c": "musei", "lat": 51.52472, "lon": -0.11399, "cost": "a pagamento", "t": "Un trenino nei tunnel dove un tempo viaggiava la posta di Londra. Se avanza tempo.", "tm": ["Esperienze", "Musei"]}, {"id": "breadahead", "n": "Bread Ahead", "d": "6", "c": "cibo", "lat": 51.50596, "lon": -0.09041, "cost": "~£4,50", "s": 1, "t": "Al Borough Market, il giorno del pranzo al mercato: il donut alla crème brûlée. Attenzione a non sporcarsi.", "tm": ["Cibo"]}, {"id": "sevendials", "n": "Seven Dials Market", "d": "7", "c": "cibo", "lat": 51.51402, "lon": -0.12604, "cost": "economico", "t": "Mercato coperto di street food a Covent Garden: ognuno sceglie il suo.", "tm": ["Cibo"]}, {"id": "chinatown", "n": "Chinatown: Bunsik e Bun House", "d": "7", "c": "cibo", "lat": 51.5115, "lon": -0.131, "cost": "economico", "t": "Corn dog coreani e bun al vapore ripieni, tra Covent Garden e Leicester Square.", "tm": ["Cibo"]}, {"id": "soho", "n": "Bagel e cookies a Soho", "d": "7", "c": "cibo", "lat": 51.5136, "lon": -0.134, "cost": "<£10", "t": "Bagel ripieni enormi e i cookies al cioccolato di Crème. Per i burger c'è Shake Shack a Leicester Square.", "tm": ["Cibo"]}];
 const DAYS = {
   hotel:{ label:"Il nostro hotel", short:"HOTEL", color:"#e0a93b" },
   "6":{ label:"Sab 6 · Tower, Borough, Aldgate", short:"SAB 6", color:"#b8402f" },
@@ -140,6 +162,10 @@ const DAYS = {
   x:{ label:"Se avanza tempo", short:"EXTRA", color:"#8a8275" }
 };
 const CATS = { viste:"Vista e foto", trasporti:"Trasporti", musei:"Musei ed esperienze", cibo:"Da mangiare", hotel:"Hotel" };
+const THEMES = [["star","★ Da non perdere"],["gratis","Gratis"],["Panorami"],["Foto"],["Monumenti"],["Musei"],["Esperienze"],["Parchi"],["Cibo"],["Trasporti"]];
+const themesOf = p => [...(p.s ? ["star"] : []), ...(p.cost === "gratis" ? ["gratis"] : []), ...(p.tm || [])];
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+for (const p of PLACES) p.hay = norm([p.n, p.t, p.cost, DAYS[p.d].label, ...(p.tm || []), p.s ? "da non perdere imperdibile" : "", p.cost === "gratis" ? "gratis gratuito free" : ""].join(" "));
 
 const map = L.map('map', { zoomControl:true, tap:true, zoomSnap:0.25, zoomDelta:0.5 }).setView([51.507, -0.10], 13);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
@@ -196,13 +222,14 @@ function select(id, fly){
   const meta = document.getElementById('c-meta'); meta.replaceChildren();
   const tag = document.createElement('span'); tag.className = 'tag'; tag.style.background = day.color; tag.textContent = day.short;
   if (p.c === 'hotel') tag.style.color = '#1d2a44';
-  const cat = document.createElement('span'); cat.textContent = CATS[p.c];
+  const cat = document.createElement('span'); cat.textContent = (p.tm && p.tm.length) ? p.tm.join(' · ') : CATS[p.c];
   const cost = document.createElement('span'); cost.className = 'cost'; cost.textContent = p.cost;
   meta.append(tag, cat, '·', cost);
   document.getElementById('c-text').textContent = (p.s ? '★ Da non perdere. ' : '') + p.t;
   document.getElementById('c-link').href = `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}&travelmode=transit`;
   card.hidden = false;
   if (fly){
+    map.stop();
     // il punto finisce nella parte alta della mappa, sopra la scheda
     const z = Math.max(map.getZoom(), 16);
     const c = map.project([p.lat, p.lon], z).add([0, map.getSize().y * 0.22]);
@@ -220,6 +247,7 @@ for (const d of ['hotel','6','7','8','9','x']){
     const b = document.createElement('button'); b.className = 'item'; b.dataset.id = p.id;
     const n = document.createElement('b'); n.textContent = p.n;
     if (p.s){ const st = document.createElement('span'); st.className = 'st'; st.textContent = ' ★'; n.append(st); }
+    if (p.tm && p.tm.length){ const tm = document.createElement('span'); tm.className = 'tm'; tm.textContent = p.tm.join(' · '); n.append(tm); }
     const c = document.createElement('span'); c.textContent = p.cost;
     b.append(n, c);
     b.onclick = () => { select(p.id, true); if (window.innerWidth <= 760) document.getElementById('map').scrollIntoView({ behavior:'smooth', block:'start' }); };
@@ -227,6 +255,7 @@ for (const d of ['hotel','6','7','8','9','x']){
   }
   list.append(sec);
 }
+const empty = document.createElement('p'); empty.className = 'empty'; empty.hidden = true; list.append(empty);
 const off = document.createElement('div'); off.className = 'off';
 off.innerHTML = '<div class="grp" style="padding:8px 0 4px"><h3>Fuori mappa</h3></div>' +
   '<p style="margin:0 0 6px"><b>Hampton by Hilton Stansted Airport</b>: prima notte, 5→6 febbraio, dentro l\'aeroporto. <a href="https://www.google.com/maps/search/?api=1&query=Hampton+by+Hilton+London+Stansted+Airport" target="_blank" rel="noopener">Mappa ↗</a></p>' +
@@ -235,18 +264,52 @@ off.innerHTML = '<div class="grp" style="padding:8px 0 4px"><h3>Fuori mappa</h3>
 list.append(off);
 
 const allBounds = L.latLngBounds(PLACES.map(p => [p.lat, p.lon]));
-let filter = 'all';
+const state = { day:'all', theme:'all', q:'' };
+const matches = p => p.c === 'hotel'
+  || ((state.day === 'all' || p.d === state.day)
+  && (state.theme === 'all' || themesOf(p).includes(state.theme))
+  && (!state.q || state.q.split(/\s+/).every(w => p.hay.includes(w))));
+const filtering = () => state.day !== 'all' || state.theme !== 'all' || state.q;
+function apply(fit){
+  const hits = [];
+  for (const id in markers){
+    const { m, p } = markers[id]; const on = matches(p);
+    m.getElement()?.querySelector('.pin')?.classList.toggle('dim', !on);
+    m.setZIndexOffset(p.c === 'hotel' ? 1000 : on ? 500 : 0);
+    const li = document.querySelector(`.item[data-id="${id}"]`);
+    // l'hotel resta sempre sulla mappa; nell'elenco compare solo senza filtri o se lo si cerca
+    if (li) li.hidden = p.c === 'hotel' ? (filtering() && !(state.q && p.hay.includes(state.q))) : !on;
+    if (on && p.c !== 'hotel') hits.push(p);
+  }
+  document.querySelectorAll('.grp[data-day]').forEach(s => s.hidden = !s.querySelector('.item:not([hidden])'));
+  document.getElementById('count').textContent = filtering() ? `${hits.length} ${hits.length === 1 ? 'luogo' : 'luoghi'}` : '';
+  empty.hidden = hits.length > 0;
+  empty.textContent = 'Nessun luogo trovato. Prova con un\'altra parola o togli un filtro.';
+  if (!fit) return hits;
+  map.stop();
+  if (!filtering()) fitAll(true);
+  else if (hits.length) map.flyToBounds(L.latLngBounds(hits.map(p => [p.lat, p.lon])), { padding:[50,50], duration:.6, maxZoom:16 });
+  return hits;
+}
 document.querySelectorAll('.chip[data-f]').forEach(c => c.onclick = () => {
-  filter = c.dataset.f;
+  state.day = c.dataset.f;
   document.querySelectorAll('.chip[data-f]').forEach(x => x.setAttribute('aria-pressed', x === c));
-  for (const id in markers){ const { m, p } = markers[id]; const on = filter === 'all' || p.d === filter || p.c === 'hotel'; m.getElement()?.querySelector('.pin')?.classList.toggle('dim', !on); m.setZIndexOffset(p.c === 'hotel' ? 1000 : on ? 500 : 0); }
-  document.querySelectorAll('.grp[data-day]').forEach(s => s.hidden = filter !== 'all' && s.dataset.day !== filter && s.dataset.day !== 'hotel');
-  const pts = PLACES.filter(p => filter === 'all' || p.d === filter || p.c === 'hotel').map(p => [p.lat, p.lon]);
-  map.flyToBounds(filter === 'all' ? allBounds : L.latLngBounds(pts), { padding:[40,40], duration:.6, maxZoom:16 });
+  apply(true);
 });
+const themesBox = document.getElementById('themes');
+for (const [key, label] of [["all","Tutti i temi"], ...THEMES]){
+  const b = document.createElement('button'); b.className = 'chip t'; b.dataset.t = key; b.textContent = label || key;
+  b.setAttribute('aria-pressed', key === 'all');
+  b.onclick = () => { state.theme = key; themesBox.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x === b)); apply(true); };
+  themesBox.append(b);
+}
+const q = document.getElementById('q'); let qt;
+q.addEventListener('input', () => { clearTimeout(qt); qt = setTimeout(() => { state.q = norm(q.value.trim()); apply(true); }, 300); });
+q.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); clearTimeout(qt); state.q = norm(q.value.trim()); const h = apply(false); if (h.length) select(h[0].id, true); q.blur(); } });
 document.getElementById('gohotel').onclick = () => select('hotel', true);
-const fitAll = () => {
+const fitAll = (fly) => {
   map.invalidateSize();
+  if (fly){ window.innerWidth <= 760 ? map.flyTo([51.5075, -0.1005], 12.75, { duration:.6 }) : map.flyToBounds(allBounds, { padding:[30,30], maxZoom:14, duration:.6 }); return; }
   // sul telefono si parte dal centro (Westminster, City, hotel); su schermo grande si vedono tutti i punti
   if (window.innerWidth <= 760) map.setView([51.5075, -0.1005], 12.75);
   else map.fitBounds(allBounds, { padding:[30,30], maxZoom:14 });
