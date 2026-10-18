@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Itinerario · Guida di Londra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>/* Guida di Londra — stile delle pagine.
+   Stampa: pagine A5 fisse (148 x 210 mm). Schermo: le stesse pagine una sotto l'altra, fluide sotto i 640 px.
+   Ogni capitolo è una "linea della metro" del suo colore (--cap) che corre sul bordo esterno,
+   con una fermata per sezione: la fermata accesa dice dove sei nel capitolo. */
+
+:root{
+  --ink:#1d2a44;        /* blu notte: testo e titoli */
+  --muted:#5f6472;
+  --paper:#fffdf9;      /* carta quasi bianca, per foto nitide */
+  --sand:#f2ebde;       /* fondi dei riquadri */
+  --red:#b8402f; --teal:#2f7272; --mustard:#c08a25; --navy:#26375c;
+  --teal-tint:#e6f0ee; --mustard-tint:#f7eedb;
+  --cap:var(--red);     /* colore del capitolo, ridefinito su ogni capitolo */
+  --f-display:"Fraunces", Georgia, serif;
+  --f-body:"Figtree", "Helvetica Neue", Arial, sans-serif;
+}
+@page{ size:148mm 210mm; margin:0 }
+*{ box-sizing:border-box }
+html{ -webkit-print-color-adjust:exact; print-color-adjust:exact }
+body{ margin:0; background:#e7e2d8; color:var(--ink); font:400 8.9pt/1.45 var(--f-body); font-variant-numeric:tabular-nums }
+img{ display:block; max-width:100% }
+a{ color:inherit }
+
+/* ---------- pagina ---------- */
+.page{ width:148mm; height:210mm; margin:0 auto 6mm; background:var(--paper); position:relative; overflow:hidden;
+  padding:14mm 17mm 15mm 13mm; break-after:page; display:flex; flex-direction:column; gap:3.2mm }
+.page.sx{ padding:14mm 13mm 15mm 17mm }               /* pagina pari: margine esterno a sinistra */
+@media print{ body{ background:none } .page{ margin:0 } }
+
+.testata{ position:absolute; top:6.5mm; left:13mm; right:17mm; display:flex; justify-content:space-between;
+  font:500 6.8pt var(--f-body); color:var(--muted) }
+.sx .testata{ left:17mm; right:13mm; flex-direction:row-reverse }
+.folio{ position:absolute; bottom:6.5mm; right:17mm; font:600 7.5pt var(--f-body); color:var(--ink) }
+.sx .folio{ right:auto; left:17mm }
+
+/* linea della metro sul bordo esterno */
+.linea{ position:absolute; top:0; bottom:0; right:5.2mm; width:2.2mm; background:var(--cap) }
+.sx .linea{ right:auto; left:5.2mm }
+.linea i{ position:absolute; left:50%; width:4.2mm; height:4.2mm; margin-left:-2.1mm; border-radius:50%;
+  background:#fff; border:.9mm solid var(--cap) }
+.linea i.qui{ width:5.6mm; height:5.6mm; margin-left:-2.8mm; background:var(--ink); border-color:#fff; box-shadow:0 0 0 .6mm var(--cap) }
+
+/* ---------- tipografia ---------- */
+h1,h2,h3,h4{ font-family:var(--f-display); margin:0; color:var(--ink); text-wrap:balance; font-optical-sizing:auto }
+h2{ font-size:21pt; line-height:1.02; font-weight:800; letter-spacing:-.01em }
+h3{ font-size:12.5pt; line-height:1.15; font-weight:700 }
+h4{ font-size:10pt; font-weight:700 }
+p{ margin:0 }
+.testo p + p{ margin-top:2.2mm }
+.testo{ hyphens:auto; -webkit-hyphens:auto }
+.lead{ font:400 11pt/1.38 var(--f-display); color:var(--ink) }
+.sezione{ font:600 8pt var(--f-body); color:var(--cap) }       /* nome della sezione sopra il titolo */
+.piccolo{ font-size:7.6pt; color:var(--muted) }
+.cap{ font-size:6.8pt; color:var(--muted); margin-top:1.2mm; font-style:italic }
+
+/* ---------- foto ---------- */
+.foto{ position:relative; overflow:hidden; border-radius:1.2mm; flex:none }
+.foto img{ width:100%; height:100%; object-fit:cover }
+.foto.al{ margin:0 -17mm 0 -13mm; border-radius:0 }            /* al vivo orizzontale */
+.sx .foto.al{ margin:0 -13mm 0 -17mm }
+
+/* ---------- apertura capitolo ---------- */
+.apertura{ padding:0 }
+.apertura > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover }
+.apertura .velo{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,28,46,.0) 35%, rgba(20,28,46,.86) 82%) }
+.apertura .titolo{ position:absolute; left:13mm; right:17mm; bottom:16mm; color:#fff }
+.apertura .num{ font:600 8pt var(--f-body); color:#fff; opacity:.85 }
+.apertura h1{ font-size:38pt; line-height:.95; font-weight:900; color:#fff; margin:2mm 0 4mm }
+.apertura .sotto{ font:400 10.5pt/1.35 var(--f-display); max-width:100mm; opacity:.95 }
+
+/* ---------- riquadri ---------- */
+.info{ background:var(--teal-tint); border-radius:1.5mm; padding:3mm 3.5mm; display:grid;
+  grid-template-columns:15mm 1fr; gap:1.1mm 3mm; font-size:7.9pt; line-height:1.35; flex:none }
+.info dt{ font-weight:700; color:var(--teal) }
+.info dd{ margin:0 }
+.consiglio{ background:var(--mustard-tint); border-radius:1.5mm; padding:3mm 3.5mm; font-size:8.4pt; flex:none }
+.consiglio h4{ color:#8a5f12; margin-bottom:1mm; display:flex; align-items:center; gap:2mm }
+.consiglio h4::before{ content:""; width:3.4mm; height:3.4mm; border-radius:50%; border:.8mm solid var(--mustard); flex:none }
+.riquadro{ background:var(--sand); border-radius:1.5mm; padding:3.2mm 3.6mm; font-size:8.4pt; flex:none }
+.riquadro h4{ margin-bottom:1.2mm }
+.top-lista{ margin:0; padding:0; list-style:none; display:grid; gap:1.4mm }
+.top-lista li{ display:grid; grid-template-columns:5mm 1fr; gap:2mm; align-items:baseline }
+.top-lista b{ font-family:var(--f-display); font-weight:800; color:var(--cap); font-size:10pt }
+
+/* ---------- schede (da vedere, mangiare...) ---------- */
+.voce{ display:grid; grid-template-columns:6.4mm 1fr; gap:0 2.6mm; break-inside:avoid }
+.voce + .voce{ padding-top:2.6mm; border-top:.25mm solid #e2dacb }
+.n{ width:6.4mm; height:6.4mm; border-radius:50%; background:var(--cap); color:#fff; font:700 7.6pt/6.4mm var(--f-body);
+  text-align:center; grid-row:span 3 }
+.n.m{ background:var(--teal) } .n.b{ background:var(--mustard) } .n.s{ background:var(--navy) }
+.voce h3{ font-size:11pt }
+.voce .dati{ font-size:7.4pt; color:var(--muted); margin:.4mm 0 1mm }
+.voce .dati b{ color:var(--ink); font-weight:600 }
+.voce .con-foto{ display:grid; grid-template-columns:1fr 30mm; gap:3mm; align-items:start }
+.voce .con-foto .foto{ height:22mm }
+.prezzo{ font-family:var(--f-body); font-weight:700; color:var(--teal); font-size:8pt; margin-left:1.5mm }
+
+/* ---------- mappa del capitolo ---------- */
+.mappa-pag{ padding:0 }
+.mappa-pag > img{ position:absolute; inset:0; width:100%; height:100% ; object-fit:cover }
+.mappa-pag .scala{ position:absolute; left:6mm; bottom:5mm; background:rgba(255,253,249,.94); border-radius:1.2mm; padding:1.6mm 2.4mm; font-size:6.6pt; color:var(--muted) }
+.legenda{ columns:2; column-gap:5mm; font-size:7.7pt; line-height:1.3 }
+.legenda h4{ font:700 8pt var(--f-body); color:var(--ink); margin:2.4mm 0 1mm; break-after:avoid; display:flex; align-items:center; gap:1.8mm }
+.legenda h4:first-child{ margin-top:0 }
+.legenda h4 i{ width:3mm; height:3mm; border-radius:50% }
+.legenda ol{ margin:0; padding:0; list-style:none }
+.legenda li{ display:grid; grid-template-columns:5mm 1fr auto; gap:1mm; padding:.45mm 0; break-inside:avoid }
+.legenda li b{ font-weight:700 }
+.legenda li span{ color:var(--muted) }
+
+/* ---------- passeggiata ---------- */
+.tappe{ margin:0; padding:0; list-style:none; position:relative }
+.tappe::before{ content:""; position:absolute; left:2.9mm; top:2mm; bottom:3mm; width:.9mm; background:var(--cap) }
+.tappe li{ position:relative; padding:0 0 2.6mm 9mm; font-size:8.4pt }
+.tappe li::before{ content:attr(data-n); position:absolute; left:0; top:-.3mm; width:6.6mm; height:6.6mm; border-radius:50%;
+  background:#fff; border:.8mm solid var(--cap); font:700 7pt/5mm var(--f-body); text-align:center; color:var(--ink) }
+.tappe b{ font-family:var(--f-display); font-size:9.8pt }
+.tappe .tempo{ color:var(--muted); font-size:7.4pt }
+
+.due{ display:grid; grid-template-columns:1fr 1fr; gap:4mm }
+.spinta{ margin-top:auto }   /* spinge un riquadro in fondo alla pagina */
+
+/* ---------- schermo stretto (sito sul telefono) ---------- */
+@media screen and (max-width: 640px){
+  body{ background:var(--paper); font-size:15px }
+  .page, .page.sx{ width:auto; height:auto; min-height:0; margin:0; padding:22px max(18px, env(safe-area-inset-right, 0px)) 26px max(18px, env(safe-area-inset-left, 0px));
+    border-bottom:1px solid #e2dacb; overflow:visible }
+  .linea, .folio, .testata{ display:none }
+  .foto.al, .sx .foto.al{ margin:0 -18px }
+  .apertura{ min-height:88vh }
+  .apertura .titolo{ left:20px; right:20px; bottom:28px }
+  .mappa-pag{ height:auto }
+  .mappa-pag > img{ position:static; height:auto }
+  .due, .voce .con-foto{ grid-template-columns:1fr }
+  .voce .con-foto .foto{ height:44vw }
+  .legenda{ columns:1 }
+  .foto[style*="height"]{ height:auto !important; aspect-ratio:3/2 }
+  /* sul telefono i caratteri in punti tipografici diventerebbero minuscoli */
+  .riquadro, .consiglio, .tappe li, .card p{ font-size:14.5px }
+  .info, .legenda, .voce .dati, .piccolo, .cap, .lista-crediti{ font-size:13px }
+  .info{ grid-template-columns:76px 1fr }
+  .lead{ font-size:18px } h2{ font-size:30px } .voce h3{ font-size:19px } h3{ font-size:19px } h4{ font-size:16px }
+  .n{ width:28px; height:28px; font-size:13px; line-height:28px }
+  .voce{ grid-template-columns:28px 1fr; gap:0 12px }
+  .riquadro [style*="font-size"]{ font-size:14px !important }
+  .riquadro [style*="grid-template-columns:13mm"]{ grid-template-columns:72px 1fr !important }
+  .riquadro [style*="grid-template-columns:24mm"]{ grid-template-columns:96px 1fr !important }
+}
+
+/* ---------- sommario e indice analitico (generati da costruisci.py) ---------- */
+.sommario{ list-style:none; margin:0; padding:0; display:grid; gap:1.6mm; font-size:9.6pt }
+.sommario li{ display:grid; grid-template-columns:3mm 1fr auto; gap:3mm; align-items:baseline; border-bottom:.25mm dotted #cfc5b2; padding-bottom:1.2mm }
+.sommario li i{ width:3mm; height:3mm; border-radius:50%; align-self:center }
+.sommario li b{ font-family:var(--f-display); font-weight:800 }
+.sommario li.parte{ display:block; border:0; margin-top:2.4mm; font:700 7.5pt var(--f-body); color:var(--muted) }
+.indice{ list-style:none; margin:0; padding:0; columns:2; column-gap:6mm; font-size:7.2pt; line-height:1.3 }
+.indice li{ display:flex; justify-content:space-between; gap:2mm; break-inside:avoid; padding:.35mm 0; border-bottom:.2mm dotted #ddd3c0 }
+.indice b{ font-weight:600; white-space:nowrap }
+@media screen and (max-width: 640px){ .sommario{ font-size:16px } .indice{ columns:1; font-size:14px } }
+
+.page{--cap:#c08a25}
+.lista-crediti{margin:0;padding:0;list-style:none;display:grid;gap:1.4mm;font-size:7pt;line-height:1.3}
+.lista-crediti span{color:var(--muted);word-break:break-all}
+.appunti .righe{flex:1;background:repeating-linear-gradient(transparent 0 7.4mm, #e2dacb 7.4mm 7.65mm)}
+
+.barra-web{display:none}
+@media screen{.barra-web{display:flex;gap:18px;justify-content:center;position:sticky;top:0;z-index:10;
+  padding:10px 16px;background:#1d2a44;font:600 14px var(--f-body)}.barra-web a{color:#fff;text-decoration:none}}
+@media print{.barra-web{display:none}}
+</style></head><body><nav class="barra-web"><a href="./">← Guida</a><a href="p2-itinerario.pdf">Scarica il PDF</a><a href="../">Mappa</a></nav>
+<section class="page apertura" data-sez="1" data-nohead><div class="linea" aria-hidden="true"><i class="qui" style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div>
+  <img style="object-position:58% 50%" src="img/foto/skyline.jpg" alt="La City di Londra illuminata al crepuscolo sul Tamigi">
+  <div class="velo"></div>
+  <div class="titolo">
+    <div class="num">Parte 2</div>
+    <h1>Itinerario</h1>
+    <p class="sotto">Il nostro viaggio, giorno per giorno e ora per ora: cosa si fa, cosa si prenota, e cosa si cambia se piove.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="1"><div class="linea" aria-hidden="true"><i class="qui" style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">52</div>
+  <p class="sezione">Il viaggio in breve</p>
+  <h2>Quattro notti, otto persone</h2>
+  <p class="lead">Si atterra venerdì quasi a mezzanotte e si riparte martedì pomeriggio: restano tre giorni pieni e due mattine.</p>
+  <dl class="info">
+    <dt>Chi</dt><dd>5 adulti e tre ragazze di 16, 13 e 12 anni, su due prenotazioni gemelle.</dd>
+    <dt>Andata</dt><dd>Ryanair <b>FR1906</b>, venerdì 5 febbraio 2027, Bari 21:35 → Londra Stansted 23:30.</dd>
+    <dt>Ritorno</dt><dd>Ryanair <b>FR1905</b>, martedì 9 febbraio, Stansted 16:30 → Bari 20:20.</dd>
+    <dt>Notte 1</dt><dd><b>Hampton by Hilton London Stansted Airport</b>, Bassingbourn Road, dentro l'area dell'aeroporto. Colazione inclusa, check-out entro le 12.</dd>
+    <dt>Notti 2-4</dt><dd><b>Hampton by Hilton London City</b>, 12-20 Osborn Street, E1 6TE, a 3-5 minuti dalla metro Aldgate East. Colazione inclusa, check-in dalle 15, check-out entro le 11. Non accetta contanti.</dd>
+  </dl>
+  <div class="riquadro">
+    <h4>I giorni in una riga</h4>
+    <div style="display:grid;grid-template-columns:15mm 1fr auto;gap:1.3mm 2.5mm;font-size:8pt;line-height:1.35">
+      <b>Ven 5</b><span>Arrivo a Stansted, notte in aeroporto.</span><span class="piccolo">p. 54</span>
+      <b style="color:var(--mustard)">Sab 6</b><span>Parlamento, Westminster Abbey, Sky Garden al tramonto.</span><span class="piccolo">p. 55</span>
+      <b style="color:var(--teal)">Dom 7</b><span>Churchill War Rooms, South Bank, London Eye, Covent Garden. Capodanno cinese.</span><span class="piccolo">p. 58</span>
+      <b style="color:var(--navy)">Lun 8</b><span>Cambio della Guardia, poi Greenwich o i musei di South Kensington. Oppure Harry Potter.</span><span class="piccolo">p. 61</span>
+      <b style="color:var(--red)">Mar 9</b><span>Tower of London, poi aeroporto.</span><span class="piccolo">p. 65</span>
+    </div>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Come si leggono le giornate</h4>
+    <p>Ogni giorno ha gli orari, cosa prenotare e il piano B se piove. I numeri nei cerchi sono quelli della mappa a p. 53; H è l'hotel.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Il programma cambia</h4>
+    <p>Qui c'è il programma del <b>18 ottobre 2026</b>; le modifiche sono a p. 68. Storia, orari e prezzi dei luoghi sono nei capitoli dei quartieri.</p>
+  </div>
+</section>
+<section class="page" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">53</div>
+  <p class="sezione">La mappa dei giorni</p>
+  <h2>Dove andiamo, giorno per giorno</h2>
+  <div class="foto al" style="height:66mm"><img src="img/mappa-p2-itinerario.jpg" alt="Mappa di Londra con le tappe dei quattro giorni, numerate e colorate per giorno"></div>
+  <p class="cap">Mappa: Esri, HERE, Garmin, OpenStreetMap. Stansted è fuori mappa, circa 50 km a nord-est.</p>
+  <div class="legenda">
+    <h4><i style="background:var(--mustard)"></i>Sabato 6</h4>
+    <ol>
+      <li><b>1</b>Parlamento e Westminster Abbey<span></span></li>
+      <li><b>2</b>Sky Garden<span></span></li>
+    </ol>
+    <h4><i style="background:var(--teal)"></i>Domenica 7</h4>
+    <ol>
+      <li><b>3</b>War Rooms e St James's Park<span></span></li>
+      <li><b>4</b>South Bank e London Eye<span></span></li>
+      <li><b>5</b>Covent Garden e Chinatown<span></span></li>
+    </ol>
+    <h4><i style="background:var(--navy)"></i>Lunedì 8</h4>
+    <ol>
+      <li><b>6</b>Cambio della Guardia<span></span></li>
+      <li><b>7</b>Greenwich<span>opz. C</span></li>
+      <li><b>8</b>Funivia sul Tamigi<span>opz. C</span></li>
+      <li><b>9</b>West India Quay<span>opz. C</span></li>
+      <li><b>10</b>Diana Memorial Fountain<span>opz. D</span></li>
+      <li><b>11</b>Musei di South Kensington<span>opz. D</span></li>
+    </ol>
+    <h4><i style="background:var(--red)"></i>Martedì 9</h4>
+    <ol>
+      <li><b>12</b>Tower of London e Tower Bridge<span></span></li>
+      <li><b>H</b>Il nostro hotel<span></span></li>
+    </ol>
+  </div>
+  <div class="riquadro spinta" style="background:var(--teal-tint)">
+    <h4>Luce e meteo</h4>
+    <p>Alba verso le 7:30, tramonto verso le 17:00, buio alle 17:30: i panorami vanno messi tra le 16:15 e le 17:15. Inizio febbraio è la parte più fredda dell'inverno inglese: massime di 7-9 gradi, minime di 1-3, pioggia circa un giorno su tre. Ogni giorno ha il suo piano B.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="3"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i class="qui" style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">54</div>
+  <p class="sezione">Venerdì 5 febbraio · arrivo</p>
+  <h2>Si vola di sera, si dorme in aeroporto</h2>
+  <div class="testo">
+    <p class="lead">Il venerdì serve solo ad arrivare: si atterra quasi a mezzanotte e si dorme a pochi minuti dal terminal.</p>
+    <p>Per questo la prima notte è all'Hampton di Stansted, dentro l'area dell'aeroporto: niente treno né taxi a mezzanotte con le valigie, e sabato mattina si parte riposati e con la colazione fatta.</p>
+  </div>
+  <ol class="tappe">
+    <li data-n=""><b>21:35</b> Decollo da Bari, volo FR1906 <span class="tempo">2 ore e 55</span></li>
+    <li data-n=""><b>23:30</b> Atterraggio a Stansted. A Londra è un'ora in meno che in Italia: rimettete l'orologio. Controllo passaporti e bagagli.</li>
+    <li data-n=""><b>verso mezzanotte</b> A piedi fino all'hotel <span class="tempo">5-10 min, da verificare</span><br>Un percorso coperto collega terminal, stazione e hotel; un tratto è all'aperto. Al check-in chiedete la strada per sabato mattina.</li>
+  </ol>
+  <div class="riquadro">
+    <h4>Prima di partire da Bari</h4>
+    <p><b>ETA</b>, l'autorizzazione elettronica per entrare nel Regno Unito: serve a tutti, ragazze comprese, £20 a testa, solo sull'app o sul sito gov.uk (attenzione ai siti che la rivendono). <b>Check-in online</b> Ryanair: si apre 24 ore prima del volo (prima solo per chi paga il posto); in aeroporto si paga. La borsa piccola gratuita misura 40 × 30 × 20 cm.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Il trucco</h4>
+    <p>Arriviamo dopo le 23: avvisate l'hotel del check-in tardivo. E tenete in borsa a mano quello che serve per la notte e per sabato, così le valigie si aprono solo a Osborn Street.</p>
+  </div>
+</section>
+<section class="page" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">55</div>
+  <p class="sezione" style="color:#8a5f12">Sabato 6 febbraio</p>
+  <h2>Parlamento, Abbazia e Sky Garden</h2>
+  <p class="piccolo">Perché oggi: è l'unico dei nostri giorni con le visite al Parlamento (a febbraio 2027 solo il 6, il 20 e il 27), e la domenica l'Abbazia non si visita.</p>
+  <ol class="tappe" style="margin-top:1mm">
+    <li data-n=""><b>08:00</b> Colazione all'Hampton di Stansted</li>
+    <li data-n=""><b>10:00</b> Check-out e <b>Stansted Express</b> fino a Liverpool Street <span class="tempo">48-50 min</span></li>
+    <li data-n=""><b>11:15</b> Valigie in reception all'Hampton City <span class="tempo">la camera è pronta dalle 15</span></li>
+    <li data-n=""><b>11:30</b> District line diretta da Aldgate East a Westminster <span class="tempo">circa 20 min</span></li>
+    <li data-n=""><b>12:00</b> Pranzo veloce da <b>St Stephen's Tavern</b>, di fronte al Big Ben <span class="tempo">cucina dalle 9:30</span></li>
+    <li data-n="1"><b>12:40</b> Controlli di sicurezza, ingresso da Portcullis House <span class="tempo">20 min prima</span></li>
+    <li data-n="1"><b>13:00</b> <b>Visita al Parlamento</b> <span class="tempo">90 min</span><br>Guidata, oppure con l'audioguida in italiano.</li>
+    <li data-n="1"><b>14:40</b> <b>Westminster Abbey</b> <span class="tempo">ultimo ingresso 15:00, chiude alle 16</span></li>
+    <li data-n=""><b>16:15</b> District line da Westminster a Monument <span class="tempo">10 min</span><br>Se c'è tempo, un quarto d'ora a Leadenhall Market, sulla strada.</li>
+    <li data-n="2"><b>16:45</b> <b>Sky Garden</b> con la città che si accende <span class="tempo">al massimo un'ora</span></li>
+    <li data-n="H"><b>18:00</b> Check-in in hotel, a 15 minuti a piedi, e pausa</li>
+    <li data-n=""><b>19:30</b> Cena nell'East End: <b>Dishoom Shoreditch</b> o <b>Tayyabs</b></li>
+  </ol>
+  <div class="riquadro spinta">
+    <h4>Cosa prenotare</h4>
+    <p><b>Subito</b>: Parlamento per le 13:00 (tickets.parliament.uk), cena da Dishoom (fino a 4 mesi prima). <b>Dicembre</b>: Westminster Abbey e Stansted Express (da £9,90 a testa comprando presto; è il prezzo minimo, non quello garantito). <b>Lunedì 11 gennaio 2027</b>: Sky Garden, quando escono i biglietti della settimana, fascia delle 16:30-16:45.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">56</div>
+  <div class="foto" style="height:72mm"><img src="img/foto/w_parliament.jpg" alt="Il Palazzo di Westminster dal Tamigi"></div>
+  <p class="cap">Il Parlamento: la visita del sabato passa per Westminster Hall, del 1097.</p>
+  <dl class="info">
+    <dt>Parlamento</dt><dd>Guidata: adulti £40, 16-24 anni £30, 5-15 anni £20, per noi <b>£270</b>. Audioguida (anche in italiano): circa <b>£191</b>. Le visite possono saltare all'ultimo per i lavori del Parlamento. <b>p. 102</b></dd>
+    <dt>Abbazia</dt><dd>Adulti £32, 6-17 anni £14: per noi <b>£202</b>. Il sabato apre 9-16. <b>p. 100</b></dd>
+    <dt>Sky Garden</dt><dd>Gratis, con biglietto a orario. Niente valigie né borse grandi, controlli come in aeroporto. <b>p. 80</b></dd>
+  </dl>
+  <div class="consiglio">
+    <h4>Il trucco: Parlamento e Abbazia di corsa</h4>
+    <p>Tra la fine della visita (14:30) e l'ultimo ingresso in Abbazia (15:00) c'è mezz'ora: basta attraversare la piazza, ma uscite subito, senza fermarvi al bookshop. I biglietti dell'Abbazia comprati online fanno saltare la coda della cassa.</p>
+  </div>
+  <div class="riquadro spinta" style="background:var(--teal-tint)">
+    <h4>Se piove</h4>
+    <p>Il sabato regge: Parlamento, Abbazia e Sky Garden sono al coperto, si bagna solo chi è in coda. Si salta Leadenhall e si prende la metro anche per gli ultimi 15 minuti verso l'hotel (Monument → Aldgate East). Con il vento forte la terrazza dello Sky Garden chiude, ma la sala resta aperta.</p>
+  </div>
+</section>
+<section class="page" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">57</div>
+  <div class="due">
+    <div class="foto" style="height:70mm"><img src="img/foto/w_abbey.jpg" alt="La facciata ovest di Westminster Abbey"></div>
+    <div class="foto" style="height:70mm"><img src="img/foto/skygarden.jpg" alt="La sala-giardino dello Sky Garden con le vetrate"></div>
+  </div>
+  <p class="cap">Westminster Abbey e lo Sky Garden, al 35° piano del "Walkie Talkie".</p>
+  <div class="riquadro">
+    <h4>Se manca lo Sky Garden</h4>
+    <p>Se i biglietti finiscono, il piano B è <b>Horizon 22</b>, al 58° piano, gratis e senza limite di tempo: il sabato chiude alle 17, quindi va presa una fascia verso le 16 (<b>p. 81</b>). Un'altra strada: prenotare il brunch alla Darwin Brasserie dello Sky Garden, che dà l'accesso anche quando i biglietti gratis sono esauriti.</p>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Capodanno cinese, già oggi</h4>
+    <p>Sabato 6 è il primo giorno dell'anno della Capra. La grande festa di Londra è domenica (p. 59), ma Chinatown sarà addobbata e piena già stasera.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>La cena del sabato</h4>
+    <p><b>Dishoom Shoreditch</b> (7 Boundary Street, il sabato fino a mezzanotte): cucina dei caffè di Bombay; dopo le 18 prenota solo gruppi da 6 in su, quindi per noi va bene. <b>Tayyabs</b> (83-89 Fieldgate Street, a pochi minuti dall'hotel, 12-23:30): cucina punjabi, il bere si porta da casa. Più caro, <b>Hawksmoor Spitalfields</b>, bistecche. <b>p. 88</b></p>
+  </div>
+</section>
+<section class="page sx" data-sez="5"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i class="qui" style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">58</div>
+  <p class="sezione" style="color:var(--teal)">Domenica 7 febbraio</p>
+  <h2>War Rooms, South Bank, London Eye, Covent Garden</h2>
+  <p class="piccolo">Perché oggi: la domenica sono aperti War Rooms, London Eye, il Food Market del South Bank e Covent Garden; l'Abbazia è già fatta e il Cambio della Guardia completo è lunedì.</p>
+  <ol class="tappe" style="margin-top:1mm">
+    <li data-n=""><b>08:00</b> Colazione in hotel</li>
+    <li data-n=""><b>09:00</b> District line diretta fino a St James's Park <span class="tempo">circa 20 min</span></li>
+    <li data-n="3"><b>09:30</b> <b>Churchill War Rooms</b>, prima fascia <span class="tempo">1 ora e mezza</span></li>
+    <li data-n="3"><b>11:15</b> <b>St James's Park</b> e il Blue Bridge, poi Horse Guards, Downing Street e il Cenotaph<br>A mezzogiorno in punto le sentinelle a cavallo di Horse Guards si danno il cambio.</li>
+    <li data-n="4"><b>12:30</b> A piedi su Westminster Bridge: la foto classica del Big Ben dal lato ovest</li>
+    <li data-n="4"><b>13:00</b> Pranzo al <b>Southbank Centre Food Market</b> (dom 12-18, in piedi) o da <b>Wahaca</b> (si prenota per 8)</li>
+    <li data-n="4"><b>14:00</b> <b>Leake Street</b> con i graffiti, gli skater dell'Undercroft, il Book Market sotto Waterloo Bridge</li>
+    <li data-n="4"><b>16:15</b> <b>London Eye</b> al tramonto <span class="tempo">tramonto alle 17:00</span></li>
+    <li data-n="5"><b>17:30</b> Sul Golden Jubilee Bridge fino a <b>Covent Garden</b> <span class="tempo">20-25 min con le foto</span><br>Mercato, luci e artisti di strada.</li>
+    <li data-n="5"><b>19:00</b> Cena da <b>Mother Mash</b>, pie &amp; mash in New Row. In alternativa Flat Iron o Seven Dials Market. Ritorno da Embankment, District line diretta.</li>
+  </ol>
+  <div class="riquadro spinta" style="background:var(--teal-tint)">
+    <h4>L'alternativa del pomeriggio</h4>
+    <p><b>The Witness for the Prosecution</b> alle 15 a County Hall: Agatha Christie in una vera aula, dai 10 anni, da £20, 2 ore e 15 (arrivare 45 minuti prima). Poi London Eye alle 17:30 con la città già illuminata: se a febbraio la ruota chiude alle 18, è una delle ultime fasce. <b>p. 111</b></p>
+  </div>
+</section>
+<section class="page" data-sez="5"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i class="qui" style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">59</div>
+  <div class="foto" style="height:72mm"><img src="img/foto/c_apertura.jpg" alt="Le lanterne rosse sopra Gerrard Street, a Chinatown"></div>
+  <p class="cap">Le lanterne di Gerrard Street, a Chinatown.</p>
+  <div class="riquadro" style="background:var(--mustard-tint)">
+    <h4>Oggi è il Capodanno cinese di Londra</h4>
+    <p>L'associazione cinese di Chinatown, che organizza la festa, l'ha fissata per <b>domenica 7 febbraio 2027</b>. Il programma esce più avanti; nel 2026 era così: <b>parata alle 10</b> da Trafalgar Square a Chinatown, <b>palco a Trafalgar Square</b> da mezzogiorno alle 18 circa con il finale verso le 17:30, bancarelle e danze del leone a Chinatown fino alle 18.</p>
+    <p style="margin-top:1.6mm"><b>Cosa cambia per noi.</b> La mattina siamo lontani, nel bunker e al parco. Alle 17:30, quando arriviamo dal ponte, Trafalgar Square e Chinatown saranno piene come allo stadio: <b>non contate di cenare a Chinatown</b>, i ristoranti saranno pieni. Tenetevi Covent Garden, prenotate la cena e tornate in hotel da <b>Embankment o Temple</b> (District line diretta), non da Leicester Square, dove potrebbero esserci chiusure per la folla.</p>
+    <p style="margin-top:1.6mm"><b>Se volete vederla.</b> Il finale delle 17:30 a Trafalgar Square è a 5 minuti dal ponte: con ragazze e gruppo di 8, scegliete un punto d'incontro prima di entrare nella folla. Dopo cena, le lanterne di Gerrard Street si vedono anche senza la festa.</p>
+  </div>
+  <p class="piccolo">Dettagli su Chinatown, Covent Garden e i ristoranti nel capitolo <i>Covent Garden, Soho e Chinatown</i>.</p>
+</section>
+<section class="page sx" data-sez="5"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i class="qui" style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">60</div>
+  <div class="foto" style="height:52mm"><img src="img/foto/w_eye.jpg" alt="Una capsula del London Eye sopra il Tamigi"></div>
+  <dl class="info">
+    <dt>War Rooms</dt><dd>Adulti £34, 5-15 anni £17; la ragazza di 16 anni paga intero: per noi <b>£238</b>. <b>p. 108</b></dd>
+    <dt>London Eye</dt><dd>Online da £29 adulti e £26 per 2-15 anni: per noi <b>circa £226</b> (alla cassa £304). L'orario del biglietto è quello in cui si entra in coda: fino a 45 minuti. <b>p. 106</b></dd>
+    <dt>South Bank</dt><dd>Leake Street, Book Market e Food Market: <b>p. 110</b>. La passeggiata completa: <b>p. 114</b>.</dd>
+    <dt>Cena</dt><dd>Mother Mash la domenica chiude la cucina alle 19:45 ed è piccolo: prenotate e chiedete se ci stiamo in 8. Flat Iron (bistecca £15) è aperto fino alle 22:30.</dd>
+  </dl>
+  <div class="riquadro">
+    <h4>Cosa prenotare</h4>
+    <p><b>Dicembre-gennaio</b>: War Rooms alle 9:30, London Eye nella fascia 16:15-16:45, Wahaca per il pranzo, la cena a Covent Garden. Witness for the Prosecution solo se scegliamo l'alternativa: si prenota già.</p>
+  </div>
+  <div class="riquadro spinta" style="background:var(--teal-tint)">
+    <h4>Se piove</h4>
+    <p>Il bunker è al coperto. Il parco si accorcia e al suo posto c'è l'<b>Imperial War Museum</b>, gratis, 10-18, con la mostra per famiglie <i>Childhood in War</i> fino al 28 febbraio (<b>p. 111</b>). Il pranzo si sposta nell'atrio della Royal Festival Hall o da Wahaca. Il London Eye si ferma solo con vento forte: in quel caso il biglietto viene spostato, e il pomeriggio va a Witness for the Prosecution.</p>
+  </div>
+</section>
+<section class="page" data-sez="6"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i class="qui" style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">61</div>
+  <p class="sezione" style="color:var(--navy)">Lunedì 8 febbraio</p>
+  <h2>Cambio della Guardia, poi si sceglie</h2>
+  <p class="piccolo">Perché oggi: il Cambio della Guardia completo a Buckingham Palace si fa il lunedì, il mercoledì e il venerdì alle 11; la domenica c'è solo una parata, il sabato e il martedì una breve ispezione alle 15.</p>
+  <ol class="tappe" style="margin-top:1mm">
+    <li data-n=""><b>08:00</b> Colazione in hotel</li>
+    <li data-n=""><b>09:45</b> District line diretta fino a St James's Park <span class="tempo">circa 22 min</span></li>
+    <li data-n="6"><b>10:15</b> Posto sui gradini del <b>Victoria Memorial</b> o lungo Birdcage Walk</li>
+    <li data-n="6"><b>11:00</b> <b>Cambio della Guardia</b> completo, con la banda <span class="tempo">circa 45 min</span></li>
+    <li data-n=""><b>12:00</b> Pranzo, poi una delle due opzioni: <b>Greenwich</b> (p. 62) o <b>i musei</b> (p. 63)</li>
+  </ol>
+  <div class="foto" style="height:30mm"><img style="object-position:50% 12%" src="img/foto/w_guard.jpg" alt="Le guardie con il colbacco durante il Cambio della Guardia"></div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Se piove</h4>
+    <p>La cerimonia può essere annullata fino alle 10:45, soprattutto con la pioggia: controllate la mattina sul sito e sui social della Household Division prima di uscire (il calendario di febbraio esce a gennaio; qui c'è lo schema di ottobre 2026). Se salta, si va diretti ai musei di South Kensington (opzione D), che sono il piano B naturale della giornata.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Il trucco</h4>
+    <p>Alla stessa ora, alle 11, c'è anche il cambio della guardia a cavallo a Horse Guards: si sceglie l'uno o l'altro. Senza folla, la vecchia guardia si forma davanti a St James's Palace verso le 10:45 e poi marcia lungo il Mall. Dettagli e calendario: <b>p. 105</b>.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="6"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i class="qui" style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">62</div>
+  <p class="sezione" style="color:var(--navy)">Lunedì 8 · opzione C</p>
+  <h2>Greenwich in battello</h2>
+  <div class="foto" style="height:33mm"><img style="object-position:50% 40%" src="img/foto/it_cutty.jpg" alt="Il Cutty Sark nel bacino asciutto di Greenwich"></div>
+  <ol class="tappe" style="margin-top:1mm">
+    <li data-n=""><b>12:30</b> <b>Uber Boat</b> da Westminster Pier a Greenwich <span class="tempo">circa 45 min</span><br>Biglietto nell'app o online: al molo costa di più.</li>
+    <li data-n="7"><b>13:30</b> <b>Cutty Sark</b>, il veliero del tè, e Greenwich</li>
+    <li data-n="8"><b>16:00</b> <b>Funivia sul Tamigi</b> verso i Royal Docks <span class="tempo">fino a 10 min</span></li>
+    <li data-n="9"><b>17:00</b> DLR fino a <b>West India Quay</b>: Canary Wharf all'ora blu, poi DLR fino a Tower Gateway, a circa 10 minuti dall'hotel</li>
+  </ol>
+  <div class="riquadro" style="background:#f6e3df">
+    <h4>Attenzione: a febbraio due tappe sono chiuse</h4>
+    <p>Il <b>Royal Observatory</b>, con il meridiano di Greenwich, chiude dal 2 novembre 2026 per lavori e riapre nell'estate 2027: l'8 febbraio sarà chiuso, e il biglietto combinato con il Cutty Sark non si può usare. Il <b>Greenwich Market</b> resta chiuso i primi sei lunedì dell'anno, e l'8 febbraio 2027 è il sesto. Restano aperti, tutti i giorni 10-17, il Cutty Sark, il <b>National Maritime Museum</b> e la <b>Queen's House</b>, questi due gratis.</p>
+  </div>
+  <dl class="info">
+    <dt>Battello</dt><dd>Westminster-Greenwich, adulti £13,50 online (£17,70 al molo), 5-15 anni metà prezzo. Tariffe di ottobre 2026.</dd>
+    <dt>Cutty Sark</dt><dd>10-17, ultimo ingresso 16:15. Adulti £22, ragazzi £11.</dd>
+    <dt>Funivia</dt><dd>Lunedì 8-21. Sola andata adulti (dai 16 anni) £7, 5-15 anni £3,50: per noi <b>£49</b>. Contactless e Oyster valgono. Si ferma con vento forte.</dd>
+  </dl>
+  <p class="piccolo spinta">Da verificare sul TfL Journey Planner: come si va dal centro di Greenwich alla stazione della funivia (North Greenwich) e i cambi della DLR dai Royal Docks a West India Quay. Dettagli nel capitolo <i>Greenwich e Docklands</i>.</p>
+</section>
+<section class="page" data-sez="6"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i class="qui" style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">63</div>
+  <p class="sezione" style="color:var(--navy)">Lunedì 8 · opzione D</p>
+  <h2>I musei di South Kensington</h2>
+  <p class="piccolo">L'opzione giusta se piove: tutto al coperto e tutto gratis.</p>
+  <div class="foto" style="height:31mm"><img src="img/foto/it_nhm.jpg" alt="La balena azzurra appesa nella Hintze Hall del Natural History Museum"></div>
+  <ol class="tappe" style="margin-top:1mm">
+    <li data-n="10"><b>12:00</b> A piedi da Buckingham Palace per Green Park e Hyde Park fino alla <b>Diana Memorial Fountain</b><br>Oppure, con la pioggia, Piccadilly line da Green Park a South Kensington.</li>
+    <li data-n="11"><b>13:00</b> <b>Natural History Museum</b> <span class="tempo">2-2 ore e mezza</span><br>I dinosauri, la balena azzurra nella Hintze Hall, il simulatore di terremoto.</li>
+    <li data-n="11"><b>15:30</b> <b>Science Museum</b>, accanto</li>
+    <li data-n=""><b>17:30</b> District line diretta da South Kensington ad Aldgate East</li>
+  </ol>
+  <dl class="info">
+    <dt>Natural History</dt><dd>Tutti i giorni 10-17:50, ultimo ingresso 17:30. Gratis; il biglietto gratuito a orario non è obbligatorio ma è consigliato.</dd>
+    <dt>Science</dt><dd>10-18, gratis con biglietto gratuito da prenotare. Wonderlab, la galleria degli esperimenti, a pagamento (da £13,50).</dd>
+    <dt>Fontana</dt><dd>Da novembre a febbraio aperta 10-16; chiude con il gelo o il maltempo.</dd>
+  </dl>
+  <div class="consiglio">
+    <h4>Lo sapevi?</h4>
+    <p>Il simulatore di terremoto è al Natural History Museum, non allo Science Museum: è la ricostruzione di un piccolo supermercato giapponese durante il terremoto di Kobe del 1995, nella galleria Volcanoes and Earthquakes (ala est, secondo piano). Il museo avverte che può impressionare.</p>
+  </div>
+  <p class="piccolo spinta">Cena vicino all'hotel (Tayyabs, Poppies, Brick Lane: <b>p. 88</b>) o a South Kensington. Dettagli nel capitolo <i>South Kensington e Hyde Park</i>.</p>
+</section>
+<section class="page sx" data-sez="7"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i class="qui" style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">64</div>
+  <p class="sezione" style="color:var(--navy)">Lunedì 8 · l'alternativa</p>
+  <h2>Una giornata a Hogwarts</h2>
+  <p class="lead">Al posto delle guardie, la giornata intera agli Studios di Harry Potter, dove sono stati girati gli otto film.</p>
+  <ol class="tappe" style="margin-top:1mm">
+    <li data-n=""><b>mattina</b> Treno da Euston a Watford Junction <span class="tempo">circa 20 min</span><br>Fino a Watford Junction vale la Oyster.</li>
+    <li data-n=""><b></b> Navetta dalla stazione agli Studios <span class="tempo">15 min, compresa nel biglietto</span></li>
+    <li data-n=""><b></b> <b>Warner Bros. Studio Tour</b> <span class="tempo">3-4 ore</span></li>
+    <li data-n=""><b>pomeriggio</b> Ritorno a Euston, poi a piedi a King's Cross: foto al <b>binario 9¾</b></li>
+    <li data-n=""><b>sera</b> Cena da <b>Dishoom King's Cross</b></li>
+  </ol>
+  <dl class="info">
+    <dt>Biglietti</dt><dd>Prezzi 2027: adulti (dai 16 anni) £61, 5-15 anni £48, famiglia £192. Per noi 8 (sei paganti adulti), <b>£462</b>; con il biglietto famiglia qualcosa meno. Solo online, con data e ora: le date si esauriscono anche un mese o due prima.</dd>
+    <dt>Orari</dt><dd>Quelli di febbraio 2027 non sono ancora pubblicati.</dd>
+    <dt>Binario 9¾</dt><dd>Il negozio è nell'atrio di King's Cross; la foto con il carrello è gratis se la scatta uno di noi, a pagamento quella del fotografo. Coda anche di un'ora.</dd>
+  </dl>
+  <div class="due spinta" style="grid-template-columns:42mm 1fr;align-items:end">
+    <div><div class="foto" style="height:52mm"><img src="img/foto/it_binario.jpg" alt="Il carrello che sparisce nel muro del binario 9¾ a King's Cross"></div>
+    <p class="cap">Il binario 9¾ a King's Cross.</p></div>
+    <div class="riquadro">
+      <h4>Cosa si perde</h4>
+      <p>Se il gruppo sceglie gli Studios, il Cambio della Guardia salta: negli altri nostri giorni c'è solo l'ispezione delle 15 (sabato e martedì) o la parata della domenica alle 10. Dettagli nel capitolo <i>Gite fuori Londra</i>.</p>
+    </div>
+  </div>
+</section>
+<section class="page" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">65</div>
+  <p class="sezione" style="color:var(--red)">Martedì 9 febbraio</p>
+  <h2>Tower of London, poi aeroporto</h2>
+  <p class="piccolo">Perché oggi: il martedì la Tower apre alle 9 ed è a 15 minuti a piedi dall'hotel. Si fa prima di partire.</p>
+  <ol class="tappe" style="margin-top:1mm">
+    <li data-n=""><b>07:45</b> Colazione in hotel</li>
+    <li data-n="H"><b>08:45</b> <b>Check-out</b> (entro le 11) e valigie in reception</li>
+    <li data-n="12"><b>09:00</b> <b>Tower of London</b> all'apertura <span class="tempo">2-3 ore</span><br>Subito ai gioielli della Corona, prima della coda; poi il giro con uno Yeoman Warder.</li>
+    <li data-n="12"><b>11:15</b> <b>Trinity Square</b> e Tower Bridge attraversato a piedi, gratis</li>
+    <li data-n="H"><b>12:15</b> Pranzo veloce in zona e ritiro delle valigie</li>
+    <li data-n=""><b>13:00</b> Da Aldgate East a Liverpool Street, poi <b>Stansted Express</b> <span class="tempo">48-50 min</span></li>
+    <li data-n=""><b>14:30</b> In aeroporto, due ore prima del volo</li>
+    <li data-n=""><b>16:30</b> Decollo FR1905 <span class="tempo">arrivo a Bari alle 20:20</span></li>
+  </ol>
+  <dl class="info">
+    <dt>Tower</dt><dd>Il martedì 9-16:30, ultimo ingresso 15. Adulti £38, 5-17 anni £19: per noi <b>£247</b>. Niente biglietto famiglia. Il giro con lo Yeoman è compreso. <b>p. 76</b></dd>
+    <dt>Tower Bridge</dt><dd>Attraversarlo è gratis; il dentro, con il pavimento di vetro, costa £18 adulti (<b>p. 78</b>).</dd>
+  </dl>
+  <div class="foto spinta" style="height:42mm"><img src="img/foto/it_stansted.jpg" alt="Uno Stansted Express al binario di Liverpool Street"></div>
+  <p class="cap">Lo Stansted Express parte da Liverpool Street, a una fermata di metro da Aldgate East.</p>
+</section>
+<section class="page sx" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">66</div>
+  <div class="foto" style="height:48mm"><img src="img/foto/tower.jpg" alt="La Tower of London vista dal Tamigi"></div>
+  <p class="cap">La Tower of London dal fiume: la White Tower ha quasi mille anni.</p>
+  <div class="riquadro">
+    <h4>Cosa prenotare</h4>
+    <p><b>Fine dicembre</b>: Tower of London per martedì 9, entrata alle 9:00. <b>Gennaio</b>: Stansted Express di ritorno, sul treno delle 13 circa da Liverpool Street. Tower Bridge e Horizon 22 solo se servono, qualche settimana prima.</p>
+  </div>
+  <div class="consiglio">
+    <h4>Il trucco</h4>
+    <p>Il check-in online del ritorno si apre lunedì 8 alle 16:30: fatelo la sera in hotel. Allo Stansted Express la Oyster non vale: si paga con la carta o con il biglietto comprato prima.</p>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Se piove</h4>
+    <p>Gioielli, White Tower e Bloody Tower sono al coperto; nei cortili ci si bagna. Invece della traversata di Tower Bridge, si entra nel ponte (passerelle al coperto, 9:30-18) o si sale a Horizon 22, gratis, il martedì 10-18 (<b>p. 81</b>).</p>
+  </div>
+  <div class="riquadro spinta">
+    <h4>Rimasti fuori, se avanza tempo</h4>
+    <p>Con il programma nuovo sono rimasti fuori: il <b>dentro di Tower Bridge</b> (£18); <b>St Paul's</b> con la terrazza gratuita di One New Change; il <b>Borough Market</b> con i donut di Bread Ahead; il <b>British Museum</b>, la <b>National Gallery</b> e il <b>Mail Rail</b>; <b>Leadenhall Market</b>, che si recupera sabato andando allo Sky Garden.</p>
+  </div>
+</section>
+<section class="page" data-sez="9"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i class="qui" style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">67</div>
+  <p class="sezione">Prima di partire</p>
+  <h2>Le prenotazioni, in ordine di data</h2>
+  <ol class="tappe" style="margin-top:1mm">
+    <li data-n="1"><b>Subito</b><br>ETA per tutti e 8 (£20 a testa, gov.uk). Visita al Parlamento di sabato 6 alle 13. Cena da Dishoom Shoreditch, sabato.</li>
+    <li data-n="2"><b>Metà novembre 2026</b><br>Tour del Big Ben, se lo vogliamo (dagli 11 anni, £55 e £35): escono i biglietti di febbraio e finiscono in poche ore.</li>
+    <li data-n="3"><b>Dicembre</b><br>Westminster Abbey, Churchill War Rooms (9:30), London Eye (16:15-16:45), Tower of London (martedì alle 9). Gli Studios di Harry Potter, se li scegliamo. Stansted Express di andata e ritorno.</li>
+    <li data-n="4"><b>Gennaio 2027</b><br>Lunedì 11: Sky Garden per sabato 6. Lunedì 18: Sky Garden per lunedì 8 o martedì 9, se serve. Calendario delle guardie di febbraio. Ristoranti di domenica e lunedì.</li>
+    <li data-n="5"><b>31 gennaio e 1 febbraio, 23:59</b><br>Ultimi giorni per cancellare gratis gli hotel: Stansted il 31, London City il 1° febbraio.</li>
+    <li data-n="6"><b>4 febbraio, 21:35</b><br>Si apre il check-in online dell'andata. Quello del ritorno l'8 febbraio alle 16:30.</li>
+  </ol>
+  <div class="riquadro spinta" style="background:var(--teal-tint)">
+    <h4>I biglietti del programma, per noi 8</h4>
+    <div class="due" style="font-size:8pt">
+      <div>Parlamento, visita guidata<br>Westminster Abbey<br>Churchill War Rooms<br>London Eye, online<br>Tower of London<br>Sky Garden, guardie, musei<br><b>Totale</b></div>
+      <div style="text-align:right">£270<br>£202<br>£238<br>£226<br>£247<br>gratis<br><b>£1.183</b></div>
+    </div>
+    <p class="piccolo" style="margin-top:1.5mm">Senza treni, metro, battello, funivia e pasti. Prezzi di ottobre 2026; con l'audioguida al Parlamento il totale scende a circa £1.104.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">68</div>
+  <p class="sezione">Cosa è cambiato</p>
+  <h2>Il registro del programma</h2>
+  <p class="piccolo">Ogni volta che il programma cambia, la modifica si scrive qui, con la data. La versione sempre aggiornata è anche sulla mappa online del viaggio.</p>
+  <ol class="tappe" style="margin-top:2mm">
+    <li data-n="1"><b>18 ottobre 2026</b> · prima versione<br>I giorni vengono ripresi dall'itinerario e dagli spunti dei video TikTok del gruppo.</li>
+    <li data-n="2"><b>18 ottobre 2026</b> · riorganizzazione<br>Dopo le verifiche su orari e chiusure: Parlamento e Abbazia passano a sabato 6 (unico giorno con le visite al Parlamento; la domenica l'Abbazia non si visita); War Rooms e South Bank a domenica 7; il Cambio della Guardia completo a lunedì 8; la Tower of London a martedì 9. Gli Studios di Harry Potter diventano l'alternativa al Cambio della Guardia.</li>
+  </ol>
+  <div class="riquadro">
+    <h4>Com'era prima</h4>
+    <p>La versione precedente aveva Tower of London e Borough Market il sabato, Westminster la domenica e Harry Potter il lunedì.</p>
+  </div>
+  <div class="riquadro" style="background:#f6e3df">
+    <h4>Da decidere insieme</h4>
+    <p><b>Lunedì a Greenwich</b>: il Royal Observatory sarà chiuso per lavori e il Greenwich Market probabilmente anche; restano Cutty Sark, National Maritime Museum e Queen's House. Vale ancora la pena, o meglio i musei? <b>Domenica sera</b>: con il Capodanno cinese, prenotare la cena e decidere se andare al finale di Trafalgar Square. <b>Harry Potter</b>: i prezzi 2027 sono già usciti (£61 e £48).</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Le prossime verifiche</h4>
+    <p>A gennaio 2027 escono il calendario delle guardie, gli orari di febbraio del London Eye e degli Studios, il programma del Capodanno cinese. Prezzi e orari di questa guida sono di ottobre 2026: vanno ricontrollati 2-4 settimane prima di partire.</p>
+  </div>
+</section>
+<section class="page crediti" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">69</div><p class="sezione">Crediti fotografici</p><h2>Le foto di questo capitolo</h2><p class="piccolo">Foto da Wikimedia Commons, pubblicate con licenze Creative Commons o in pubblico dominio. Mappe: Esri, HERE, Garmin e i contributori di OpenStreetMap. Linee della metro: OpenStreetMap.</p><ul class="lista-crediti"><li><b>skyline</b>: mattbuck, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:London_MMB_»053_River_Thames_and_the_City.jpg</span></li><li><b>w_parliament</b>: Robert Lamb, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:View_of_the_Houses_of_Parliament_from_Westminster_Bridge_-_geograph.org.uk_-_4435444.jpg</span></li><li><b>w_abbey</b>: Prioryman, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Westminster_Abbey_west_front_March_2015.jpg</span></li><li><b>skygarden</b>: Colin, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:The_Sky_Garden.jpg</span></li><li><b>c_apertura</b>: Robert Lamb, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Lantern_heaven_on_Gerrard_Street_-_geograph.org.uk_-_1721601.jpg</span></li><li><b>w_eye</b>: LittleRoamingChief, CC BY 2.0, <span>commons.wikimedia.org/wiki/File:2024--15_September--London_Eye_Capsule_and_Palace_of_Westminster.jpg</span></li><li><b>w_guard</b>: bortescristian, CC BY 2.0, <span>commons.wikimedia.org/wiki/File:Changing_of_the_Guard,_Buckingham_Palace.jpg</span></li><li><b>it_cutty</b>: PAUL FARMER, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:The_Cutty_Sark,_Greenwich_-_geograph.org.uk_-_3150174.jpg</span></li><li><b>it_nhm</b>: Sourabh.biswas003, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:PXL_20231218_125426972.LONG_EXPOSURE-02.COVER_The_Natural_History_Museum,_London_Hintze_Hall_Hall_Hope,_Whale_Skeleton.jpg</span></li><li><b>it_binario</b>: Bert Seghers, CC0, <span>commons.wikimedia.org/wiki/File:Platform_9_3-4_(King&#x27;s_Cross_station,_London,_2014).jpg</span></li><li><b>it_stansted</b>: Hugh Llewelyn, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Greater_Anglia_Class_745-1_Stansted_Express_train_at_Liverpool_Street.jpg</span></li><li><b>tower</b>: Bob Collowan, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Tower_of_London_viewed_from_the_River_Thames.jpg</span></li></ul></section>
+<section class="page sx appunti" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Itinerario</span><span>Parte 2</span></div><div class="folio">70</div><p class="sezione">Appunti</p><div class="righe"></div></section>
+<script>
+// segnala le pagine troppo piene (in stampa il testo verrebbe tagliato)
+window.addEventListener('load', () => {
+  const piene = [...document.querySelectorAll('.page')].filter(p => p.scrollHeight > p.clientHeight + 2)
+    .map((p, i) => p.querySelector('.folio')?.textContent || 'apertura');
+  document.body.dataset.piene = piene.join(',');
+});
+</script>
+</body></html>
