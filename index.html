@@ -140,7 +140,7 @@ const DAYS = {
 };
 const CATS = { viste:"Vista e foto", trasporti:"Trasporti", musei:"Musei ed esperienze", cibo:"Da mangiare", hotel:"Hotel" };
 
-const map = L.map('map', { zoomControl:true, tap:true }).setView([51.507, -0.10], 13);
+const map = L.map('map', { zoomControl:true, tap:true, zoomSnap:0.25, zoomDelta:0.5 }).setView([51.507, -0.10], 13);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
   maxZoom:19,
   attribution:'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors'
