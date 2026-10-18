@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tower, City e Aldgate · Guida di Londra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>/* Guida di Londra — stile delle pagine.
+   Stampa: pagine A5 fisse (148 x 210 mm). Schermo: le stesse pagine una sotto l'altra, fluide sotto i 640 px.
+   Ogni capitolo è una "linea della metro" del suo colore (--cap) che corre sul bordo esterno,
+   con una fermata per sezione: la fermata accesa dice dove sei nel capitolo. */
+
+:root{
+  --ink:#1d2a44;        /* blu notte: testo e titoli */
+  --muted:#5f6472;
+  --paper:#fffdf9;      /* carta quasi bianca, per foto nitide */
+  --sand:#f2ebde;       /* fondi dei riquadri */
+  --red:#b8402f; --teal:#2f7272; --mustard:#c08a25; --navy:#26375c;
+  --teal-tint:#e6f0ee; --mustard-tint:#f7eedb;
+  --cap:var(--red);     /* colore del capitolo, ridefinito su ogni capitolo */
+  --f-display:"Fraunces", Georgia, serif;
+  --f-body:"Figtree", "Helvetica Neue", Arial, sans-serif;
+}
+@page{ size:148mm 210mm; margin:0 }
+*{ box-sizing:border-box }
+html{ -webkit-print-color-adjust:exact; print-color-adjust:exact }
+body{ margin:0; background:#e7e2d8; color:var(--ink); font:400 8.9pt/1.45 var(--f-body); font-variant-numeric:tabular-nums }
+img{ display:block; max-width:100% }
+a{ color:inherit }
+
+/* ---------- pagina ---------- */
+.page{ width:148mm; height:210mm; margin:0 auto 6mm; background:var(--paper); position:relative; overflow:hidden;
+  padding:14mm 17mm 15mm 13mm; break-after:page; display:flex; flex-direction:column; gap:3.2mm }
+.page.sx{ padding:14mm 13mm 15mm 17mm }               /* pagina pari: margine esterno a sinistra */
+@media print{ body{ background:none } .page{ margin:0 } }
+
+.testata{ position:absolute; top:6.5mm; left:13mm; right:17mm; display:flex; justify-content:space-between;
+  font:500 6.8pt var(--f-body); color:var(--muted) }
+.sx .testata{ left:17mm; right:13mm; flex-direction:row-reverse }
+.folio{ position:absolute; bottom:6.5mm; right:17mm; font:600 7.5pt var(--f-body); color:var(--ink) }
+.sx .folio{ right:auto; left:17mm }
+
+/* linea della metro sul bordo esterno */
+.linea{ position:absolute; top:0; bottom:0; right:5.2mm; width:2.2mm; background:var(--cap) }
+.sx .linea{ right:auto; left:5.2mm }
+.linea i{ position:absolute; left:50%; width:4.2mm; height:4.2mm; margin-left:-2.1mm; border-radius:50%;
+  background:#fff; border:.9mm solid var(--cap) }
+.linea i.qui{ width:5.6mm; height:5.6mm; margin-left:-2.8mm; background:var(--ink); border-color:#fff; box-shadow:0 0 0 .6mm var(--cap) }
+
+/* ---------- tipografia ---------- */
+h1,h2,h3,h4{ font-family:var(--f-display); margin:0; color:var(--ink); text-wrap:balance; font-optical-sizing:auto }
+h2{ font-size:21pt; line-height:1.02; font-weight:800; letter-spacing:-.01em }
+h3{ font-size:12.5pt; line-height:1.15; font-weight:700 }
+h4{ font-size:10pt; font-weight:700 }
+p{ margin:0 }
+.testo p + p{ margin-top:2.2mm }
+.testo{ hyphens:auto; -webkit-hyphens:auto }
+.lead{ font:400 11pt/1.38 var(--f-display); color:var(--ink) }
+.sezione{ font:600 8pt var(--f-body); color:var(--cap) }       /* nome della sezione sopra il titolo */
+.piccolo{ font-size:7.6pt; color:var(--muted) }
+.cap{ font-size:6.8pt; color:var(--muted); margin-top:1.2mm; font-style:italic }
+
+/* ---------- foto ---------- */
+.foto{ position:relative; overflow:hidden; border-radius:1.2mm; flex:none }
+.foto img{ width:100%; height:100%; object-fit:cover }
+.foto.al{ margin:0 -17mm 0 -13mm; border-radius:0 }            /* al vivo orizzontale */
+.sx .foto.al{ margin:0 -13mm 0 -17mm }
+
+/* ---------- apertura capitolo ---------- */
+.apertura{ padding:0 }
+.apertura > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover }
+.apertura .velo{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,28,46,.0) 35%, rgba(20,28,46,.86) 82%) }
+.apertura .titolo{ position:absolute; left:13mm; right:17mm; bottom:16mm; color:#fff }
+.apertura .num{ font:600 8pt var(--f-body); color:#fff; opacity:.85 }
+.apertura h1{ font-size:38pt; line-height:.95; font-weight:900; color:#fff; margin:2mm 0 4mm }
+.apertura .sotto{ font:400 10.5pt/1.35 var(--f-display); max-width:100mm; opacity:.95 }
+
+/* ---------- riquadri ---------- */
+.info{ background:var(--teal-tint); border-radius:1.5mm; padding:3mm 3.5mm; display:grid;
+  grid-template-columns:15mm 1fr; gap:1.1mm 3mm; font-size:7.9pt; line-height:1.35; flex:none }
+.info dt{ font-weight:700; color:var(--teal) }
+.info dd{ margin:0 }
+.consiglio{ background:var(--mustard-tint); border-radius:1.5mm; padding:3mm 3.5mm; font-size:8.4pt; flex:none }
+.consiglio h4{ color:#8a5f12; margin-bottom:1mm; display:flex; align-items:center; gap:2mm }
+.consiglio h4::before{ content:""; width:3.4mm; height:3.4mm; border-radius:50%; border:.8mm solid var(--mustard); flex:none }
+.riquadro{ background:var(--sand); border-radius:1.5mm; padding:3.2mm 3.6mm; font-size:8.4pt; flex:none }
+.riquadro h4{ margin-bottom:1.2mm }
+.top-lista{ margin:0; padding:0; list-style:none; display:grid; gap:1.4mm }
+.top-lista li{ display:grid; grid-template-columns:5mm 1fr; gap:2mm; align-items:baseline }
+.top-lista b{ font-family:var(--f-display); font-weight:800; color:var(--cap); font-size:10pt }
+
+/* ---------- schede (da vedere, mangiare...) ---------- */
+.voce{ display:grid; grid-template-columns:6.4mm 1fr; gap:0 2.6mm; break-inside:avoid }
+.voce + .voce{ padding-top:2.6mm; border-top:.25mm solid #e2dacb }
+.n{ width:6.4mm; height:6.4mm; border-radius:50%; background:var(--cap); color:#fff; font:700 7.6pt/6.4mm var(--f-body);
+  text-align:center; grid-row:span 3 }
+.n.m{ background:var(--teal) } .n.b{ background:var(--mustard) } .n.s{ background:var(--navy) }
+.voce h3{ font-size:11pt }
+.voce .dati{ font-size:7.4pt; color:var(--muted); margin:.4mm 0 1mm }
+.voce .dati b{ color:var(--ink); font-weight:600 }
+.voce .con-foto{ display:grid; grid-template-columns:1fr 30mm; gap:3mm; align-items:start }
+.voce .con-foto .foto{ height:22mm }
+.prezzo{ font-family:var(--f-body); font-weight:700; color:var(--teal); font-size:8pt; margin-left:1.5mm }
+
+/* ---------- mappa del capitolo ---------- */
+.mappa-pag{ padding:0 }
+.mappa-pag > img{ position:absolute; inset:0; width:100%; height:100% ; object-fit:cover }
+.mappa-pag .scala{ position:absolute; left:6mm; bottom:5mm; background:rgba(255,253,249,.94); border-radius:1.2mm; padding:1.6mm 2.4mm; font-size:6.6pt; color:var(--muted) }
+.legenda{ columns:2; column-gap:5mm; font-size:7.7pt; line-height:1.3 }
+.legenda h4{ font:700 8pt var(--f-body); color:var(--ink); margin:2.4mm 0 1mm; break-after:avoid; display:flex; align-items:center; gap:1.8mm }
+.legenda h4:first-child{ margin-top:0 }
+.legenda h4 i{ width:3mm; height:3mm; border-radius:50% }
+.legenda ol{ margin:0; padding:0; list-style:none }
+.legenda li{ display:grid; grid-template-columns:5mm 1fr auto; gap:1mm; padding:.45mm 0; break-inside:avoid }
+.legenda li b{ font-weight:700 }
+.legenda li span{ color:var(--muted) }
+
+/* ---------- passeggiata ---------- */
+.tappe{ margin:0; padding:0; list-style:none; position:relative }
+.tappe::before{ content:""; position:absolute; left:2.9mm; top:2mm; bottom:3mm; width:.9mm; background:var(--cap) }
+.tappe li{ position:relative; padding:0 0 2.6mm 9mm; font-size:8.4pt }
+.tappe li::before{ content:attr(data-n); position:absolute; left:0; top:-.3mm; width:6.6mm; height:6.6mm; border-radius:50%;
+  background:#fff; border:.8mm solid var(--cap); font:700 7pt/5mm var(--f-body); text-align:center; color:var(--ink) }
+.tappe b{ font-family:var(--f-display); font-size:9.8pt }
+.tappe .tempo{ color:var(--muted); font-size:7.4pt }
+
+.due{ display:grid; grid-template-columns:1fr 1fr; gap:4mm }
+.spinta{ margin-top:auto }   /* spinge un riquadro in fondo alla pagina */
+
+/* ---------- schermo stretto (sito sul telefono) ---------- */
+@media screen and (max-width: 640px){
+  body{ background:var(--paper); font-size:15px }
+  .page, .page.sx{ width:auto; height:auto; min-height:0; margin:0; padding:22px max(18px, env(safe-area-inset-right, 0px)) 26px max(18px, env(safe-area-inset-left, 0px));
+    border-bottom:1px solid #e2dacb; overflow:visible }
+  .linea, .folio, .testata{ display:none }
+  .foto.al, .sx .foto.al{ margin:0 -18px }
+  .apertura{ min-height:88vh }
+  .apertura .titolo{ left:20px; right:20px; bottom:28px }
+  .mappa-pag{ height:auto }
+  .mappa-pag > img{ position:static; height:auto }
+  .due, .voce .con-foto{ grid-template-columns:1fr }
+  .voce .con-foto .foto{ height:44vw }
+  .legenda{ columns:1 }
+  .foto[style*="height"]{ height:auto !important; aspect-ratio:3/2 }
+}
+
+.page{--cap:#b8402f}
+.lista-crediti{margin:0;padding:0;list-style:none;display:grid;gap:1.4mm;font-size:7pt;line-height:1.3}
+.lista-crediti span{color:var(--muted);word-break:break-all}
+
+.barra-web{display:none}
+@media screen{.barra-web{display:flex;gap:18px;justify-content:center;position:sticky;top:0;z-index:10;
+  padding:10px 16px;background:#1d2a44;font:600 14px var(--f-body)}.barra-web a{color:#fff;text-decoration:none}}
+@media print{.barra-web{display:none}}
+</style></head><body><nav class="barra-web"><a href="./">← Guida</a><a href="01-tower.pdf">Scarica il PDF</a><a href="../">Mappa</a></nav>
+<section class="page apertura" data-sez="1" data-nohead><div class="linea" aria-hidden="true"><i class="qui" style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div>
+  <img src="img/foto/apertura.jpg" alt="Tower Bridge all'ora blu, illuminato sul Tamigi">
+  <div class="velo"></div>
+  <div class="titolo">
+    <div class="num">Capitolo 1</div>
+    <h1>Tower, City e Aldgate</h1>
+    <p class="sotto">Una fortezza di mille anni, il ponte più fotografato del mondo e i grattacieli della City. Tutto a un quarto d'ora a piedi dal nostro hotel.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="1"><div class="linea" aria-hidden="true"><i class="qui" style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">2</div>
+  <p class="sezione">Perché andarci</p>
+  <h2>La Londra più antica, attaccata alla più nuova</h2>
+  <div class="testo">
+    <p class="lead">In poche strade si passa dalla Torre dove venivano rinchiusi i nemici del re ai grattacieli di vetro della finanza, fino ai mercati dell'East End dove ogni domenica si mangia il mondo.</p>
+    <p>È la zona in cui dormiamo, quindi la vivremo a tutte le ore: la mattina presto, quando la Torre apre e la luce entra tra le colonne di Trinity Square; il tardo pomeriggio, quando dallo Sky Garden si vede accendersi la città; la sera, quando Brick Lane si riempie di gente e di profumo di curry.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Il meglio del quartiere</h4>
+    <ol class="top-lista">
+      <li><b>1</b><span><strong>I gioielli della Corona</strong> alla Tower of London, prima che arrivi la coda.</span></li>
+      <li><b>2</b><span><strong>Il pavimento di vetro</strong> di Tower Bridge, 42 metri sopra il Tamigi.</span></li>
+      <li><b>3</b><span><strong>Il tramonto dallo Sky Garden</strong>, gratis, se si prenota al momento giusto.</span></li>
+      <li><b>4</b><span><strong>Leadenhall Market</strong>, il mercato vittoriano di Harry Potter.</span></li>
+      <li><b>5</b><span><strong>Un bagel caldo da Beigel Bake</strong>, aperto 24 ore su 24.</span></li>
+    </ol>
+  </div>
+  <dl class="info">
+    <dt>Arrivare</dt><dd>È casa nostra: Aldgate East (District, Hammersmith &amp; City) è a 3 minuti dall'hotel, Tower Hill (Circle, District) a una fermata.</dd>
+    <dt>Tempo</dt><dd>Due giornate piene; la Torre da sola chiede 2-3 ore.</dd>
+    <dt>Quando</dt><dd>La City si svuota nel weekend; l'East End dà il meglio la domenica.</dd>
+    <dt>Prenotare</dt><dd>Tower of London, Tower Bridge, Sky Garden, Horizon 22, cena da Dishoom.</dd>
+  </dl>
+</section>
+<section class="page mappa-pag" data-sez="2" data-nohead><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div>
+  <img src="img/mappa-tower.jpg" alt="Mappa del quartiere con i luoghi numerati">
+  <div class="scala">Numeri rossi: da vedere · verdi: mangiare · senape: dolci · H: il nostro hotel</div>
+</section>
+<section class="page sx" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">4</div>
+  <p class="sezione">La mappa</p>
+  <h2>Tutti i luoghi del capitolo</h2>
+  <div class="legenda">
+    <h4><i style="background:var(--cap)"></i>Top sight</h4>
+    <ol>
+      <li><b>1</b>Tower of London<span>p. 6</span></li>
+      <li><b>2</b>Tower Bridge<span>p. 8</span></li>
+      <li><b>3</b>Sky Garden<span>p. 10</span></li>
+    </ol>
+    <h4><i style="background:var(--cap)"></i>Da vedere</h4>
+    <ol>
+      <li><b>4</b>Horizon 22<span>p. 11</span></li>
+      <li><b>5</b>The Monument<span>p. 12</span></li>
+      <li><b>6</b>Leadenhall Market<span>p. 12</span></li>
+      <li><b>7</b>St Dunstan in the East<span>p. 12</span></li>
+      <li><b>8</b>All Hallows by the Tower<span>p. 13</span></li>
+      <li><b>9</b>Trinity Square<span>p. 13</span></li>
+      <li><b>10</b>St Katharine Docks<span>p. 13</span></li>
+      <li><b>11</b>Old Spitalfields Market<span>p. 14</span></li>
+      <li><b>12</b>Brick Lane<span>p. 14</span></li>
+      <li><b>13</b>Petticoat Lane Market<span>p. 14</span></li>
+      <li><b>14</b>Whitechapel Gallery<span>p. 14</span></li>
+      <li><b>15</b>Guildhall e anfiteatro romano<span>p. 15</span></li>
+      <li><b>16</b>Bank of England Museum<span>p. 15</span></li>
+    </ol>
+    <h4><i style="background:var(--teal)"></i>Mangiare</h4>
+    <ol>
+      <li><b>17</b>Dishoom Shoreditch<span>p. 18</span></li>
+      <li><b>18</b>Hawksmoor Spitalfields<span>p. 18</span></li>
+      <li><b>19</b>Poppies<span>p. 18</span></li>
+      <li><b>20</b>Tayyabs<span>p. 19</span></li>
+      <li><b>21</b>Upmarket e Ely's Yard<span>p. 19</span></li>
+    </ol>
+    <h4><i style="background:var(--mustard)"></i>Dolci e pub</h4>
+    <ol>
+      <li><b>22</b>Beigel Bake<span>p. 20</span></li>
+      <li><b>6</b>The Lamb Tavern, dentro Leadenhall<span>p. 20</span></li>
+    </ol>
+  </div>
+  <div class="riquadro spinta">
+    <h4>La mappa sul telefono</h4>
+    <p>Gli stessi luoghi sono sulla mappa online del viaggio, con le linee della metro e il percorso fino a ognuno: <b>felicevitulano.github.io/londra-2027</b>. Il filtro "Sab 6" mostra la giornata in questo quartiere.</p>
+  </div>
+</section>
+<section class="page" data-sez="3"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i class="qui" style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">5</div>
+  <p class="sezione">Orientarsi</p>
+  <h2>Tre mondi in un chilometro</h2>
+  <div class="testo">
+    <p><strong>Il fiume e la Torre.</strong> A sud, lungo il Tamigi, ci sono la fortezza, il ponte e la darsena di St Katharine Docks. È la Londra delle cartoline, ed è sempre piena.</p>
+    <p><strong>La City.</strong> Il "Square Mile" è la città romana e medievale, oggi il distretto della finanza: chiese di Wren schiacciate tra grattacieli con i soprannomi, il Walkie Talkie, il Gherkin, lo Scalpel. Dal lunedì al venerdì è un formicaio; il sabato e la domenica è quasi deserta, con molti negozi chiusi, ed è il momento migliore per fotografarla.</p>
+    <p><strong>L'East End.</strong> A nord e a est dell'hotel cominciano Aldgate, Whitechapel e Spitalfields: per secoli il quartiere degli immigrati (ugonotti, ebrei, poi bengalesi), oggi mercati, street art e il curry di Brick Lane.</p>
+  </div>
+  <div class="riquadro">
+    <h4>A piedi dall'hotel</h4>
+    <div class="due" style="font-size:8pt">
+      <div>Aldgate East: <b>3 min</b><br>Brick Lane (sud): <b>5 min</b><br>Whitechapel Gallery: <b>4 min</b><br>Spitalfields: <b>10 min</b></div>
+      <div>Horizon 22: <b>12 min</b><br>Tower of London: <b>15 min</b><br>Sky Garden: <b>15 min</b><br>Tower Bridge: <b>20 min</b></div>
+    </div>
+    <p class="piccolo" style="margin-top:1.5mm">Tempi a passo di famiglia, stimati sulla mappa.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Il buio arriva presto</h4>
+    <p>Dal 6 al 9 febbraio il sole tramonta tra le 16:59 e le 17:04, e alle 17:30 è notte. Le visite all'aperto vanno fatte entro il pomeriggio; il tramonto conviene guardarlo dall'alto, da Sky Garden o Horizon 22.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">6</div>
+  <div class="foto al" style="height:74mm;margin-top:-14mm"><img src="img/foto/tower.jpg" alt="La Tower of London vista dal Tamigi"></div>
+  <p class="sezione">Top sight · 1</p>
+  <h2>Tower of London</h2>
+  <div class="testo">
+    <p class="lead">Fortezza, palazzo reale, prigione, zecca, zoo: in quasi mille anni la Torre è stata tutto, e oggi custodisce la collezione di gioielli più famosa del mondo.</p>
+    <p>Guglielmo il Conquistatore fece costruire la <strong>White Tower</strong>, la torre bianca al centro, dopo aver conquistato l'Inghilterra nel 1066: doveva far capire ai londinesi chi comandava. Intorno sono cresciute due cerchie di mura, ventuno torri e un fossato. Qui sono state imprigionate e giustiziate due regine, Anna Bolena e Caterina Howard, e qui sparirono i due "principi nella torre", i nipoti di Riccardo III.</p>
+    <p>I prigionieri più importanti arrivavano in barca dal Tamigi, attraverso la <strong>Traitors' Gate</strong>, la porta dei traditori, che si vede ancora sotto la St Thomas's Tower. Oggi nella Torre vivono una trentina di Yeoman Warder con le loro famiglie: è un quartiere vero, con un pub riservato agli abitanti.</p>
+  </div>
+  <div class="riquadro spinta">
+    <h4>Lo sapevi?</h4>
+    <p>Per sei secoli la Torre ha ospitato lo zoo del re: leoni, elefanti e perfino un orso polare, regalato dal re di Norvegia nel 1252, che pescava nel Tamigi legato a una catena. Ogni sera, da circa 700 anni, la Torre viene chiusa con la Ceremony of the Keys, alle 21:53 in punto.</p>
+</section>
+<section class="page" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">7</div>
+  <div class="due">
+    <div class="foto" style="height:40mm"><img src="img/foto/yeoman.jpg" alt="Uno Yeoman Warder in uniforme"></div>
+    <div class="foto" style="height:40mm"><img src="img/foto/raven.jpg" alt="Un corvo della Torre"></div>
+  </div>
+  <div class="riquadro">
+    <h4>Da non perdere</h4>
+    <ul style="margin:0;padding-left:4mm;display:grid;gap:1mm">
+      <li><strong>Crown Jewels</strong>: la Corona di Stato, lo scettro con il Cullinan I, i tesori usati nelle incoronazioni. Si vedono da un tapis roulant, senza foto.</li>
+      <li><strong>Yeoman Warder tour</strong>: i "Beefeater" raccontano la Torre con molto umorismo. Incluso nel biglietto, partono vicino all'ingresso.</li>
+      <li><strong>I corvi</strong>: la leggenda dice che se lasciano la Torre cadranno la Torre e il regno. Ce ne sono sempre almeno sei.</li>
+      <li><strong>White Tower</strong>: armature di Enrico VIII e la cappella normanna di San Giovanni.</li>
+    </ul>
+  </div>
+  <dl class="info">
+    <dt>Orari</dt><dd>Sab 6 e mar 9: 9:00-16:30. Dom 7 e lun 8: 10:00-16:30. <b>Ultimo ingresso 15:00</b>, ultimo tour 14:30.</dd>
+    <dt>Prezzi</dt><dd>Adulti £38, ragazzi 5-17 £19. Niente biglietto famiglia: per noi 8, <b>£247</b>.</dd>
+    <dt>Prenotare</dt><dd>Online in anticipo: molti orari si esauriscono. hrp.org.uk</dd>
+    <dt>Metro</dt><dd>Tower Hill, 3 min. Dall'hotel 15 min a piedi.</dd>
+  </dl>
+  <div class="consiglio spinta">
+    <h4>Il trucco</h4>
+    <p>Entrare all'apertura e andare <b>subito ai gioielli</b>, prima che la coda cresca; poi unirsi a un tour degli Yeoman. In febbraio l'ultimo ingresso è alle 15: il pomeriggio è troppo corto per tutto.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="5"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i class="qui" style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">8</div>
+  <div class="foto al" style="height:80mm;margin-top:-14mm"><img src="img/foto/towerbridge.jpg" alt="Tower Bridge illuminato al crepuscolo"></div>
+  <p class="sezione">Top sight · 2</p>
+  <h2>Tower Bridge</h2>
+  <div class="testo">
+    <p class="lead">Lo chiamano London Bridge in metà del mondo, ma il London Bridge è quello accanto, piatto e anonimo. Questo è Tower Bridge, inaugurato nel 1894.</p>
+    <p>Fu progettato in stile neogotico perché non stonasse accanto alla Torre, ma sotto la pietra c'è un'ossatura d'acciaio. I due bracci si alzano ancora circa 500 volte l'anno per far passare le navi alte. Attraversarlo a piedi è gratis; il biglietto serve per salire sulle passerelle e scendere nella sala macchine.</p>
+    <p>Ci vollero otto anni e 432 operai per costruirlo, su progetto dell'architetto Horace Jones e dell'ingegnere John Wolfe Barry. Le passerelle in alto servivano ai pedoni quando il ponte era aperto, ma quasi nessuno ci saliva: furono chiuse nel 1910 e riaperte solo nel 1982 come museo.</p>
+  </div>
+  <div class="riquadro spinta">
+    <h4>Lo sapevi?</h4>
+    <p>Nel 1952 il ponte cominciò ad aprirsi mentre ci passava sopra un autobus a due piani: l'autista, Albert Gunter, accelerò e saltò il varco di quasi un metro. In origine il ponte era marrone scuro; i colori bianco e azzurro arrivano dal Giubileo d'argento della regina, nel 1977.</p>
+</section>
+<section class="page" data-sez="5"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i class="qui" style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">9</div>
+  <div class="foto" style="height:58mm"><img src="img/foto/glassfloor.jpg" alt="Il pavimento di vetro delle passerelle, con il traffico sotto"></div>
+  <p class="cap">Dal pavimento di vetro si vedono auto e autobus 42 metri più in basso.</p>
+  <div class="testo">
+    <p>Le <strong>passerelle alte</strong> collegano le due torri e hanno tratti di pavimento trasparente. Poi si scende nelle <strong>Engine Rooms</strong>, sul lato sud, con le macchine a vapore vittoriane che alzavano il ponte: sono un'uscita separata, non saltatele.</p>
+  </div>
+  <dl class="info">
+    <dt>Orari</dt><dd>Tutti i giorni 9:30-18:00, ultimo ingresso 17:00.</dd>
+    <dt>Prezzi</dt><dd>Adulti £18, 16-17 anni £13,50, 5-15 anni £9. Per noi 8: <b>£121,50</b>.</dd>
+    <dt>Prenotare</dt><dd>Online, circa 6 settimane prima. La coda è all'aperto anche con il biglietto. towerbridge.org.uk</dd>
+    <dt>Tempo</dt><dd>Un'ora, un'ora e mezza.</dd>
+  </dl>
+  <div class="consiglio spinta">
+    <h4>Il ponte che si apre sotto i piedi</h4>
+    <p>Gli orari in cui si alza il ponte sono online (towerbridge.org.uk/bridge-lifts) e quelli di febbraio escono verso gennaio. Essere sul vetro mentre il ponte si apre sotto è il momento migliore della visita. Entrando verso le 16 si vede anche il tramonto sul fiume.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="6"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i class="qui" style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">10</div>
+  <div class="foto al" style="height:78mm;margin-top:-14mm"><img src="img/foto/skygarden.jpg" alt="Il giardino coperto dello Sky Garden"></div>
+  <p class="sezione">Top sight · 3</p>
+  <h2>Sky Garden</h2>
+  <div class="testo">
+    <p class="lead">Un giardino tropicale sotto una cupola di vetro, al 35° piano, con tutta Londra intorno. E non si paga.</p>
+    <p>È in cima al <strong>20 Fenchurch Street</strong>, il grattacielo che i londinesi chiamano "Walkie Talkie" per la forma che si allarga verso l'alto. Dalla terrazza aperta si vedono lo Shard, Tower Bridge e il fiume; dentro ci sono piante, un bar e un ristorante. La sala è ventilata con l'aria esterna: tenete il cappotto.</p>
+    <p>Il grattacielo, progettato da Rafael Viñoly, è stato finito nel 2014. Prima ancora di essere completato si era guadagnato un altro soprannome, "Walkie Scorchie": nell'estate del 2013 la facciata curva concentrava i raggi del sole sulla strada e sciolse parti di un'auto parcheggiata in Eastcheap. Per risolvere il problema hanno aggiunto delle lamelle frangisole.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Orari</dt><dd>Lun-ven 10-18, sab-dom 11-21. Si resta <b>al massimo un'ora</b>.</dd>
+    <dt>Prezzi</dt><dd>Gratis, con biglietto a orario.</dd>
+    <dt>Metro</dt><dd>Monument, 3 min. Dall'hotel 15 min a piedi.</dd>
+  </dl>
+</section>
+<section class="page" data-sez="6"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i class="qui" style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">11</div>
+  <div class="riquadro">
+    <h4>Come prendere i biglietti</h4>
+    <ol class="tappe" style="margin-top:2mm">
+      <li data-n="1"><b>Lunedì 11 gennaio 2027</b><br>Escono i biglietti della settimana del 6-7 febbraio. Escono ogni lunedì mattina, tre settimane prima.</li>
+      <li data-n="2"><b>Lunedì 18 gennaio 2027</b><br>Escono quelli per l'8 e il 9 febbraio.</li>
+      <li data-n="3"><b>Scegliere le 16:00-16:30 del weekend</b><br>Con il tramonto alle 17 si vede la città passare dal giorno alla notte.</li>
+    </ol>
+    <p class="piccolo">Regole: un adulto può accompagnare al massimo 3 ragazzi sotto i 16 anni; gli adulti portano un documento. Niente valigie, niente cibo da fuori. Se i biglietti sono finiti, un brunch al Darwin Brasserie (sab-dom) include l'ingresso.</p>
+  </div>
+  <div class="voce" style="border:0;padding-top:1mm">
+    <div class="n">4</div>
+    <h3>Horizon 22, il piano B (o bis)</h3>
+    <div class="dati"><b>22 Bishopsgate</b> · Liverpool Street o Aldgate · gratis</div>
+    <div class="con-foto">
+      <p>La terrazza panoramica gratuita più alta d'Europa, al 58° piano, con ascensori da 41 secondi. Rispetto allo Sky Garden è tutta al chiuso dietro le vetrate, ma <strong>non ha limite di tempo</strong>. Si prenota solo su horizon22.co.uk, fino a 9 biglietti per prenotazione: entriamo tutti e 8 insieme.</p>
+      <div class="foto" style="height:34mm"><img src="img/foto/horizon.jpg" alt="Il grattacielo 22 Bishopsgate"></div>
+    </div>
+    <div class="dati" style="grid-column:2">Lun-ven 10-18, sab 10-17, dom 10-16. Dall'hotel 12 min a piedi.</div>
+  </div>
+  <div class="foto spinta" style="height:44mm"><img src="img/foto/walkie.jpg" alt="Il Walkie Talkie e i grattacieli della City visti dal Tamigi"></div>
+  <p class="cap">Il Walkie Talkie (a sinistra) e la City dal fiume: lo Sky Garden è nella parte più larga, in cima.</p>
+</section>
+<section class="page sx" data-sez="7"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i class="qui" style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">12</div>
+  <p class="sezione">Da vedere</p>
+  <div class="voce">
+    <div class="n">5</div>
+    <h3>The Monument</h3>
+    <div class="dati"><b>Fish Street Hill</b> · metro Monument · adulti £7, 5-15 anni £3,50 (per noi £49)</div>
+    <div class="con-foto">
+      <p>La colonna ricorda il Grande Incendio del 1666, che distrusse quasi tutta la città medievale. È alta 61 metri, quanto la distanza dal forno di Pudding Lane da cui partì il fuoco. Si sale a piedi: <strong>311 gradini</strong> su una scala a chiocciola stretta, poi un balcone in gabbia con vista sulla City.</p>
+      <div class="foto" style="height:30mm"><img src="img/foto/monument.jpg" alt="La scala a chiocciola del Monument vista dall'alto"></div>
+    </div>
+    <div class="dati" style="grid-column:2">9:30-13:00 e 14:00-18:00 (ultimo ingresso 12:30 e 17:30). Niente ascensore. Meglio all'apertura.</div>
+  </div>
+  <div class="voce">
+    <div class="n">6</div>
+    <h3>Leadenhall Market</h3>
+    <div class="dati"><b>Gracechurch Street</b> · metro Bank o Monument · gratis, aperto sempre</div>
+    <div class="con-foto">
+      <p>Un mercato coperto vittoriano in ferro e vetro, rosso, crema e oro, costruito nel 1881 dallo stesso architetto di Tower Bridge sopra il foro della Londra romana. Nel primo film di Harry Potter è la strada che porta al Paiolo Magico. Nel weekend è vuoto e silenzioso, perfetto per le foto; nei giorni feriali a pranzo è pieno di impiegati.</p>
+      <div class="foto" style="height:30mm"><img src="img/foto/leadenhall.jpg" alt="Il soffitto in ferro e vetro di Leadenhall Market"></div>
+    </div>
+  </div>
+  <div class="voce">
+    <div class="n">7</div>
+    <h3>St Dunstan in the East</h3>
+    <div class="dati"><b>St Dunstan's Hill</b> · metro Monument o Tower Hill · gratis</div>
+    <div class="con-foto">
+      <p>Una chiesa medievale bruciata nel 1666, ricostruita con il campanile di Wren e bombardata nel 1941. Dal 1971 è un giardino pubblico: alberi ed edera dentro le finestre gotiche senza vetri. Uno dei posti più fotografati di Londra.</p>
+      <div class="foto" style="height:30mm"><img src="img/foto/stdunstan.jpg" alt="Il giardino tra le rovine di St Dunstan in the East"></div>
+    </div>
+    <div class="dati" style="grid-column:2">Di solito 8:00 fino al tramonto: a febbraio andateci entro le 16:30.</div>
+  </div>
+</section>
+<section class="page" data-sez="7"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i class="qui" style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">13</div>
+  <div class="voce">
+    <div class="n">8</div>
+    <h3>All Hallows by the Tower</h3>
+    <div class="dati"><b>Byward Street</b> · metro Tower Hill · offerta libera</div>
+    <div class="con-foto">
+      <p>La chiesa più antica della City, fondata nel 675. Dal suo campanile Samuel Pepys guardò bruciare Londra nel 1666. Nella cripta ci sono un pavimento romano e un arco sassone.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/allhallows.jpg" alt="All Hallows by the Tower"></div>
+    </div>
+    <div class="dati" style="grid-column:2">Lun-ven 8-17, sab 10-17, dom 12:30-17. <b>I gruppi di più di 5 persone devono avvisare</b>: scrivere prima o entrare in due gruppi.</div>
+  </div>
+  <div class="voce">
+    <div class="n">9</div>
+    <h3>Trinity Square</h3>
+    <div class="dati"><b>Tower Hill</b> · davanti alla stazione · gratis</div>
+    <div class="con-foto">
+      <p>Il palazzo con il colonnato e la torre è l'ex sede del Porto di Londra (1922), oggi un hotel di lusso: in cima, la statua del Padre Tamigi indica il mare con il tridente. Nei giardini di fronte c'era il patibolo di Tower Hill, dove furono decapitati Tommaso Moro e Thomas Cromwell; accanto, il memoriale ai marinai delle due guerre e un pezzo delle mura romane.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/trinity.jpg" alt="L'ex sede del Porto di Londra a Trinity Square"></div>
+    </div>
+  </div>
+  <div class="voce">
+    <div class="n">10</div>
+    <h3>St Katharine Docks</h3>
+    <div class="dati"><b>Accanto a Tower Bridge, lato est</b> · metro Tower Hill · gratis</div>
+    <div class="con-foto">
+      <p>L'unica marina del centro di Londra: barche a vela e yacht tra vecchi magazzini, ristoranti e caffè. Una passeggiata tranquilla di mezz'ora dopo la Torre e il ponte, lontano dalla folla.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/stkatharine.jpg" alt="Barche a St Katharine Docks"></div>
+    </div>
+  </div>
+</section>
+<section class="page sx" data-sez="7"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i class="qui" style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">14</div>
+  <div class="voce">
+    <div class="n">11</div>
+    <h3>Old Spitalfields Market</h3>
+    <div class="dati"><b>Commercial Street</b> · 10 min dall'hotel · gratis</div>
+    <div class="con-foto">
+      <p>Un grande mercato coperto vittoriano con bancarelle di moda, design e artigianato e, intorno, cucine di strada di tutto il mondo. La domenica è il giorno più vivace e si abbina a Brick Lane.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/spitalfields.jpg" alt="Folla tra i banchi di Old Spitalfields Market"></div>
+    </div>
+    <div class="dati" style="grid-column:2">Sab 10-18, dom 10-17, lun-mar 10-20.</div>
+  </div>
+  <div class="voce">
+    <div class="n">12</div>
+    <h3>Brick Lane</h3>
+    <div class="dati"><b>A 5 minuti dall'hotel</b> · gratis</div>
+    <div class="con-foto">
+      <p>La via del curry e della street art. I murales cambiano di continuo: i più belli sono nelle traverse, Hanbury Street, Fashion Street, Princelet Street, Grimsby Street. Nella vecchia birreria Truman ci sono mercati vintage e un food hall aperti tutti i giorni; la domenica tutto il quartiere diventa un mercato.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/brick.jpg" alt="Murales in un cortile di Brick Lane"></div>
+    </div>
+  </div>
+  <div class="voce">
+    <div class="n">13</div>
+    <h3>Petticoat Lane Market</h3>
+    <div class="dati"><b>Middlesex Street e Wentworth Street</b> · 3-5 min dall'hotel</div>
+    <p>Il mercato storico dell'abbigliamento a buon mercato. Il grande mercato è <strong>solo la domenica mattina</strong>, più o meno fino alle 14; nei giorni feriali resta qualche banco su Wentworth Street.</p>
+  </div>
+  <div class="voce">
+    <div class="n">14</div>
+    <h3>Whitechapel Gallery</h3>
+    <div class="dati"><b>77-82 Whitechapel High Street</b> · 4 min dall'hotel · sale gratis</div>
+    <p>Galleria d'arte contemporanea aperta nel 1901: nel 1939 qui fu esposta Guernica di Picasso. Ottimo rifugio se piove. <strong>Chiusa il lunedì</strong>; la mostra a pagamento costa £16,50 ed è gratis sotto i 16 anni.</p>
+  </div>
+</section>
+<section class="page" data-sez="7"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i class="qui" style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">15</div>
+  <div class="voce">
+    <div class="n">15</div>
+    <h3>Guildhall e l'anfiteatro romano</h3>
+    <div class="dati"><b>Guildhall Yard</b> · metro Bank, St Paul's o Moorgate · gratis</div>
+    <div class="con-foto">
+      <p>Il municipio medievale della City affaccia su una piazza dove una linea scura nel selciato disegna il contorno dell'anfiteatro romano. Sotto la galleria d'arte ci sono i resti veri, scoperti nel 1988, con luci e suoni che ricostruiscono l'arena.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/guildhall.jpg" alt="Guildhall Yard"></div>
+    </div>
+    <div class="dati" style="grid-column:2">Tutti i giorni 10-17, ultimo ingresso 16:45.</div>
+  </div>
+  <div class="voce">
+    <div class="n">16</div>
+    <h3>Bank of England Museum</h3>
+    <div class="dati"><b>Bartholomew Lane</b> · metro Bank · gratis</div>
+    <p>Il museo della banca centrale: monete, banconote, storia della sterlina e, se c'è ancora, il lingotto d'oro vero da 13 chili che si prova a sollevare infilando la mano in una teca. <strong>Aperto solo dal lunedì al venerdì</strong>, 10-17: per noi lunedì 8 o martedì 9.</p>
+  </div>
+  <div class="riquadro spinta">
+    <h4>Sotto i piedi, Londinium</h4>
+    <p>La City è costruita sopra la città romana. Ne restano pezzi in vista: le mura accanto alla stazione di Tower Hill, l'anfiteatro sotto Guildhall, il pavimento nella cripta di All Hallows. Leadenhall Market sta sopra il foro e la basilica romana, che era l'edificio più grande a nord delle Alpi.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">16</div>
+  <p class="sezione">Passeggiata</p>
+  <h2>Dalla Torre ai tetti della City</h2>
+  <p class="piccolo">Circa 4 km · 3 ore con le soste · meglio sabato, finendo allo Sky Garden al tramonto</p>
+  <div class="foto al" style="height:38mm"><img src="img/foto/skyline.jpg" alt="Il Tamigi e la City al crepuscolo"></div>
+  <ol class="tappe">
+    <li data-n="1"><b>Hotel → Trinity Square</b> <span class="tempo">15 min</span><br>Lungo Mansell Street fino a Tower Hill: colonnato, mura romane, memoriale ai marinai.</li>
+    <li data-n="2"><b>Tower of London</b> <span class="tempo">2-3 ore</span><br>Entrando all'apertura si esce per l'ora di pranzo.</li>
+    <li data-n="3"><b>Tower Bridge e ritorno</b> <span class="tempo">30 min</span><br>Si attraversa gratis: la foto migliore della Torre è dal lato sud.</li>
+    <li data-n="4"><b>All Hallows e St Dunstan in the East</b> <span class="tempo">20 min</span><br>Le due chiese più antiche, a cinque minuti l'una dall'altra.</li>
+    <li data-n="5"><b>The Monument</b> <span class="tempo">40 min</span><br>311 gradini: chi non li vuole fare aspetta al caffè.</li>
+    <li data-n="6"><b>Leadenhall Market</b> <span class="tempo">20 min</span><br>Il mercato di Harry Potter, vuoto e perfetto per le foto.</li>
+    <li data-n="7"><b>Sky Garden</b> <span class="tempo">1 ora</span><br>Con il biglietto delle 16:00-16:30, per vedere la città accendersi.</li>
+  </ol>
+</section>
+<section class="page" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">17</div>
+  <p class="sezione">Passeggiata</p>
+  <h2>East End, la domenica</h2>
+  <p class="piccolo">Circa 3 km · mezza giornata · domenica 10-15, quando sono aperti tutti i mercati</p>
+  <div class="foto" style="height:52mm"><img src="img/foto/beigel.jpg" alt="La fila davanti a Beigel Bake su Brick Lane"></div>
+  <ol class="tappe">
+    <li data-n="1"><b>Hotel → Petticoat Lane</b> <span class="tempo">5 min</span><br>Il mercato della domenica su Middlesex Street, che chiude verso le 14.</li>
+    <li data-n="2"><b>Old Spitalfields Market</b> <span class="tempo">1 ora</span><br>Bancarelle e un primo assaggio alle cucine di strada.</li>
+    <li data-n="3"><b>Fournier Street e Princelet Street</b> <span class="tempo">15 min</span><br>Case georgiane dei tessitori ugonotti, porte colorate.</li>
+    <li data-n="4"><b>Brick Lane</b> <span class="tempo">1 ora</span><br>Street art nelle traverse, mercati vintage e food hall nella birreria Truman.</li>
+    <li data-n="5"><b>Beigel Bake</b> <span class="tempo">15 min</span><br>In fondo a Brick Lane: bagel con salt beef caldo, da mangiare in strada.</li>
+    <li data-n="6"><b>Ritorno in hotel</b> <span class="tempo">15 min</span><br>Lungo Brick Lane verso sud, oppure una fermata da Shoreditch High Street.</li>
+  </ol>
+</section>
+<section class="page sx" data-sez="9"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i class="qui" style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">18</div>
+  <p class="sezione">Mangiare</p>
+  <h2>Dove mangiare in otto</h2>
+  <p class="piccolo">£ meno di £12 a testa · ££ £15-30 · £££ oltre £40</p>
+  <div class="voce">
+    <div class="n m">17</div>
+    <h3>Dishoom Shoreditch <span class="prezzo">££</span></h3>
+    <div class="dati"><b>7 Boundary Street</b> · Shoreditch High Street, 15 min dall'hotel</div>
+    <p>Il locale indiano più amato di Londra, ispirato ai caffè persiani di Bombay: piatti da dividere, naan al formaggio, chai. Dopo le 18 prende prenotazioni <strong>solo per gruppi da 6 in su</strong>: per noi è perfetto. Si prenota online fino a 4 mesi prima; senza prenotazione la sera si aspetta 30-60 minuti.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">18</div>
+    <h3>Hawksmoor Spitalfields <span class="prezzo">£££</span></h3>
+    <div class="dati"><b>157a Commercial Street</b> · 10 min dall'hotel</div>
+    <p>Bistecche alla griglia di carbone, tra le migliori della città. Il menu fisso a pranzo e a inizio serata (£26 due portate, £30 tre) lo rende abbordabile. Per i gruppi c'è un modulo di richiesta sul sito; la domenica fanno il roast.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">19</div>
+    <h3>Poppies <span class="prezzo">££</span></h3>
+    <div class="dati"><b>6-8 Hanbury Street</b> · 10 min dall'hotel</div>
+    <p>Fish and chips come negli anni '50, servito nella carta stampata come i giornali di una volta. Si prenota dal sito. Una tappa naturale nella passeggiata della domenica.</p>
+  </div>
+</section>
+<section class="page" data-sez="9"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i class="qui" style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">19</div>
+  <div class="voce">
+    <div class="n m">20</div>
+    <h3>Tayyabs <span class="prezzo">£-££</span></h3>
+    <div class="dati"><b>83-89 Fieldgate Street</b> · 8 min dall'hotel · tutti i giorni 12-23:30</div>
+    <p>Un'istituzione di Whitechapel: cucina punjabi, costolette d'agnello alla griglia, sala rumorosa e sempre piena. Le bevande si portano da fuori. Si prenota per telefono (020 7247 9543) o online.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">21</div>
+    <h3>Upmarket e Ely's Yard <span class="prezzo">£-££</span></h3>
+    <div class="dati"><b>Brick Lane, birreria Truman</b> · 7 min dall'hotel</div>
+    <p>Più di 40 banchi di cucina di strada al coperto e furgoni nel cortile: ognuno sceglie il suo, che con le ragazze è la soluzione più semplice. Upmarket lun-sab 11-18, dom 10-18; Ely's Yard tutti i giorni 11-23. Non si prenota.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Mangiare in otto senza stress</h4>
+    <ul style="margin:0;padding-left:4mm;display:grid;gap:1mm">
+      <li>Per i ristoranti con servizio <strong>prenotate sempre</strong>: in otto, senza prenotazione, si aspetta o non si entra.</li>
+      <li>Il servizio (12,5%) è spesso già nel conto: controllate prima di lasciare la mancia.</li>
+      <li>A pranzo funzionano meglio mercati e food hall; la sera conviene un posto prenotato vicino all'hotel.</li>
+      <li>Per una cena tipica inglese, pie and mash e pub: vedi il capitolo Covent Garden e il documento dei ristoranti.</li>
+    </ul>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Gli orari dei pasti</h4>
+    <p>A Londra si pranza tra le 12 e le 14 e si cena presto, tra le 18 e le 21: dopo le 21:30 molte cucine chiudono, soprattutto la domenica. Nella City nel weekend molti locali sono chiusi; l'East End invece è aperto tutti i giorni.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">20</div>
+  <p class="sezione">Dolci, pub e shopping</p>
+  <div class="voce">
+    <div class="n b">22</div>
+    <h3>Beigel Bake <span class="prezzo">£</span></h3>
+    <div class="dati"><b>159 Brick Lane</b> · aperto 24 ore su 24, tutti i giorni</div>
+    <p>Bagel bolliti e poi cotti al forno, sfornati giorno e notte. Il classico è il <strong>salt beef</strong>, manzo salato caldo con senape: circa £7-9. Quelli semplici costano molto meno. C'è sempre fila, ma scorre veloce.</p>
+  </div>
+  <div class="voce">
+    <div class="n b">6</div>
+    <h3>The Lamb Tavern <span class="prezzo">££</span></h3>
+    <div class="dati"><b>Dentro Leadenhall Market</b> · lun-sab 11-23, dom 12-17</div>
+    <p>Un pub vittoriano sotto le volte del mercato, con il roast la domenica. Di solito i ragazzi con gli adulti sono ammessi per mangiare: chiedete all'ingresso.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Shopping</h4>
+    <p style="margin-bottom:1.2mm"><strong>Old Spitalfields Market</strong>: abbigliamento di piccoli marchi, gioielli, design.</p>
+    <p style="margin-bottom:1.2mm"><strong>Brick Lane Vintage Market</strong> (85 Brick Lane): vintage anni '70-'90, tutti i giorni.</p>
+    <p><strong>Leadenhall Market</strong>: negozi aperti soprattutto nei giorni feriali.</p>
+  </div>
+  <div class="foto spinta" style="height:50mm"><img style="object-position:50% 42%" src="img/foto/truman.jpg" alt="La ciminiera della vecchia birreria Truman su Brick Lane"></div>
+  <p class="cap">La vecchia birreria Truman su Brick Lane: dentro ci sono i mercati vintage e il food hall.</p>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Nei pub con i ragazzi</h4>
+    <p>Sotto i 18 anni non si può comprare alcol. I minori di 16 anni possono entrare in un pub solo con un adulto, e ogni locale decide se accettarli e fino a che ora: di giorno e per mangiare quasi sempre sì, la sera spesso no. Chiedete al banco prima di sedervi.</p>
+  </div>
+</section>
+<section class="page" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">21</div>
+  <p class="sezione">Il consiglio di TikTok</p>
+  <h2>Le dritte dai video del gruppo</h2>
+  <div class="foto" style="height:58mm"><img src="img/foto/trinity.jpg" alt="Il colonnato di Trinity Square"></div>
+  <div class="consiglio">
+    <h4>Trinity Square, la mattina</h4>
+    <p>Il colonnato prende una luce bellissima nelle prime ore. Prima tappa perfetta uscendo dall'hotel, prima della Torre.</p>
+  </div>
+  <div class="consiglio">
+    <h4>Sky Garden: se è tutto esaurito</h4>
+    <p>Prima il walk-in, se c'è posto e non dopo le 17 nei giorni feriali; oppure Horizon 22, che non ha limite di tempo.</p>
+  </div>
+  <div class="consiglio">
+    <h4>Tower Bridge da dentro</h4>
+    <p>Il pavimento di vetro vale il biglietto. Nei video costava £15,80; oggi è £18 per gli adulti.</p>
+  </div>
+  <p class="piccolo spinta">Dai video di @thevisuallife, @spensierati.in.viaggio e @volga_londonstories, girati da Miriam il 17 ottobre 2026.</p>
+</section>
+<section class="page sx" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">22</div>
+  <p class="sezione">Prima di partire</p>
+  <h2>Cosa prenotare per questo quartiere</h2>
+  <ol class="tappe" style="margin-top:1mm">
+    <li data-n="1"><b>Da subito</b><br>Cena da Dishoom per 8: si prenota fino a 4 mesi prima, quindi già da inizio ottobre per febbraio.</li>
+    <li data-n="2"><b>Fine dicembre</b><br>Tower Bridge (online, circa 6 settimane prima). Tower of London appena il giorno è deciso.</li>
+    <li data-n="3"><b>Inizio gennaio</b><br>Horizon 22 (i biglietti escono probabilmente 30 giorni prima, alle 10). Mail ad All Hallows se ci andiamo in 8.</li>
+    <li data-n="4"><b>Lunedì 11 gennaio</b><br>Sky Garden per sabato 6 o domenica 7, slot delle 16:00-16:30.</li>
+    <li data-n="5"><b>Lunedì 18 gennaio</b><br>Sky Garden per lunedì 8 o martedì 9, se serve.</li>
+  </ol>
+  <div class="riquadro">
+    <h4>Da ricontrollare a gennaio</h4>
+    <p>Prezzi e orari (in questa guida sono quelli di ottobre 2026), gli orari di apertura del ponte, l'ascensore dello Sky Garden (a ottobre uno era fuori servizio), le mostre della Whitechapel Gallery e il lingotto del Bank of England Museum.</p>
+  </div>
+  <div class="riquadro spinta" style="background:var(--teal-tint)">
+    <h4>Biglietti del quartiere, per noi 8</h4>
+    <div class="due" style="font-size:8pt">
+      <div>Tower of London<br>Tower Bridge<br>The Monument<br>Sky Garden, Horizon 22<br><b>Totale</b></div>
+      <div style="text-align:right">£247,00<br>£121,50<br>£49,00<br>gratis<br><b>£417,50</b></div>
+    </div>
+  </div>
+</section>
+<section class="page crediti" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Tower, City e Aldgate</span><span>Quartieri</span></div><div class="folio">23</div><p class="sezione">Crediti fotografici</p><h2>Le foto di questo capitolo</h2><p class="piccolo">Foto da Wikimedia Commons, pubblicate con licenze Creative Commons o in pubblico dominio. Mappe: Esri, HERE, Garmin e i contributori di OpenStreetMap. Linee della metro: OpenStreetMap.</p><ul class="lista-crediti"><li><b>apertura</b>: Diliff, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Tower_bridge_London_Twilight_-_November_2006.jpg</span></li><li><b>tower</b>: Bob Collowan, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Tower_of_London_viewed_from_the_River_Thames.jpg</span></li><li><b>yeoman</b>: PRA, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Yeoman_Warder_-_Beefeater.JPG</span></li><li><b>raven</b>: Colin, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Jubilee_and_Munin,_Ravens,_Tower_of_London_2016-04-30.jpg</span></li><li><b>towerbridge</b>: Diliff, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Tower_Bridge_London_Feb_2006.jpg</span></li><li><b>glassfloor</b>: Tristan Surtel, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Tower_Bridge_walkway.jpg</span></li><li><b>skygarden</b>: Colin, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:The_Sky_Garden.jpg</span></li><li><b>horizon</b>: sebastiandoe5, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:22_Bishopsgate_From_Bank.jpg</span></li><li><b>walkie</b>: Diego Delso, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Walkie-Talkie,_edificio_Leadenhall_y_Gherkin,_Londres,_Inglaterra,_2014-08-11,_DD_087.JPG</span></li><li><b>monument</b>: David Barrie from London, England, CC BY 2.0, <span>commons.wikimedia.org/wiki/File:311_Steps,_Monument,_London_-_Flickr_-_David_Barrie.jpg</span></li><li><b>leadenhall</b>: It&#x27;s No Game, CC BY 2.0, <span>commons.wikimedia.org/wiki/File:Leadenhall_Market_(50374627401).jpg</span></li><li><b>stdunstan</b>: Peter Trimming from Croydon, England, CC BY 2.0, <span>commons.wikimedia.org/wiki/File:St.Dunstan_in_the_East_Church_Garden_(6127229857).jpg</span></li><li><b>allhallows</b>: Katie Chan, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:EH1064671_Church_of_All_Hallows_by_the_Tower_01.JPG</span></li><li><b>trinity</b>: Harry Mitchell, CC BY 4.0, <span>commons.wikimedia.org/wiki/File:Port_of_London_Authority_building,_Trinity_Square_(2).JPG</span></li><li><b>stkatharine</b>: Jodiepedia, CC0, <span>commons.wikimedia.org/wiki/File:45_Nao_Santa_Maria_in_the_lock_at_St_Katharine_Docks_-_IMG_5780_-_Nao.jpg</span></li><li><b>spitalfields</b>: Acabashi, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Spitalfields_Market_interior_Tower_Hamlets_London_England_01.jpg</span></li><li><b>brick</b>: Robert Lamb, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:View_of_street_art_in_a_yard_off_Brick_Lane_-_geograph.org.uk_-_5514087.jpg</span></li><li><b>guildhall</b>: 3BRBS, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Guildhall_+_Roman_amphitheatre_on_the_Guildhall_Yard_-_Left_Side_Panorama_02.jpg</span></li><li><b>skyline</b>: mattbuck, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:London_MMB_»053_River_Thames_and_the_City.jpg</span></li><li><b>beigel</b>: Bex Walton from London, England, CC BY 2.0, <span>commons.wikimedia.org/wiki/File:Beigel_Bake,_Brick_Lane_(33936265604).jpg</span></li><li><b>truman</b>: Jim Osley, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Truman_Brewery_chimney,_Brick_Lane_-_geograph.org.uk_-_3290697.jpg</span></li></ul></section>
+<script>
+// segnala le pagine troppo piene (in stampa il testo verrebbe tagliato)
+window.addEventListener('load', () => {
+  const piene = [...document.querySelectorAll('.page')].filter(p => p.scrollHeight > p.clientHeight + 2)
+    .map((p, i) => p.querySelector('.folio')?.textContent || 'apertura');
+  document.body.dataset.piene = piene.join(',');
+});
+</script>
+</body></html>
