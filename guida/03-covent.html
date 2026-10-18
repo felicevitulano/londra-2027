@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Covent Garden, Soho e Chinatown · Guida di Londra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>/* Guida di Londra — stile delle pagine.
+   Stampa: pagine A5 fisse (148 x 210 mm). Schermo: le stesse pagine una sotto l'altra, fluide sotto i 640 px.
+   Ogni capitolo è una "linea della metro" del suo colore (--cap) che corre sul bordo esterno,
+   con una fermata per sezione: la fermata accesa dice dove sei nel capitolo. */
+
+:root{
+  --ink:#1d2a44;        /* blu notte: testo e titoli */
+  --muted:#5f6472;
+  --paper:#fffdf9;      /* carta quasi bianca, per foto nitide */
+  --sand:#f2ebde;       /* fondi dei riquadri */
+  --red:#b8402f; --teal:#2f7272; --mustard:#c08a25; --navy:#26375c;
+  --teal-tint:#e6f0ee; --mustard-tint:#f7eedb;
+  --cap:var(--red);     /* colore del capitolo, ridefinito su ogni capitolo */
+  --f-display:"Fraunces", Georgia, serif;
+  --f-body:"Figtree", "Helvetica Neue", Arial, sans-serif;
+}
+@page{ size:148mm 210mm; margin:0 }
+*{ box-sizing:border-box }
+html{ -webkit-print-color-adjust:exact; print-color-adjust:exact }
+body{ margin:0; background:#e7e2d8; color:var(--ink); font:400 8.9pt/1.45 var(--f-body); font-variant-numeric:tabular-nums }
+img{ display:block; max-width:100% }
+a{ color:inherit }
+
+/* ---------- pagina ---------- */
+.page{ width:148mm; height:210mm; margin:0 auto 6mm; background:var(--paper); position:relative; overflow:hidden;
+  padding:14mm 17mm 15mm 13mm; break-after:page; display:flex; flex-direction:column; gap:3.2mm }
+.page.sx{ padding:14mm 13mm 15mm 17mm }               /* pagina pari: margine esterno a sinistra */
+@media print{ body{ background:none } .page{ margin:0 } }
+
+.testata{ position:absolute; top:6.5mm; left:13mm; right:17mm; display:flex; justify-content:space-between;
+  font:500 6.8pt var(--f-body); color:var(--muted) }
+.sx .testata{ left:17mm; right:13mm; flex-direction:row-reverse }
+.folio{ position:absolute; bottom:6.5mm; right:17mm; font:600 7.5pt var(--f-body); color:var(--ink) }
+.sx .folio{ right:auto; left:17mm }
+
+/* linea della metro sul bordo esterno */
+.linea{ position:absolute; top:0; bottom:0; right:5.2mm; width:2.2mm; background:var(--cap) }
+.sx .linea{ right:auto; left:5.2mm }
+.linea i{ position:absolute; left:50%; width:4.2mm; height:4.2mm; margin-left:-2.1mm; border-radius:50%;
+  background:#fff; border:.9mm solid var(--cap) }
+.linea i.qui{ width:5.6mm; height:5.6mm; margin-left:-2.8mm; background:var(--ink); border-color:#fff; box-shadow:0 0 0 .6mm var(--cap) }
+
+/* ---------- tipografia ---------- */
+h1,h2,h3,h4{ font-family:var(--f-display); margin:0; color:var(--ink); text-wrap:balance; font-optical-sizing:auto }
+h2{ font-size:21pt; line-height:1.02; font-weight:800; letter-spacing:-.01em }
+h3{ font-size:12.5pt; line-height:1.15; font-weight:700 }
+h4{ font-size:10pt; font-weight:700 }
+p{ margin:0 }
+.testo p + p{ margin-top:2.2mm }
+.testo{ hyphens:auto; -webkit-hyphens:auto }
+.lead{ font:400 11pt/1.38 var(--f-display); color:var(--ink) }
+.sezione{ font:600 8pt var(--f-body); color:var(--cap) }       /* nome della sezione sopra il titolo */
+.piccolo{ font-size:7.6pt; color:var(--muted) }
+.cap{ font-size:6.8pt; color:var(--muted); margin-top:1.2mm; font-style:italic }
+
+/* ---------- foto ---------- */
+.foto{ position:relative; overflow:hidden; border-radius:1.2mm; flex:none }
+.foto img{ width:100%; height:100%; object-fit:cover }
+.foto.al{ margin:0 -17mm 0 -13mm; border-radius:0 }            /* al vivo orizzontale */
+.sx .foto.al{ margin:0 -13mm 0 -17mm }
+
+/* ---------- apertura capitolo ---------- */
+.apertura{ padding:0 }
+.apertura > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover }
+.apertura .velo{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,28,46,.0) 35%, rgba(20,28,46,.86) 82%) }
+.apertura .titolo{ position:absolute; left:13mm; right:17mm; bottom:16mm; color:#fff }
+.apertura .num{ font:600 8pt var(--f-body); color:#fff; opacity:.85 }
+.apertura h1{ font-size:38pt; line-height:.95; font-weight:900; color:#fff; margin:2mm 0 4mm }
+.apertura .sotto{ font:400 10.5pt/1.35 var(--f-display); max-width:100mm; opacity:.95 }
+
+/* ---------- riquadri ---------- */
+.info{ background:var(--teal-tint); border-radius:1.5mm; padding:3mm 3.5mm; display:grid;
+  grid-template-columns:15mm 1fr; gap:1.1mm 3mm; font-size:7.9pt; line-height:1.35; flex:none }
+.info dt{ font-weight:700; color:var(--teal) }
+.info dd{ margin:0 }
+.consiglio{ background:var(--mustard-tint); border-radius:1.5mm; padding:3mm 3.5mm; font-size:8.4pt; flex:none }
+.consiglio h4{ color:#8a5f12; margin-bottom:1mm; display:flex; align-items:center; gap:2mm }
+.consiglio h4::before{ content:""; width:3.4mm; height:3.4mm; border-radius:50%; border:.8mm solid var(--mustard); flex:none }
+.riquadro{ background:var(--sand); border-radius:1.5mm; padding:3.2mm 3.6mm; font-size:8.4pt; flex:none }
+.riquadro h4{ margin-bottom:1.2mm }
+.top-lista{ margin:0; padding:0; list-style:none; display:grid; gap:1.4mm }
+.top-lista li{ display:grid; grid-template-columns:5mm 1fr; gap:2mm; align-items:baseline }
+.top-lista b{ font-family:var(--f-display); font-weight:800; color:var(--cap); font-size:10pt }
+
+/* ---------- schede (da vedere, mangiare...) ---------- */
+.voce{ display:grid; grid-template-columns:6.4mm 1fr; gap:0 2.6mm; break-inside:avoid }
+.voce + .voce{ padding-top:2.6mm; border-top:.25mm solid #e2dacb }
+.n{ width:6.4mm; height:6.4mm; border-radius:50%; background:var(--cap); color:#fff; font:700 7.6pt/6.4mm var(--f-body);
+  text-align:center; grid-row:span 3 }
+.n.m{ background:var(--teal) } .n.b{ background:var(--mustard) } .n.s{ background:var(--navy) }
+.voce h3{ font-size:11pt }
+.voce .dati{ font-size:7.4pt; color:var(--muted); margin:.4mm 0 1mm }
+.voce .dati b{ color:var(--ink); font-weight:600 }
+.voce .con-foto{ display:grid; grid-template-columns:1fr 30mm; gap:3mm; align-items:start }
+.voce .con-foto .foto{ height:22mm }
+.prezzo{ font-family:var(--f-body); font-weight:700; color:var(--teal); font-size:8pt; margin-left:1.5mm }
+
+/* ---------- mappa del capitolo ---------- */
+.mappa-pag{ padding:0 }
+.mappa-pag > img{ position:absolute; inset:0; width:100%; height:100% ; object-fit:cover }
+.mappa-pag .scala{ position:absolute; left:6mm; bottom:5mm; background:rgba(255,253,249,.94); border-radius:1.2mm; padding:1.6mm 2.4mm; font-size:6.6pt; color:var(--muted) }
+.legenda{ columns:2; column-gap:5mm; font-size:7.7pt; line-height:1.3 }
+.legenda h4{ font:700 8pt var(--f-body); color:var(--ink); margin:2.4mm 0 1mm; break-after:avoid; display:flex; align-items:center; gap:1.8mm }
+.legenda h4:first-child{ margin-top:0 }
+.legenda h4 i{ width:3mm; height:3mm; border-radius:50% }
+.legenda ol{ margin:0; padding:0; list-style:none }
+.legenda li{ display:grid; grid-template-columns:5mm 1fr auto; gap:1mm; padding:.45mm 0; break-inside:avoid }
+.legenda li b{ font-weight:700 }
+.legenda li span{ color:var(--muted) }
+
+/* ---------- passeggiata ---------- */
+.tappe{ margin:0; padding:0; list-style:none; position:relative }
+.tappe::before{ content:""; position:absolute; left:2.9mm; top:2mm; bottom:3mm; width:.9mm; background:var(--cap) }
+.tappe li{ position:relative; padding:0 0 2.6mm 9mm; font-size:8.4pt }
+.tappe li::before{ content:attr(data-n); position:absolute; left:0; top:-.3mm; width:6.6mm; height:6.6mm; border-radius:50%;
+  background:#fff; border:.8mm solid var(--cap); font:700 7pt/5mm var(--f-body); text-align:center; color:var(--ink) }
+.tappe b{ font-family:var(--f-display); font-size:9.8pt }
+.tappe .tempo{ color:var(--muted); font-size:7.4pt }
+
+.due{ display:grid; grid-template-columns:1fr 1fr; gap:4mm }
+.spinta{ margin-top:auto }   /* spinge un riquadro in fondo alla pagina */
+
+/* ---------- schermo stretto (sito sul telefono) ---------- */
+@media screen and (max-width: 640px){
+  body{ background:var(--paper); font-size:15px }
+  .page, .page.sx{ width:auto; height:auto; min-height:0; margin:0; padding:22px max(18px, env(safe-area-inset-right, 0px)) 26px max(18px, env(safe-area-inset-left, 0px));
+    border-bottom:1px solid #e2dacb; overflow:visible }
+  .linea, .folio, .testata{ display:none }
+  .foto.al, .sx .foto.al{ margin:0 -18px }
+  .apertura{ min-height:88vh }
+  .apertura .titolo{ left:20px; right:20px; bottom:28px }
+  .mappa-pag{ height:auto }
+  .mappa-pag > img{ position:static; height:auto }
+  .due, .voce .con-foto{ grid-template-columns:1fr }
+  .voce .con-foto .foto{ height:44vw }
+  .legenda{ columns:1 }
+  .foto[style*="height"]{ height:auto !important; aspect-ratio:3/2 }
+  /* sul telefono i caratteri in punti tipografici diventerebbero minuscoli */
+  .riquadro, .consiglio, .tappe li, .card p{ font-size:14.5px }
+  .info, .legenda, .voce .dati, .piccolo, .cap, .lista-crediti{ font-size:13px }
+  .info{ grid-template-columns:76px 1fr }
+  .lead{ font-size:18px } h2{ font-size:30px } .voce h3{ font-size:19px } h3{ font-size:19px } h4{ font-size:16px }
+  .n{ width:28px; height:28px; font-size:13px; line-height:28px }
+  .voce{ grid-template-columns:28px 1fr; gap:0 12px }
+  .riquadro [style*="font-size"]{ font-size:14px !important }
+  .riquadro [style*="grid-template-columns:13mm"]{ grid-template-columns:72px 1fr !important }
+  .riquadro [style*="grid-template-columns:24mm"]{ grid-template-columns:96px 1fr !important }
+}
+
+.page{--cap:#6b3a5d}
+.lista-crediti{margin:0;padding:0;list-style:none;display:grid;gap:1.4mm;font-size:7pt;line-height:1.3}
+.lista-crediti span{color:var(--muted);word-break:break-all}
+.appunti .righe{flex:1;background:repeating-linear-gradient(transparent 0 7.4mm, #e2dacb 7.4mm 7.65mm)}
+
+.barra-web{display:none}
+@media screen{.barra-web{display:flex;gap:18px;justify-content:center;position:sticky;top:0;z-index:10;
+  padding:10px 16px;background:#1d2a44;font:600 14px var(--f-body)}.barra-web a{color:#fff;text-decoration:none}}
+@media print{.barra-web{display:none}}
+</style></head><body><nav class="barra-web"><a href="./">← Guida</a><a href="03-covent.pdf">Scarica il PDF</a><a href="../">Mappa</a></nav>
+<section class="page apertura" data-sez="1" data-nohead><div class="linea" aria-hidden="true"><i class="qui" style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div>
+  <img style="object-position:45% 40%" src="img/foto/c_apertura.jpg" alt="Le lanterne rosse sopra Gerrard Street, a Chinatown">
+  <div class="velo"></div>
+  <div class="titolo">
+    <div class="num">Capitolo 3</div>
+    <h1>Covent Garden, Soho e Chinatown</h1>
+    <p class="sotto">Artisti di strada, musical, lanterne rosse e le luci di Piccadilly: il West End è la Londra che non va mai a dormire.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="1"><div class="linea" aria-hidden="true"><i class="qui" style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">94</div>
+  <p class="sezione">Perché andarci</p>
+  <h2>Il quartiere dove Londra si diverte</h2>
+  <div class="testo">
+    <p class="lead">Tra il fiume e Oxford Street ci sono i teatri, i negozi più famosi, il mercato coperto con gli acrobati e un quartiere cinese che a febbraio si riempie di lanterne.</p>
+    <p>Il West End si gira a piedi in poche ore, ma cambia faccia a ogni isolato: la piazza ordinata di Covent Garden, le stradine di Seven Dials, la confusione colorata di Chinatown, i maxischermi di Piccadilly Circus, i vicoli di libri antichi vicino a Trafalgar Square. Di sera è più bello che di giorno.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Il meglio del quartiere</h4>
+    <ol class="top-lista">
+      <li><b>1</b><span><strong>Gli artisti di strada</strong> di Covent Garden, sotto il portico di St Paul's.</span></li>
+      <li><b>2</b><span><strong>I Girasoli di Van Gogh</strong> alla National Gallery, gratis.</span></li>
+      <li><b>3</b><span><strong>Chinatown con le lanterne</strong> del Capodanno cinese.</span></li>
+      <li><b>4</b><span><strong>La statua di Harry Potter</strong> sulla scopa, a Leicester Square.</span></li>
+      <li><b>5</b><span><strong>Le luci di Piccadilly Circus</strong> di sera.</span></li>
+    </ol>
+  </div>
+  <dl class="info">
+    <dt>Arrivare</dt><dd>District line diretta da Aldgate East a Embankment o Temple (circa 20 min), poi 10 minuti a piedi. Dal London Eye, a piedi sul Golden Jubilee Bridge in 20-25 minuti.</dd>
+    <dt>Tempo</dt><dd>Mezza giornata o una sera; due, se si vogliono negozi e musei.</dd>
+    <dt>Quando</dt><dd>Negozi e musei il sabato, quando chiudono tardi; la domenica sera solo strade, luci e cena (vedi p. 97).</dd>
+  </dl>
+</section>
+<section class="page mappa-pag" data-sez="2" data-nohead><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div>
+  <img src="img/mappa-03-covent.jpg" alt="Mappa di Covent Garden, Soho e Chinatown con i luoghi numerati">
+  <div class="scala">Prugna: da vedere · verde: mangiare · senape: dolci · blu scuro: shopping</div>
+</section>
+<section class="page sx" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">96</div>
+  <p class="sezione">La mappa</p>
+  <h2>Tutti i luoghi del capitolo</h2>
+  <div class="legenda">
+    <h4><i style="background:var(--cap)"></i>Top sight</h4>
+    <ol>
+      <li><b>1</b>Covent Garden<span>p. 98</span></li>
+      <li><b>2</b>Trafalgar Square e National Gallery<span>p. 100</span></li>
+      <li><b>3</b>Chinatown<span>p. 102</span></li>
+    </ol>
+    <h4><i style="background:var(--cap)"></i>Da vedere</h4>
+    <ol>
+      <li><b>4</b>London Transport Museum<span>p. 104</span></li>
+      <li><b>5</b>Royal Opera House<span>p. 104</span></li>
+      <li><b>6</b>Seven Dials e Neal's Yard<span>p. 104</span></li>
+      <li><b>7</b>St Martin-in-the-Fields<span>p. 104</span></li>
+      <li><b>8</b>National Portrait Gallery<span>p. 105</span></li>
+      <li><b>9</b>Leicester Square<span>p. 105</span></li>
+      <li><b>10</b>Piccadilly Circus<span>p. 105</span></li>
+      <li><b>11</b>Carnaby Street e Liberty<span>p. 105</span></li>
+      <li><b>12</b>Hamleys<span>p. 106</span></li>
+      <li><b>13</b>House of MinaLima<span>p. 106</span></li>
+      <li><b>14</b>Cecil Court e Goodwin's Court<span>p. 106</span></li>
+      <li><b>15</b>Outernet<span>p. 106</span></li>
+      <li><b>16</b>Palace Theatre<span>p. 106</span></li>
+    </ol>
+    <h4><i style="background:var(--teal)"></i>Mangiare</h4>
+    <ol>
+      <li><b>17</b>Mother Mash<span>p. 108</span></li>
+      <li><b>18</b>Flat Iron<span>p. 108</span></li>
+      <li><b>19</b>Seven Dials Market<span>p. 108</span></li>
+      <li><b>20</b>Dishoom Covent Garden<span>p. 108</span></li>
+      <li><b>21</b>Golden Dragon<span>p. 108</span></li>
+      <li><b>22</b>Rules<span>p. 108</span></li>
+      <li><b>25</b>Bun House e Bunsik<span>p. 109</span></li>
+    </ol>
+    <h4><i style="background:var(--mustard)"></i>Dolci</h4>
+    <ol>
+      <li><b>23</b>Crème<span>p. 109</span></li>
+      <li><b>24</b>Bubblewrap<span>p. 109</span></li>
+    </ol>
+    <h4><i style="background:var(--navy)"></i>Shopping</h4>
+    <ol>
+      <li><b>26</b>Twinings<span>p. 109</span></li>
+      <li><b>27</b>Foyles<span>p. 109</span></li>
+      <li><b>28</b>Forbidden Planet<span>p. 109</span></li>
+    </ol>
+  </div>
+</section>
+<section class="page" data-sez="3"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i class="qui" style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">97</div>
+  <p class="sezione">Orientarsi</p>
+  <h2>Dal fiume a Oxford Street</h2>
+  <div class="testo">
+    <p>Scendendo dal ponte pedonale si arriva a <strong>Trafalgar Square</strong>, la porta del West End. A est c'è <strong>Covent Garden</strong>, con il mercato e i teatri; a nord <strong>Seven Dials</strong> e <strong>Soho</strong>, il quartiere dei locali; a ovest <strong>Leicester Square</strong>, <strong>Chinatown</strong> e <strong>Piccadilly Circus</strong>, da cui partono Regent Street e Carnaby Street. Tutto sta in un chilometro quadrato.</p>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>La domenica sera</h4>
+    <p>Per legge i grandi negozi inglesi la domenica aprono al massimo sei ore, di solito dalle 12 alle 18; i musei chiudono alle 18. Dopo le 17:30 restano aperti strade, luci, ristoranti, dolci e l'Outernet. Il sabato invece la National Portrait Gallery e Foyles restano aperti fino alle 21, Hamleys fino alle 21, il negozio LEGO fino alle 22.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Il Capodanno cinese 2027</h4>
+    <p>Il Capodanno lunare cade <b>sabato 6 febbraio 2027</b>, inizio dell'anno della Capra. Londra lo festeggia <b>domenica 7</b>: di solito parata alle 10, palco a Trafalgar Square fino alle 18 circa con il finale verso le 17:30, banchi e danze del leone a Chinatown. È una festa enorme: folla, transenne, ristoranti cinesi pieni. Il programma esce a gennaio su lccauk.com.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">98</div>
+  <div class="foto al" style="height:76mm;margin-top:-14mm"><img src="img/foto/c_piazza.jpg" alt="Un artista di strada davanti al pubblico in Covent Garden"></div>
+  <p class="sezione">Top sight · 1</p>
+  <h2>Covent Garden</h2>
+  <div class="testo">
+    <p class="lead">La prima piazza di Londra, un mercato coperto di ferro e vetro e gli artisti di strada più bravi della città.</p>
+    <p>Il nome viene dall'orto di un convento dei monaci di Westminster. Negli anni Trenta del Seicento l'architetto Inigo Jones ci disegnò la prima piazza all'italiana di Londra; per tre secoli è stata il mercato della frutta e dei fiori, fino al 1974, quando i grossisti si spostarono fuori città. Il mercato coperto del 1830 oggi è pieno di negozi, banchi di artigianato e caffè.</p>
+  </div>
+  <div class="riquadro spinta">
+    <h4>Lo sapevi?</h4>
+    <p>Sotto il portico della chiesa di St Paul's, la "chiesa degli attori", nel 1662 Samuel Pepys vide il primo spettacolo di Punch e Judy di cui si abbia notizia. Il portico che si vede dalla piazza è finto: l'ingresso vero della chiesa è sul retro. E qui comincia <em>My Fair Lady</em>: Eliza Doolittle vendeva fiori proprio in questa piazza.</p>
+  </div>
+</section>
+<section class="page" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">99</div>
+  <div class="foto" style="height:56mm"><img src="img/foto/c_market.jpg" alt="L'interno del mercato coperto di Covent Garden"></div>
+  <div class="testo">
+    <p>Gli artisti si esibiscono in due posti diversi. Davanti al portico di St Paul's, sulla <strong>West Piazza</strong>, ci sono i grandi cerchi di pubblico: acrobati, escapisti, comici; ogni mattina i posti della giornata vengono sorteggiati. Al piano inferiore del mercato, nel <strong>cortile</strong>, suonano musicisti di musica classica e cantanti lirici, che per esibirsi qui devono superare un'audizione davanti a una giuria.</p>
+  </div>
+  <dl class="info">
+    <dt>Orari</dt><dd>Piazza e mercato sempre aperti. Negozi lun-sab 10-20, dom circa 11-18. Apple Market 10-18.</dd>
+    <dt>Prezzi</dt><dd>Gratis.</dd>
+    <dt>Metro</dt><dd>Covent Garden (Piccadilly line), ma per un gruppo è meglio Leicester Square o Embankment.</dd>
+  </dl>
+  <div class="consiglio spinta">
+    <h4>Il trucco</h4>
+    <p>Il cappello che gira alla fine dello spettacolo è l'unico compenso degli artisti: tenete qualche moneta o una carta contactless. Dal ballatoio del mercato si guardano i musicisti del cortile dall'alto, senza stare nella calca.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="5"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i class="qui" style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">100</div>
+  <div class="foto al" style="height:72mm;margin-top:-14mm"><img src="img/foto/c_trafalgar.jpg" alt="Uno dei leoni di bronzo di Trafalgar Square"></div>
+  <p class="sezione">Top sight · 2</p>
+  <h2>Trafalgar Square e National Gallery</h2>
+  <div class="testo">
+    <p class="lead">La piazza delle manifestazioni, dei festeggiamenti e dei piccioni, con una delle pinacoteche più ricche del mondo. Gratis.</p>
+    <p>Ricorda la battaglia di Trafalgar del 1805, in cui l'ammiraglio Nelson sconfisse la flotta di Napoleone e morì. Lui sta in cima alla colonna, a 52 metri; i quattro leoni di bronzo alla base sono di Edwin Landseer. Sul <strong>quarto piedistallo</strong>, rimasto vuoto per 150 anni, ogni due anni si espone un'opera d'arte nuova: fino al 2028 c'è <em>Lady in Blue</em> di Tschabalala Self, una londinese qualunque in abito blu.</p>
+  </div>
+  <div class="riquadro spinta">
+    <h4>Lo sapevi?</h4>
+    <p>Sul muro della terrazza nord sono incise le misure ufficiali inglesi: il pollice, il piede e la iarda. E nell'angolo sud-est c'è la "stazione di polizia più piccola di Londra", una cabina dentro un lampione.</p>
+  </div>
+</section>
+<section class="page" data-sez="5"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i class="qui" style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">101</div>
+  <div class="testo">
+    <p>La <strong>National Gallery</strong> occupa tutto il lato nord della piazza e raccoglie la pittura europea dal Duecento al Novecento. L'ingresso principale oggi è dalla Sainsbury Wing, all'angolo con Pall Mall. Alcune sale sono chiuse per lavori e alcuni quadri sono stati spostati: controllate la piantina prima di entrare.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Il giro dei capolavori in un'ora</h4>
+    <ul style="margin:0;padding-left:4mm;display:grid;gap:1mm">
+      <li><strong>I Girasoli</strong> di Van Gogh.</li>
+      <li><strong>Gli Ambasciatori</strong> di Holbein: guardatelo di sbieco, da destra in basso, e la macchia sul pavimento diventa un teschio.</li>
+      <li><strong>Il ritratto dei coniugi Arnolfini</strong> di Van Eyck: cercate lo specchio minuscolo sulla parete in fondo.</li>
+      <li><strong>La Valorosa Téméraire</strong> di Turner e <strong>Il carro di fieno</strong> di Constable.</li>
+      <li><strong>La Vergine delle rocce</strong> di Leonardo e le <strong>Ninfee</strong> di Monet.</li>
+    </ul>
+  </div>
+  <dl class="info">
+    <dt>Orari</dt><dd>Tutti i giorni 10-18, venerdì fino alle 21. Il sabato chiude alle 18.</dd>
+    <dt>Prezzi</dt><dd>Gratis. Il biglietto gratuito online fa saltare la fila.</dd>
+    <dt>Metro</dt><dd>Charing Cross, oppure Embankment e 5 minuti a piedi.</dd>
+  </dl>
+  <div class="foto spinta" style="height:84mm"><img style="object-position:50% 0" src="img/foto/c_nelson.jpg" alt="La colonna di Nelson a Trafalgar Square"></div>
+</section>
+<section class="page sx" data-sez="6"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i class="qui" style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">102</div>
+  <div class="foto al" style="height:74mm;margin-top:-14mm"><img src="img/foto/c_chinagate.jpg" alt="La porta cinese all'ingresso di Gerrard Street"></div>
+  <p class="sezione">Top sight · 3</p>
+  <h2>Chinatown</h2>
+  <div class="testo">
+    <p class="lead">Tre strade di lanterne rosse, anatre laccate in vetrina e insegne bilingui, a due passi da Leicester Square.</p>
+    <p>La comunità cinese di Londra viveva in origine vicino al porto, a Limehouse; dopo la guerra si spostò qui, intorno a <strong>Gerrard Street</strong>, dove negli anni Sessanta aprirono i primi ristoranti. Oggi Chinatown è Gerrard Street, Lisle Street e un pezzo di Wardour Street, con porte decorate, leoni di pietra e cartelli stradali in inglese e in cinese.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Orari</dt><dd>Le strade sono sempre aperte; ristoranti e negozi fino a tarda sera.</dd>
+    <dt>Metro</dt><dd>Leicester Square, 2 minuti.</dd>
+  </dl>
+</section>
+<section class="page" data-sez="6"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i class="qui" style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">103</div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Capodanno cinese: domenica 7 febbraio 2027</h4>
+    <p style="margin-bottom:1.6mm">Il calendario lunare comincia l'anno della <b>Capra</b> sabato 6 febbraio; i festeggiamenti ufficiali di Londra sono la domenica. Lo schema degli anni scorsi:</p>
+    <ol class="tappe" style="margin:0">
+      <li data-n="10"><b>Parata</b><br>Draghi, leoni e carri da Trafalgar Square verso Chinatown.</li>
+      <li data-n="12"><b>Palco a Trafalgar Square</b><br>Spettacoli e danze fino alle 18 circa.</li>
+      <li data-n="17"><b>Il finale</b><br>Verso le 17:30, con luci e musica.</li>
+    </ol>
+    <p class="piccolo">Il programma 2027 esce a gennaio su lccauk.com. La festa dura quindici giorni, fino alla Festa delle lanterne del 20 febbraio.</p>
+  </div>
+  <div class="consiglio">
+    <h4>Il trucco</h4>
+    <p>Quel giorno i ristoranti di Chinatown sono presi d'assalto e per otto persone è quasi impossibile trovare posto senza prenotazione: o si prenota con largo anticipo, o si cena altrove (Dishoom e Flat Iron sono a cinque minuti) e a Chinatown si passa solo per le lanterne e un dolce.</p>
+  </div>
+  <div class="riquadro spinta">
+    <h4>Lo sapevi?</h4>
+    <p>Nell'oroscopo cinese ogni anno ha un animale, in un ciclo di dodici. L'anno cinese comincia tra fine gennaio e metà febbraio: chi è nato a gennaio appartiene quasi sempre all'animale dell'anno prima. Un gioco per le ragazze: scoprire il proprio.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">104</div>
+  <p class="sezione">Da vedere</p>
+  <div class="voce">
+    <div class="n">4</div>
+    <h3>London Transport Museum</h3>
+    <div class="dati"><b>Piazza di Covent Garden</b> · adulti £27, sotto i 18 anni gratis (per noi £135)</div>
+    <div class="con-foto">
+      <p>Bus a due piani, tram, carrozze della prima metropolitana del mondo (1863) e simulatori di guida. Il biglietto degli adulti vale un anno intero. I ragazzi entrano gratis, ma serve comunque il biglietto a orario online. Il negozio, con tutto quello che ha la mappa della metro stampata sopra, è la miniera dei souvenir.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/c_transport.jpg" alt="I bus storici del London Transport Museum"></div>
+    </div>
+    <div class="dati" style="grid-column:2">Tutti i giorni 10-18, ultimo ingresso verso le 17.</div>
+  </div>
+  <div class="voce">
+    <div class="n">5</div>
+    <h3>Royal Opera House</h3>
+    <div class="dati"><b>Bow Street</b> · aree pubbliche gratis</div>
+    <div class="con-foto">
+      <p>Senza biglietto si può entrare nei foyer, nella Paul Hamlyn Hall, una serra di ferro e vetro che era il vecchio mercato dei fiori, e salire sulla terrazza sopra il portico della piazza, con vista sui tetti del mercato. Di domenica, senza spettacolo, chiude alle 18.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/c_opera.jpg" alt="La facciata della Royal Opera House"></div>
+    </div>
+  </div>
+  <div class="voce">
+    <div class="n">6</div>
+    <h3>Seven Dials e Neal's Yard</h3>
+    <div class="dati"><b>Incrocio di sette strade</b> · gratis</div>
+    <div class="con-foto">
+      <p>Nel 1693 Thomas Neale disegnò qui un incrocio a stella con una colonna in mezzo. Contate: le strade sono sette, ma le meridiane sulla colonna sono sei. La settima è la colonna stessa, che fa ombra sul selciato. Dietro l'angolo, Neal's Yard è un cortiletto di facciate coloratissime.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/c_sevendials.jpg" alt="Le meridiane in cima alla colonna di Seven Dials"></div>
+    </div>
+  </div>
+  <div class="voce">
+    <div class="n">7</div>
+    <h3>St Martin-in-the-Fields</h3>
+    <div class="dati"><b>Trafalgar Square</b> · ingresso libero</div>
+    <p>La chiesa con il campanile sulla piazza. Nella cripta c'è il <strong>Café in the Crypt</strong>, economico e suggestivo, tra le lapidi del pavimento: la domenica chiude alle 17, il sabato alle 19. Concerti a lume di candela soprattutto da giovedì a sabato alle 19:30.</p>
+  </div>
+</section>
+<section class="page" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">105</div>
+  <div class="voce">
+    <div class="n">8</div>
+    <h3>National Portrait Gallery</h3>
+    <div class="dati"><b>Dietro la National Gallery</b> · gratis · 10:30-18, ven e sab fino alle 21</div>
+    <p>Cinque secoli di ritratti di inglesi famosi: re e regine, scrittori, scienziati e, ai piani alti, pop star, sportivi e la famiglia reale di oggi. Il sabato sera è aperta fino alle 21 ed è molto più tranquilla.</p>
+  </div>
+  <div class="voce">
+    <div class="n">9</div>
+    <h3>Leicester Square</h3>
+    <div class="dati"><b>Metro Leicester Square</b> · gratis</div>
+    <div class="con-foto">
+      <p>La piazza dei cinema e delle prime dei film. Intorno c'è un percorso di statue di personaggi del cinema: <strong>Harry Potter sulla Nimbus 2000</strong>, Paddington, Mary Poppins, Mr Bean, Batman, Bugs Bunny e altri. Il <strong>negozio LEGO</strong> ha una carrozza della metro e un Big Ben di mattoncini a grandezza reale; M&amp;M's London ha quattro piani.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/c_leicester.jpg" alt="Leicester Square"></div>
+    </div>
+    <div class="dati" style="grid-column:2">LEGO: lun-sab 10-22, dom 12-18. Biglietti scontati per i teatri al chiosco ufficiale <b>TKTS</b>, nella torre dell'orologio: lun-sab 10:30-18, dom 11-16.</div>
+  </div>
+  <div class="voce">
+    <div class="n">10</div>
+    <h3>Piccadilly Circus</h3>
+    <div class="dati"><b>Metro Piccadilly Circus</b> · gratis</div>
+    <div class="con-foto">
+      <p>L'incrocio dei maxischermi, accesi giorno e notte. La statua che tutti chiamano Eros, del 1893, secondo il suo autore è suo fratello Anteros, l'amore disinteressato; ed è stata la prima statua al mondo fusa in alluminio.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/c_piccadilly.jpg" alt="I maxischermi di Piccadilly Circus di notte"></div>
+    </div>
+  </div>
+  <div class="voce">
+    <div class="n">11</div>
+    <h3>Carnaby Street e Liberty</h3>
+    <div class="dati"><b>Dietro Regent Street</b> · negozi la domenica 12-18</div>
+    <div class="con-foto">
+      <p>Carnaby Street, pedonale, era la via della moda degli anni Sessanta. A due passi c'è <strong>Liberty</strong>, un grande magazzino in stile Tudor del 1924 costruito con il legno di due navi da guerra.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/c_liberty.jpg" alt="La facciata in stile Tudor di Liberty"></div>
+    </div>
+  </div>
+</section>
+<section class="page sx" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">106</div>
+  <div class="voce">
+    <div class="n">12</div>
+    <h3>Hamleys</h3>
+    <div class="dati"><b>188-196 Regent Street</b> · lun-sab 10-21, dom 12-18</div>
+    <div class="con-foto">
+      <p>Aperto nel 1760, è considerato il negozio di giocattoli più antico del mondo: sette piani, con commessi che fanno dimostrazioni su ogni piano.</p>
+      <div class="foto" style="height:24mm"><img src="img/foto/c_hamleys.jpg" alt="La facciata di Hamleys"></div>
+    </div>
+  </div>
+  <div class="voce">
+    <div class="n">13</div>
+    <h3>House of MinaLima</h3>
+    <div class="dati"><b>157 Wardour Street</b> (si è trasferita da Greek Street) · gratis · 11-18:45</div>
+    <p>Lo studio grafico che ha disegnato gli oggetti di carta dei film di Harry Potter: la Mappa del Malandrino, la Gazzetta del Profeta, le lettere di Hogwarts. Mostra e negozio su più piani; nelle ore di punta l'ingresso è a orario.</p>
+  </div>
+  <div class="voce">
+    <div class="n">14</div>
+    <h3>Cecil Court e Goodwin's Court</h3>
+    <div class="dati"><b>Tra Charing Cross Road e St Martin's Lane</b> · gratis</div>
+    <div class="con-foto">
+      <p>Cecil Court è una fila di librerie antiquarie con vetrine vittoriane; Goodwin's Court un vicolo con finestre georgiane e veri lampioni a gas. I fan li indicano come ispirazione per Diagon Alley, ma J.K. Rowling ha detto che non si è ispirata a un posto reale. Goodwin's Court è abitata: entrate in silenzio, pochi alla volta.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/c_cecil.jpg" alt="Una vetrina di Cecil Court"></div>
+    </div>
+  </div>
+  <div class="voce">
+    <div class="n">15</div>
+    <h3>Outernet</h3>
+    <div class="dati"><b>Tottenham Court Road</b> · gratis · di solito 10-23:30</div>
+    <p>Un atrio di quattro piani con schermi LED dal pavimento al soffitto: si entra dentro le immagini. È una delle poche cose aperte la domenica sera.</p>
+  </div>
+  <div class="voce">
+    <div class="n">16</div>
+    <h3>Palace Theatre e il West End</h3>
+    <div class="dati"><b>Cambridge Circus</b> · <em>Harry Potter and the Cursed Child</em>, dagli 8 anni, £30-174</div>
+    <p>Da ottobre 2026 lo spettacolo è in una sola parte: mar-sab alle 19, mer e sab anche alle 13, <strong>domenica solo alle 14:30</strong>. In generale i grandi musical (Il Re Leone, Wicked, Matilda) la domenica fanno solo il pomeriggio: per una serata a teatro il giorno giusto è il sabato.</p>
+  </div>
+</section>
+<section class="page" data-sez="9"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i class="qui" style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">107</div>
+  <p class="sezione">Passeggiata</p>
+  <h2>Dal fiume alle luci di Piccadilly</h2>
+  <p class="piccolo">Circa 3 km · 2-3 ore con le soste · al tramonto, quando si accendono le luci</p>
+  <div class="foto al" style="height:38mm"><img src="img/foto/c_palace.jpg" alt="Il Palace Theatre illuminato di sera"></div>
+  <ol class="tappe">
+    <li data-n="1"><b>Golden Jubilee Bridge</b> <span class="tempo">10 min</span><br>Dal South Bank, sul lato est del ponte: vista su St Paul's e la City all'ora blu.</li>
+    <li data-n="2"><b>Trafalgar Square</b> <span class="tempo">15 min</span><br>I leoni, la colonna, il quarto piedistallo.</li>
+    <li data-n="3"><b>Cecil Court e Goodwin's Court</b> <span class="tempo">15 min</span><br>I vicoli "da Diagon Alley", con i lampioni a gas accesi.</li>
+    <li data-n="4"><b>Covent Garden</b> <span class="tempo">45 min</span><br>Il mercato illuminato e gli ultimi artisti di strada.</li>
+    <li data-n="5"><b>Seven Dials</b> <span class="tempo">15 min</span><br>La colonna con le sei meridiane; cena al Seven Dials Market o da Dishoom.</li>
+    <li data-n="6"><b>Chinatown e Leicester Square</b> <span class="tempo">30 min</span><br>Le lanterne, un dolce, la statua di Harry Potter.</li>
+    <li data-n="7"><b>Piccadilly Circus</b> <span class="tempo">10 min</span><br>I maxischermi; da qui, o da Embankment, si torna in hotel.</li>
+  </ol>
+</section>
+<section class="page sx" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">108</div>
+  <p class="sezione">Mangiare</p>
+  <h2>Dove mangiare in otto</h2>
+  <p class="piccolo">£ meno di £12 a testa · ££ £15-30 · £££ oltre £40. Orari della domenica.</p>
+  <div class="voce">
+    <div class="n m">17</div>
+    <h3>Mother Mash <span class="prezzo">£</span></h3>
+    <div class="dati"><b>4 New Row</b> · dom 12-20, cucina fino alle 19:45</div>
+    <p>Pie and mash, il piatto popolare londinese: purè, salsicce o pasticcio di carne e sugo. Locale piccolo: prenotate e arrivate entro le 19.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">18</div>
+    <h3>Flat Iron <span class="prezzo">£</span></h3>
+    <div class="dati"><b>17-18 Henrietta Street</b> · dom 11:30-22:30</div>
+    <p>Una sola bistecca, tenera, a £15, con contorni da £3,50. Semplice, veloce, buona. Si prenota online.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">19</div>
+    <h3>Seven Dials Market <span class="prezzo">£-££</span></h3>
+    <div class="dati"><b>Earlham Street</b> · dom 11-21</div>
+    <p>Un food hall con una ventina di banchi: hamburger, pizza, formaggi, cucine del mondo. Non si prenota; i posti a sedere sono di chi arriva prima.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">20</div>
+    <h3>Dishoom Covent Garden <span class="prezzo">££</span></h3>
+    <div class="dati"><b>12 Upper St Martin's Lane</b> · dom 9-23</div>
+    <p>Lo stesso locale indiano di Shoreditch: dopo le 18 prenota solo per gruppi da 6 in su, quindi per noi va bene. Si prenota fino a 4 mesi prima.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">21</div>
+    <h3>Golden Dragon <span class="prezzo">££</span></h3>
+    <div class="dati"><b>28-29 Gerrard Street</b> · dom 11-22</div>
+    <p>Cucina cantonese e dim sum, abituato ai gruppi grandi. Per il Capodanno cinese va prenotato molto prima (020 7734 1073).</p>
+  </div>
+  <div class="voce">
+    <div class="n m">22</div>
+    <h3>Rules <span class="prezzo">£££</span></h3>
+    <div class="dati"><b>35 Maiden Lane</b> · chiuso il lunedì</div>
+    <p>Il ristorante più antico di Londra, dal 1798: selvaggina, pie e roast in sale piene di quadri. Per un'occasione speciale.</p>
+  </div>
+</section>
+<section class="page" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">109</div>
+  <p class="sezione">Dolci, spuntini e shopping</p>
+  <div class="voce">
+    <div class="n m">25</div>
+    <h3>Bun House e Bunsik <span class="prezzo">£</span></h3>
+    <div class="dati"><b>26-27 Lisle Street</b> e <b>31 Wardour Street</b></div>
+    <p>Panini al vapore ripieni (Bun House, senza prenotazione) e corn dog coreani (Bunsik, da asporto): lo spuntino di Chinatown.</p>
+  </div>
+  <div class="voce">
+    <div class="n b">23</div>
+    <h3>Crème <span class="prezzo">£</span></h3>
+    <div class="dati"><b>4 D'Arblay Street</b>, Soho · dom 10-21</div>
+    <p>Cookie enormi e gelato soft. C'è spesso la fila.</p>
+  </div>
+  <div class="voce">
+    <div class="n b">24</div>
+    <h3>Bubblewrap <span class="prezzo">£</span></h3>
+    <div class="dati"><b>24 Wardour Street</b>, Chinatown</div>
+    <p>Waffle all'uovo di Hong Kong, a bolle, ripieni di gelato e frutta. Code anche lunghe.</p>
+  </div>
+  <div class="voce">
+    <div class="n s">26</div>
+    <h3>Twinings</h3>
+    <div class="dati"><b>216 Strand</b> · tutti i giorni 11-18</div>
+    <div class="con-foto">
+      <p>Thomas Twining comprò questa bottega nel 1706: è sullo stesso posto da oltre trecento anni. Si assaggiano gratis alcuni tè. Negozio stretto: pochi alla volta.</p>
+      <div class="foto" style="height:24mm"><img src="img/foto/c_twinings.jpg" alt="L'insegna di Twinings sullo Strand"></div>
+    </div>
+  </div>
+  <div class="voce">
+    <div class="n s">27</div>
+    <h3>Foyles e Forbidden Planet</h3>
+    <div class="dati"><b>Charing Cross Road</b> e <b>Shaftesbury Avenue</b> · sab fino alle 21 e alle 19, dom 12-18</div>
+    <p>Foyles è una delle librerie più grandi di Londra, con un ricco reparto per ragazzi. Forbidden Planet è il paradiso di fumetti, manga e gadget di film e serie.</p>
+  </div>
+  <div class="foto spinta" style="height:40mm"><img src="img/foto/c_carnaby.jpg" alt="L'arco di benvenuto di Carnaby Street"></div>
+</section>
+<section class="page sx" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">110</div>
+  <p class="sezione">Il consiglio di TikTok e prima di partire</p>
+  <div class="consiglio">
+    <h4>Dai video del gruppo</h4>
+    <p>L'Outernet, gratis, e il negozio LEGO più grande del mondo; a Chinatown i corn dog di Bunsik e i panini di Bun House; il Seven Dials Market per mangiare in tanti; i cookie di Crème a Soho. <span class="piccolo">Da @volga_londonstories, @akirediaries e @andreaelaura.</span></p>
+  </div>
+  <ol class="tappe" style="margin-top:2mm">
+    <li data-n="1"><b>Subito</b><br>Cena per 8 da Dishoom Covent Garden o Flat Iron per la sera del Capodanno cinese: Chinatown sarà piena.</li>
+    <li data-n="2"><b>Se si sceglie il teatro</b><br>Il sabato sera è l'unica serata con i musical: otto posti vicini vanno presi presto.</li>
+    <li data-n="3"><b>Gennaio 2027</b><br>Programma del Capodanno cinese su lccauk.com e orari aggiornati di negozi e musei.</li>
+    <li data-n="4"><b>Prima di andare</b><br>London Transport Museum: biglietti a orario, anche quelli gratuiti dei ragazzi.</li>
+  </ol>
+  <div class="riquadro spinta" style="background:var(--teal-tint)">
+    <h4>Biglietti del quartiere, per noi 8</h4>
+    <p>Quasi tutto è gratis: piazze, artisti di strada, National Gallery, Portrait Gallery, Outernet, MinaLima. A pagamento solo il London Transport Museum (£135 per i 5 adulti) e l'eventuale teatro (da circa £30 a testa).</p>
+  </div>
+</section>
+<section class="page crediti" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">111</div><p class="sezione">Crediti fotografici</p><h2>Le foto di questo capitolo</h2><p class="piccolo">Foto da Wikimedia Commons, pubblicate con licenze Creative Commons o in pubblico dominio. Mappe: Esri, HERE, Garmin e i contributori di OpenStreetMap. Linee della metro: OpenStreetMap.</p><ul class="lista-crediti"><li><b>c_apertura</b>: Robert Lamb, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Lantern_heaven_on_Gerrard_Street_-_geograph.org.uk_-_1721601.jpg</span></li><li><b>c_piazza</b>: Colin Smith, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Covent_Garden_Entertainers_-_geograph.org.uk_-_2030402.jpg</span></li><li><b>c_market</b>: Nathan Meijer, CC BY 2.0, <span>commons.wikimedia.org/wiki/File:Covent_Garden_Market_interior.jpg</span></li><li><b>c_trafalgar</b>: habiloid, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Landseer_Lion,_Trafalgar_Square,_London_-_geograph.org.uk_-_6823604.jpg</span></li><li><b>c_nelson</b>: Dietmar Rabich, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:London,_Trafalgar_Square,_Nelson&#x27;s_Column_--_2016_--_4851.jpg</span></li><li><b>c_chinagate</b>: Robert Lamb, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:View_of_Gerrard_Street_framed_in_the_Chinatown_arch_-_geograph.org.uk_-_4436066.jpg</span></li><li><b>c_transport</b>: User:Clithering, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Interior_of_the_London_Transport_Museum.JPG</span></li><li><b>c_opera</b>: Russ London (talk), CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Royal_Opera_House_and_ballerina.jpg</span></li><li><b>c_sevendials</b>: ClemRutter, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Seven_Dials_0477.jpg</span></li><li><b>c_leicester</b>: DiscoA340, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Leicester_Square_(August_2023)_07.jpg</span></li><li><b>c_piccadilly</b>: Billy Hicks, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Piccadilly_Circus_by_night_January_2012.JPG</span></li><li><b>c_liberty</b>: habitatgirl, CC BY 2.0, <span>commons.wikimedia.org/wiki/File:Liberty_of_London.jpg</span></li><li><b>c_hamleys</b>: DAVID HOLT from London, England, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Hamleys,_Regent_Street,_London,_22_June_2014.jpg</span></li><li><b>c_cecil</b>: Thomas Woodtli from Zürich, Switzerland, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Marchpane_Children&#x27;s_Books_storefront_(40044067295).jpg</span></li><li><b>c_palace</b>: No Swan So Fine, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Harry_Potter_and_the_Cursed_Child,_Palace_Theatre,_May_2023_02.jpg</span></li><li><b>c_twinings</b>: Gryffindor, Public domain, <span>commons.wikimedia.org/wiki/File:Twinings_London_April_2006_088.jpg</span></li><li><b>c_carnaby</b>: SisterLondon, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Carnaby_London.jpg</span></li></ul></section>
+<section class="page sx appunti" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Covent Garden, Soho e Chinatown</span><span>Quartieri</span></div><div class="folio">112</div><p class="sezione">Appunti</p><div class="righe"></div></section>
+<script>
+// segnala le pagine troppo piene (in stampa il testo verrebbe tagliato)
+window.addEventListener('load', () => {
+  const piene = [...document.querySelectorAll('.page')].filter(p => p.scrollHeight > p.clientHeight + 2)
+    .map((p, i) => p.querySelector('.folio')?.textContent || 'apertura');
+  document.body.dataset.piene = piene.join(',');
+});
+</script>
+</body></html>
