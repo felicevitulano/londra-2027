@@ -97,6 +97,7 @@ aside{ border-left:1px solid var(--line); background:var(--panel); overflow-y:au
   h1{ font-size:20px }
   .mapwrap{ height:calc(100svh - 110px); max-height:680px }
   .card{ bottom:calc(16px + env(safe-area-inset-bottom, 0px)) }
+  .hotelmk .lbl{ left:auto; right:46px }
 }
 </style>
 </head>
@@ -244,7 +245,12 @@ document.querySelectorAll('.chip[data-f]').forEach(c => c.onclick = () => {
   map.flyToBounds(filter === 'all' ? allBounds : L.latLngBounds(pts), { padding:[40,40], duration:.6, maxZoom:16 });
 });
 document.getElementById('gohotel').onclick = () => select('hotel', true);
-const fitAll = () => { map.invalidateSize(); map.fitBounds(allBounds, { paddingTopLeft:[20,40], paddingBottomRight:[window.innerWidth <= 760 ? 110 : 30, 20], maxZoom:14 }); };
+const fitAll = () => {
+  map.invalidateSize();
+  // sul telefono si parte dal centro (Westminster, City, hotel); su schermo grande si vedono tutti i punti
+  if (window.innerWidth <= 760) map.setView([51.5075, -0.1005], 12.75);
+  else map.fitBounds(allBounds, { padding:[30,30], maxZoom:14 });
+};
 fitAll();
 window.addEventListener('load', () => setTimeout(fitAll, 50));
 </script>
