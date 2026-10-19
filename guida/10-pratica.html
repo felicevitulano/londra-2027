@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Guida pratica · Guida di Londra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>/* Guida di Londra — stile delle pagine.
+   Stampa: pagine A5 fisse (148 x 210 mm). Schermo: le stesse pagine una sotto l'altra, fluide sotto i 640 px.
+   Ogni capitolo è una "linea della metro" del suo colore (--cap) che corre sul bordo esterno,
+   con una fermata per sezione: la fermata accesa dice dove sei nel capitolo. */
+
+:root{
+  --ink:#1d2a44;        /* blu notte: testo e titoli */
+  --muted:#5f6472;
+  --paper:#fffdf9;      /* carta quasi bianca, per foto nitide */
+  --sand:#f2ebde;       /* fondi dei riquadri */
+  --red:#b8402f; --teal:#2f7272; --mustard:#c08a25; --navy:#26375c;
+  --teal-tint:#e6f0ee; --mustard-tint:#f7eedb;
+  --cap:var(--red);     /* colore del capitolo, ridefinito su ogni capitolo */
+  --f-display:"Fraunces", Georgia, serif;
+  --f-body:"Figtree", "Helvetica Neue", Arial, sans-serif;
+}
+@page{ size:148mm 210mm; margin:0 }
+*{ box-sizing:border-box }
+html{ -webkit-print-color-adjust:exact; print-color-adjust:exact }
+body{ margin:0; background:#e7e2d8; color:var(--ink); font:400 8.9pt/1.45 var(--f-body); font-variant-numeric:tabular-nums }
+img{ display:block; max-width:100% }
+a{ color:inherit }
+
+/* ---------- pagina ---------- */
+.page{ width:148mm; height:210mm; margin:0 auto 6mm; background:var(--paper); position:relative; overflow:hidden;
+  padding:14mm 17mm 15mm 13mm; break-after:page; display:flex; flex-direction:column; gap:3.2mm }
+.page.sx{ padding:14mm 13mm 15mm 17mm }               /* pagina pari: margine esterno a sinistra */
+@media print{ body{ background:none } .page{ margin:0 } }
+
+.testata{ position:absolute; top:6.5mm; left:13mm; right:17mm; display:flex; justify-content:space-between;
+  font:500 6.8pt var(--f-body); color:var(--muted) }
+.sx .testata{ left:17mm; right:13mm; flex-direction:row-reverse }
+.folio{ position:absolute; bottom:6.5mm; right:17mm; font:600 7.5pt var(--f-body); color:var(--ink) }
+.sx .folio{ right:auto; left:17mm }
+
+/* linea della metro sul bordo esterno */
+.linea{ position:absolute; top:0; bottom:0; right:5.2mm; width:2.2mm; background:var(--cap) }
+.sx .linea{ right:auto; left:5.2mm }
+.linea i{ position:absolute; left:50%; width:4.2mm; height:4.2mm; margin-left:-2.1mm; border-radius:50%;
+  background:#fff; border:.9mm solid var(--cap) }
+.linea i.qui{ width:5.6mm; height:5.6mm; margin-left:-2.8mm; background:var(--ink); border-color:#fff; box-shadow:0 0 0 .6mm var(--cap) }
+
+/* ---------- tipografia ---------- */
+h1,h2,h3,h4{ font-family:var(--f-display); margin:0; color:var(--ink); text-wrap:balance; font-optical-sizing:auto }
+h2{ font-size:21pt; line-height:1.02; font-weight:800; letter-spacing:-.01em }
+h3{ font-size:12.5pt; line-height:1.15; font-weight:700 }
+h4{ font-size:10pt; font-weight:700 }
+p{ margin:0 }
+.testo p + p{ margin-top:2.2mm }
+.testo{ hyphens:auto; -webkit-hyphens:auto }
+.lead{ font:400 11pt/1.38 var(--f-display); color:var(--ink) }
+.sezione{ font:600 8pt var(--f-body); color:var(--cap) }       /* nome della sezione sopra il titolo */
+.piccolo{ font-size:7.6pt; color:var(--muted) }
+.cap{ font-size:6.8pt; color:var(--muted); margin-top:1.2mm; font-style:italic }
+
+/* ---------- foto ---------- */
+.foto{ position:relative; overflow:hidden; border-radius:1.2mm; flex:none }
+.foto img{ width:100%; height:100%; object-fit:cover }
+.foto.al{ margin:0 -17mm 0 -13mm; border-radius:0 }            /* al vivo orizzontale */
+.sx .foto.al{ margin:0 -13mm 0 -17mm }
+
+/* ---------- apertura capitolo ---------- */
+.apertura{ padding:0 }
+.apertura > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover }
+.apertura .velo{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,28,46,.0) 35%, rgba(20,28,46,.86) 82%) }
+.apertura .titolo{ position:absolute; left:13mm; right:17mm; bottom:16mm; color:#fff }
+.apertura .num{ font:600 8pt var(--f-body); color:#fff; opacity:.85 }
+.apertura h1{ font-size:38pt; line-height:.95; font-weight:900; color:#fff; margin:2mm 0 4mm }
+.apertura .sotto{ font:400 10.5pt/1.35 var(--f-display); max-width:100mm; opacity:.95 }
+
+/* ---------- riquadri ---------- */
+.info{ background:var(--teal-tint); border-radius:1.5mm; padding:3mm 3.5mm; display:grid;
+  grid-template-columns:15mm 1fr; gap:1.1mm 3mm; font-size:7.9pt; line-height:1.35; flex:none }
+.info dt{ font-weight:700; color:var(--teal) }
+.info dd{ margin:0 }
+.consiglio{ background:var(--mustard-tint); border-radius:1.5mm; padding:3mm 3.5mm; font-size:8.4pt; flex:none }
+.consiglio h4{ color:#8a5f12; margin-bottom:1mm; display:flex; align-items:center; gap:2mm }
+.consiglio h4::before{ content:""; width:3.4mm; height:3.4mm; border-radius:50%; border:.8mm solid var(--mustard); flex:none }
+.riquadro{ background:var(--sand); border-radius:1.5mm; padding:3.2mm 3.6mm; font-size:8.4pt; flex:none }
+.riquadro h4{ margin-bottom:1.2mm }
+.top-lista{ margin:0; padding:0; list-style:none; display:grid; gap:1.4mm }
+.top-lista li{ display:grid; grid-template-columns:5mm 1fr; gap:2mm; align-items:baseline }
+.top-lista b{ font-family:var(--f-display); font-weight:800; color:var(--cap); font-size:10pt }
+
+/* ---------- schede (da vedere, mangiare...) ---------- */
+.voce{ display:grid; grid-template-columns:6.4mm 1fr; gap:0 2.6mm; break-inside:avoid }
+.voce + .voce{ padding-top:2.6mm; border-top:.25mm solid #e2dacb }
+.n{ width:6.4mm; height:6.4mm; border-radius:50%; background:var(--cap); color:#fff; font:700 7.6pt/6.4mm var(--f-body);
+  text-align:center; grid-row:span 3 }
+.n.m{ background:var(--teal) } .n.b{ background:var(--mustard) } .n.s{ background:var(--navy) }
+.voce h3{ font-size:11pt }
+.voce .dati{ font-size:7.4pt; color:var(--muted); margin:.4mm 0 1mm }
+.voce .dati b{ color:var(--ink); font-weight:600 }
+.voce .con-foto{ display:grid; grid-template-columns:1fr 30mm; gap:3mm; align-items:start }
+.voce .con-foto .foto{ height:22mm }
+.prezzo{ font-family:var(--f-body); font-weight:700; color:var(--teal); font-size:8pt; margin-left:1.5mm }
+
+/* ---------- mappa del capitolo ---------- */
+.mappa-pag{ padding:0 }
+.mappa-pag > img{ position:absolute; inset:0; width:100%; height:100% ; object-fit:cover }
+.mappa-pag .scala{ position:absolute; left:6mm; bottom:5mm; background:rgba(255,253,249,.94); border-radius:1.2mm; padding:1.6mm 2.4mm; font-size:6.6pt; color:var(--muted) }
+.legenda{ columns:2; column-gap:5mm; font-size:7.7pt; line-height:1.3 }
+.legenda h4{ font:700 8pt var(--f-body); color:var(--ink); margin:2.4mm 0 1mm; break-after:avoid; display:flex; align-items:center; gap:1.8mm }
+.legenda h4:first-child{ margin-top:0 }
+.legenda h4 i{ width:3mm; height:3mm; border-radius:50% }
+.legenda ol{ margin:0; padding:0; list-style:none }
+.legenda li{ display:grid; grid-template-columns:5mm 1fr auto; gap:1mm; padding:.45mm 0; break-inside:avoid }
+.legenda li b{ font-weight:700 }
+.legenda li span{ color:var(--muted) }
+
+/* ---------- passeggiata ---------- */
+.tappe{ margin:0; padding:0; list-style:none; position:relative }
+.tappe::before{ content:""; position:absolute; left:2.9mm; top:2mm; bottom:3mm; width:.9mm; background:var(--cap) }
+.tappe li{ position:relative; padding:0 0 2.6mm 9mm; font-size:8.4pt }
+.tappe li::before{ content:attr(data-n); position:absolute; left:0; top:-.3mm; width:6.6mm; height:6.6mm; border-radius:50%;
+  background:#fff; border:.8mm solid var(--cap); font:700 7pt/5mm var(--f-body); text-align:center; color:var(--ink) }
+.tappe b{ font-family:var(--f-display); font-size:9.8pt }
+.tappe .tempo{ color:var(--muted); font-size:7.4pt }
+
+.due{ display:grid; grid-template-columns:1fr 1fr; gap:4mm }
+.spinta{ margin-top:auto }   /* spinge un riquadro in fondo alla pagina */
+
+/* ---------- schermo stretto (sito sul telefono) ---------- */
+@media screen and (max-width: 640px){
+  body{ background:var(--paper); font-size:15px }
+  .page, .page.sx{ width:auto; height:auto; min-height:0; margin:0; padding:22px max(18px, env(safe-area-inset-right, 0px)) 26px max(18px, env(safe-area-inset-left, 0px));
+    border-bottom:1px solid #e2dacb; overflow:visible }
+  .linea, .folio, .testata{ display:none }
+  .foto.al, .sx .foto.al{ margin:0 -18px }
+  .apertura{ min-height:88vh }
+  .apertura .titolo{ left:20px; right:20px; bottom:28px }
+  .mappa-pag{ height:auto }
+  .mappa-pag > img{ position:static; height:auto }
+  .due, .voce .con-foto{ grid-template-columns:1fr }
+  .voce .con-foto .foto{ height:44vw }
+  .legenda{ columns:1 }
+  .foto[style*="height"]{ height:auto !important; aspect-ratio:3/2 }
+  /* sul telefono i caratteri in punti tipografici diventerebbero minuscoli */
+  .riquadro, .consiglio, .tappe li, .card p{ font-size:14.5px }
+  .info, .legenda, .voce .dati, .piccolo, .cap, .lista-crediti{ font-size:13px }
+  .info{ grid-template-columns:76px 1fr }
+  .lead{ font-size:18px } h2{ font-size:30px } .voce h3{ font-size:19px } h3{ font-size:19px } h4{ font-size:16px }
+  .n{ width:28px; height:28px; font-size:13px; line-height:28px }
+  .voce{ grid-template-columns:28px 1fr; gap:0 12px }
+  .riquadro [style*="font-size"]{ font-size:14px !important }
+  .riquadro [style*="grid-template-columns:13mm"]{ grid-template-columns:72px 1fr !important }
+  .riquadro [style*="grid-template-columns:24mm"]{ grid-template-columns:96px 1fr !important }
+}
+
+/* ---------- sommario e indice analitico (generati da costruisci.py) ---------- */
+.sommario{ list-style:none; margin:0; padding:0; display:grid; gap:1.6mm; font-size:9.6pt }
+.sommario li{ display:grid; grid-template-columns:3mm 1fr auto; gap:3mm; align-items:baseline; border-bottom:.25mm dotted #cfc5b2; padding-bottom:1.2mm }
+.sommario li i{ width:3mm; height:3mm; border-radius:50%; align-self:center }
+.sommario li b{ font-family:var(--f-display); font-weight:800 }
+.sommario li.parte{ display:block; border:0; margin-top:2.4mm; font:700 7.5pt var(--f-body); color:var(--muted) }
+.indice{ list-style:none; margin:0; padding:0; columns:2; column-gap:6mm; font-size:7.2pt; line-height:1.3 }
+.indice li{ display:flex; justify-content:space-between; gap:2mm; break-inside:avoid; padding:.35mm 0; border-bottom:.2mm dotted #ddd3c0 }
+.indice b{ font-weight:600; white-space:nowrap }
+@media screen and (max-width: 640px){ .sommario{ font-size:16px } .indice{ columns:1; font-size:14px } }
+
+.page{--cap:#4a5560}
+.lista-crediti{margin:0;padding:0;list-style:none;display:grid;gap:1.4mm;font-size:7pt;line-height:1.3}
+.lista-crediti span{color:var(--muted);word-break:break-all}
+.appunti .righe{flex:1;background:repeating-linear-gradient(transparent 0 7.4mm, #e2dacb 7.4mm 7.65mm)}
+
+.barra-web{display:none}
+@media screen{.barra-web{display:flex;gap:18px;justify-content:center;position:sticky;top:0;z-index:10;
+  padding:10px 16px;background:#1d2a44;font:600 14px var(--f-body)}.barra-web a{color:#fff;text-decoration:none}}
+@media print{.barra-web{display:none}}
+</style></head><body><nav class="barra-web"><a href="./">← Guida</a><a href="10-pratica.pdf">Scarica il PDF</a><a href="../">Mappa</a></nav>
+<section class="page apertura" data-sez="1" data-nohead><div class="linea" aria-hidden="true"><i class="qui" style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div>
+  <img src="img/foto/pr_apertura.jpg" alt="Un treno della metropolitana di Londra in banchina">
+  <div class="velo"></div>
+  <div class="titolo">
+    <div class="num">Parte 6</div>
+    <h1>Guida pratica</h1>
+    <p class="sotto">Dall'aereo all'hotel, la metro senza biglietto, le prese a tre poli e cosa fare se qualcosa va storto.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="1"><div class="linea" aria-hidden="true"><i class="qui" style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">244</div>
+  <p class="sezione">In breve</p>
+  <h2>Le dieci cose da sapere</h2>
+  <div class="riquadro">
+    <ol class="top-lista">
+      <li><b>1</b><span><strong>Passaporto</strong> per tutti, anche per le ragazze: la carta d'identità non basta.</span></li>
+      <li><b>2</b><span><strong>ETA</strong>, l'autorizzazione elettronica: £20 a testa, da chiedere prima, solo sull'app ufficiale o su gov.uk.</span></li>
+      <li><b>3</b><span><strong>Niente panini con salumi o formaggio</strong> in valigia: è vietato portare carne e latticini dall'Unione europea.</span></li>
+      <li><b>4</b><span><strong>L'ora</strong>: a Londra è un'ora in meno che in Italia.</span></li>
+      <li><b>5</b><span><strong>In metro si paga con la carta contactless</strong> o il telefono, una carta per persona. Oltre £8,90 al giorno non si paga.</span></li>
+      <li><b>6</b><span><strong>Le ragazze di 12 e 13 anni</strong> pagano metà con una Oyster e lo sconto Young Visitor. Quella di 16 paga da adulta.</span></li>
+      <li><b>7</b><span><strong>Prese tipo G</strong>, a tre spinotti: servono gli adattatori.</span></li>
+      <li><b>8</b><span><strong>Il roaming</strong> non è più gratis come in Europa: controllate il vostro operatore.</span></li>
+      <li><b>9</b><span><strong>Sulla scala mobile</strong> si sta a destra.</span></li>
+      <li><b>10</b><span><strong>999</strong> per le emergenze, <strong>111</strong> per un medico. Portate la tessera sanitaria: vale anche lì.</span></li>
+    </ol>
+  </div>
+  <dl class="info spinta">
+    <dt>Valuta</dt><dd>Sterlina. £1 ≈ €1,19 (BCE, 16 ottobre 2026).</dd>
+    <dt>Lingua</dt><dd>Inglese. Il piccolo dizionario è a p. 238.</dd>
+    <dt>Fuso</dt><dd>GMT, un'ora indietro rispetto all'Italia.</dd>
+    <dt>Buio</dt><dd>A febbraio il sole sorge verso le 7:30 e tramonta verso le 17.</dd>
+  </dl>
+</section>
+<section class="page" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">245</div>
+  <div class="foto al" style="height:60mm;margin-top:-14mm"><img src="img/foto/pr_stansted.jpg" alt="Il terminal dell'aeroporto di Stansted"></div>
+  <p class="sezione">Arrivo e partenza</p>
+  <h2>Venerdì notte a Stansted</h2>
+  <div class="testo">
+    <p class="lead">Atterriamo alle 23:30. La prima notte si dorme all'aeroporto: niente treni a mezzanotte.</p>
+    <p>Dopo il controllo passaporti si esce dal terminal e si va a piedi all'<strong>Hampton by Hilton London Stansted Airport</strong>, in Bassingbourn Road, lungo un percorso coperto: l'aeroporto parla di cinque minuti, con le valigie contate dieci o quindici. Non serve la navetta. Realisticamente siamo in camera tra mezzanotte e mezza e l'una.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Al controllo passaporti</h4>
+    <p>I cittadini europei con passaporto elettronico possono usare gli <strong>eGates</strong>, i varchi automatici, dagli 8 anni in su e da 120 cm di altezza, con l'ETA valida. Tra gli 8 e i 17 anni si passa con un adulto: l'adulto va per primo. Vale per tutte e tre le ragazze.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Il trucco</h4>
+    <p>L'arrivo dopo mezzanotte va segnalato all'hotel prima di partire. La mattina dopo c'è tempo: il check-out è alle 12 e la colazione è compresa.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">246</div>
+  <p class="sezione">Arrivo e partenza</p>
+  <h2>Sabato: da Stansted all'hotel</h2>
+  <div class="foto" style="height:44mm"><img src="img/foto/pr_express.jpg" alt="Un treno dello Stansted Express"></div>
+  <div class="voce">
+    <div class="n">1</div>
+    <h3>Stansted Express <span class="prezzo">consigliato</span></h3>
+    <div class="dati"><b>Treno</b> · circa 48 minuti fino a Liverpool Street · ogni 15 minuti di giorno</div>
+    <p>Parte dalla stazione ferroviaria dell'aeroporto e ferma a Tottenham Hale e a <strong>Liverpool Street</strong>. Da lì all'hotel: una fermata di Hammersmith &amp; City line fino ad <strong>Aldgate East</strong>, o 12-15 minuti a piedi con le valigie. In tutto, circa un'ora e un quarto.</p>
+  </div>
+  <div class="voce">
+    <div class="n">2</div>
+    <h3>Pullman National Express A9 <span class="prezzo">economico</span></h3>
+    <div class="dati"><b>Pullman</b> · circa un'ora fino a Whitechapel · da £10,50 a testa</div>
+    <p>Dal nuovo orario di ottobre 2026 ferma a <strong>Whitechapel</strong>, vicino al Royal London Hospital, a circa un chilometro dall'hotel, e poi a Liverpool Street. Una valigia grande fino a 20 kg e un bagaglio a mano a testa. Attenzione: una corsa su due passa da Canary Wharf e non da Whitechapel.</p>
+  </div>
+  <div class="riquadro spinta" style="background:var(--teal-tint)">
+    <h4>Le valigie, sabato</h4>
+    <p>Il check-in all'hotel di Londra è dalle 15. Si arriva in mattinata, si lasciano le valigie alla reception e si parte subito per la giornata.</p>
+  </div>
+</section>
+<section class="page" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">247</div>
+  <p class="sezione">Arrivo e partenza</p>
+  <h2>Biglietti e sconti per il treno</h2>
+  <dl class="info">
+    <dt>Advance</dt><dd>Solo online, posti limitati, non rimborsabili, in vendita circa sei mesi prima: <b>da £9,90</b> a testa a tratta.</dd>
+    <dt>Normale</dt><dd>Circa £21-25 a tratta, comprato al momento.</dd>
+    <dt>Ragazzi</dt><dd>Dai 5 ai 15 anni metà prezzo. <b>La ragazza di 16 anni paga da adulta.</b> Per noi: 6 biglietti interi e 2 ridotti.</dd>
+    <dt>Contactless</dt><dd>Dal marzo 2026 si può pagare toccando il lettore con la carta, ma senza ridotto per le ragazze. La Oyster <b>non vale</b> per Stansted: si rischia una multa di £100.</dd>
+  </dl>
+  <div class="riquadro">
+    <h4>E gli sconti di gruppo?</h4>
+    <p>Il <strong>GroupSave</strong> delle ferrovie inglesi (un terzo in meno per 3-9 persone) <b>non vale</b> sullo Stansted Express. Il treno ha una sua offerta per gruppi di 3-4 persone: in otto si possono fare due gruppi da quattro. Le condizioni esatte sono da controllare su stanstedexpress.com al momento di prenotare.</p>
+    <p style="margin-top:1.6mm">La <strong>Family &amp; Friends Railcard</strong> costa £35 per un anno, si compra nell'app Railcard e vale sullo Stansted Express: un terzo in meno per gli adulti, fino al 60% per i ragazzi 5-15. Ogni carta copre fino a 4 adulti e 4 ragazzi, con almeno un ragazzo: a noi ne servono due.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Quanto spendiamo in otto, a tratta</h4>
+    <p>Advance: <b>da circa £70</b>. Biglietto normale: circa £147. Normale con due Railcard: circa £92 (più £70 per le carte, una volta sola). Pullman A9: da circa £70-84. Conviene prenotare gli Advance appena escono.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">248</div>
+  <p class="sezione">Arrivo e partenza</p>
+  <h2>Martedì: il volo delle 16:30</h2>
+  <div class="testo">
+    <p class="lead">Il banco bagagli di Ryanair chiude alle 15:50, l'imbarco alle 16:00. Dopo, l'aereo parte senza di noi.</p>
+  </div>
+  <ol class="tappe" style="margin-top:1mm">
+    <li data-n="1"><b>Entro le 11:00</b><br>Check-out dall'hotel di Londra. Le valigie si lasciano in deposito: da confermare con l'hotel.</li>
+    <li data-n="2"><b>Fino alle 12:15</b><br>Ultima mattinata vicino all'hotel, poi si recuperano le valigie.</li>
+    <li data-n="3"><b>Alle 12:30, al più tardi</b><br>Partenza: una fermata fino a Liverpool Street e lo Stansted Express, circa un'ora e un quarto in tutto. In pullman A9 da Whitechapel ci vuole un'ora e 37 minuti, più la strada a piedi.</li>
+    <li data-n="4"><b>14:00-14:30</b><br>In aeroporto, due ore o due ore e mezza prima. Con valigie da imbarcare, meglio stare verso le 14.</li>
+    <li data-n="5"><b>15:50 · 16:00 · 16:30</b><br>Chiude il banco bagagli, chiude il gate, si parte. Arrivo a Bari alle 20:20.</li>
+  </ol>
+  <div class="riquadro">
+    <h4>Il bagaglio Ryanair</h4>
+    <p>Gratis solo una borsa piccola da <strong>40 × 30 × 20 cm</strong> sotto il sedile. Con Priority si aggiunge un trolley da 10 kg (55 × 40 × 20 cm). Il bagaglio da 10 kg senza Priority si consegna al banco prima dei controlli.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Se l'hotel non tiene le valigie</h4>
+    <p>A Liverpool Street c'è un deposito bagagli vicino al binario 10, aperto circa 7-23, e ci sono app come Stasher con negozi convenzionati nei dintorni. Prezzi da controllare prima.</p>
+  </div>
+</section>
+<section class="page" data-sez="3"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i class="qui" style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">249</div>
+  <p class="sezione">Muoversi a Londra</p>
+  <h2>Niente biglietti: si tocca e si va</h2>
+  <div class="testo">
+    <p class="lead">Metro, bus, DLR, Elizabeth line: si paga avvicinando una carta contactless o il telefono al lettore giallo, all'entrata e all'uscita.</p>
+    <p>Il sistema calcola da solo la tariffa più bassa e, raggiunto il <strong>tetto giornaliero</strong>, non fa più pagare: si viaggia quanto si vuole. Il tetto settimanale va da lunedì a domenica, quindi a noi non serve: le nostre giornate cadono a cavallo di due settimane.</p>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Le tariffe, adulti</h4>
+    <div class="due" style="font-size:8pt">
+      <div>Corsa in zona 1, punta / fuori punta<br>Corsa zone 1-2, punta / fuori punta<br><b>Tetto giornaliero zone 1-2</b><br>Tetto giornaliero zone 1-3<br>Bus, una corsa (dal 1° novembre 2026)<br>Tetto giornaliero solo bus</div>
+      <div style="text-align:right">£3,10 / £3,00<br>£3,60 / £3,10<br><b>£8,90</b><br>£10,50<br>£1,85<br>£5,55</div>
+    </div>
+    <p class="piccolo" style="margin-top:1.5mm">Tariffe in vigore da marzo 2026; TfL dice che i tetti restano fermi fino a marzo 2027. Ore di punta: dal lunedì al venerdì 6:30-9:30 e 16:00-19:00. Il weekend è tutto fuori punta.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Tre regole</h4>
+    <p><strong>Una carta per persona.</strong> Non si paga per due con la stessa carta, ma si può pagare per un altro con una seconda carta o con il telefono.<br><strong>Sempre la stessa carta</strong>, all'entrata e all'uscita, tutto il giorno: niente cambi tra telefono e carta, o il tetto non funziona.<br><strong>Tenete le carte separate.</strong> Un portafoglio con due carte appoggiato sul lettore può far pagare quella sbagliata, o due volte.</p>
+  </div>
+  <p class="piccolo spinta">Le carte non britanniche spesso fanno pagare una commissione dell'1-3% a ogni pagamento: una carta senza commissioni all'estero fa risparmiare.</p>
+</section>
+<section class="page sx" data-sez="3"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i class="qui" style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">250</div>
+  <p class="sezione">Muoversi a Londra</p>
+  <h2>Le ragazze in metro</h2>
+  <div class="voce">
+    <div class="n">12</div>
+    <h3>12 e 13 anni: Young Visitor</h3>
+    <div class="dati"><b>Metà prezzo e metà tetto</b> per 14 giorni · su una Oyster</div>
+    <p>I ragazzi dagli 11 ai 15 anni in visita a Londra hanno lo sconto <strong>Young Visitor</strong>: il 50% sulle corse e sul tetto giornaliero, in metro, bus, DLR, Overground ed Elizabeth line. Va caricato su una carta <strong>Oyster</strong> o Visitor Oyster da un addetto, in una stazione della metro: <b>le ragazze devono essere presenti</b>. Non funziona sulle carte di credito.</p>
+  </div>
+  <div class="voce">
+    <div class="n">16</div>
+    <h3>16 anni: paga da adulta</h3>
+    <div class="dati"><b>Contactless o Oyster</b> a tariffa piena</div>
+    <p>Esiste la 16+ Zip Oyster per i ragazzi che vivono fuori Londra, ma costa £22, va chiesta settimane prima e per tre giorni costa più di quanto fa risparmiare. Meglio la sua carta contactless, se ce l'ha, o una Oyster normale.</p>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Quanto si risparmia</h4>
+    <p>La Visitor Oyster costa £10,50 di attivazione, che non si riprende (il credito avanzato sì). In tre giorni lo sconto fa risparmiare circa £13 a ragazza: il guadagno vero è di pochi euro. Ma alle ragazze di 12 e 13 anni una carta loro serve comunque, perché ognuno deve avere la sua.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Il trucco</h4>
+    <p>Fate attivare lo sconto il sabato, alla prima stazione: a Liverpool Street o ad Aldgate East, chiedendo allo sportello o a un addetto con il gilet arancione. Vale anche sui battelli Uber Boat, che fanno metà prezzo ai ragazzi 5-15.</p>
+  </div>
+</section>
+<section class="page" data-sez="3"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i class="qui" style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">251</div>
+  <div class="foto al" style="height:58mm;margin-top:-14mm"><img src="img/foto/pr_escalator.jpg" alt="Le scale mobili di una stazione della metropolitana"></div>
+  <p class="sezione">Muoversi a Londra</p>
+  <h2>La Tube in pratica</h2>
+  <div class="testo">
+    <p>La metropolitana, <em>the Tube</em>, ha 11 linee, ognuna con il suo nome e il suo colore. I cartelli sulle banchine indicano la direzione con il punto cardinale (<em>Eastbound</em>, verso est; <em>Westbound</em>, verso ovest) o con il capolinea. L'uscita si chiama <em>Way out</em>.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Le regole non scritte</h4>
+    <p><strong>Sulla scala mobile si sta a destra</strong>, a sinistra passa chi ha fretta. Davanti alle porte si lascia scendere prima di salire. Sulle banchine strette si sta dietro la linea gialla. Lo zaino si toglie dalle spalle quando c'è folla.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Di notte</dt><dd>Il venerdì e il sabato le linee Central, Jubilee, Northern, Piccadilly e Victoria vanno tutta la notte. Le nostre, District e Hammersmith &amp; City, no.</dd>
+    <dt>Lavori</dt><dd>Nei weekend alcune linee chiudono per lavori: controllate l'app TfL Go due settimane prima e la mattina stessa.</dd>
+    <dt>Oggetti persi</dt><dd>Si denuncia online su tfl.gov.uk/lostproperty; il ritiro è solo su appuntamento.</dd>
+  </dl>
+</section>
+<section class="page sx" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">252</div>
+  <p class="sezione">Muoversi a Londra</p>
+  <h2>La metro che ci serve</h2>
+  <div style="margin:0 -6mm 0 -4mm">
+<svg viewBox="0 0 1310 920" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block" font-family="Figtree, Helvetica, Arial, sans-serif">
+<rect width="1310" height="920" fill="#fffdf9"/>
+<path d="M0,700 C200,690 380,700 470,690 C560,680 600,650 700,650 C850,650 950,640 1010,650 C1070,660 1075,720 1075,770 C1075,800 1120,800 1310,790" fill="none" stroke="#d6e6ee" stroke-width="34" stroke-linecap="round"/>
+<text x="250" y="715" font-size="20" fill="#7aa3b8" font-style="italic">Tamigi</text>
+<polyline points="90,300 290,230 430,190 560,150 690,250 880,300 950,370 960,560 820,560 690,560 610,560 530,560 470,640 390,640 300,640 150,640 70,640 40,560 40,380 90,300" fill="none" stroke="#FFD329" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="90,309 290,239 430,199 560,159 690,259 880,309 950,379 1040,399 1130,339" fill="none" stroke="#F4A9BE" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1130,330 1040,390 960,560" fill="none" stroke="#007D32" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="960,569 820,569 690,569 610,569 530,569 470,649 390,649 300,649 150,649 70,649" fill="none" stroke="#007D32" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="290,420 370,420 460,420 560,420 690,420 820,420 880,300" fill="none" stroke="#DC241F" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="560,150 560,420 525,465 470,480 405,495 340,520 230,575 150,640" fill="none" stroke="#0019A8" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="290,230 290,420 340,520 470,640 560,740 680,740 820,740 1120,720 1200,800" fill="none" stroke="#A1A5A7" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="430,150 460,420 470,480 530,560 560,740" fill="none" stroke="#000000" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="560,150 820,420 820,740" fill="none" stroke="#000000" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="560,150 430,150 370,420 340,520 300,640" fill="none" stroke="#0098D8" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="90,291 290,411 460,411 690,241 880,291 1130,321 1120,711" fill="none" stroke="#6950A1" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="820,420 900,470 1090,600 1120,720 1040,860" fill="none" stroke="#00AFAD" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1030,560 1090,600" fill="none" stroke="#00AFAD" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="820" y1="420" x2="820" y2="560" stroke="#1d2a44" stroke-width="3" stroke-dasharray="6 5"/>
+<circle cx="90" cy="300" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="108" y="307" font-size="24" font-weight="600" text-anchor="start" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Paddington</text>
+<circle cx="290" cy="230" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="290" y="212" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Baker Street</text>
+<circle cx="430" cy="150" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="412" y="157" font-size="24" font-weight="600" text-anchor="end" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Euston</text>
+<circle cx="560" cy="150" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="560" y="132" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">King's Cross St Pancras</text>
+<circle cx="690" cy="250" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="690" y="232" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Farringdon</text>
+<circle cx="880" cy="300" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="880" y="282" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Liverpool Street</text>
+<circle cx="950" cy="370" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="932" y="377" font-size="24" font-weight="600" text-anchor="end" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Aldgate</text>
+<circle cx="1040" cy="390" r="14" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="1040" y="424" font-size="24" font-weight="800" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Aldgate East</text>
+<circle cx="1130" cy="330" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="1130" y="312" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Whitechapel</text>
+<circle cx="960" cy="560" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="960" y="594" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Tower Hill</text>
+<circle cx="290" cy="420" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="272" y="427" font-size="24" font-weight="600" text-anchor="end" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Bond Street</text>
+<circle cx="370" cy="420" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="370" y="454" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Oxford Circus</text>
+<circle cx="460" cy="420" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="460" y="402" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Tottenham Ct Rd</text>
+<circle cx="560" cy="420" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="578" y="427" font-size="24" font-weight="600" text-anchor="start" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Holborn</text>
+<circle cx="690" cy="420" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="690" y="402" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">St Paul's</text>
+<circle cx="820" cy="420" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="838" y="427" font-size="24" font-weight="600" text-anchor="start" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Bank</text>
+<circle cx="525" cy="465" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="543" y="472" font-size="24" font-weight="600" text-anchor="start" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Covent Garden</text>
+<circle cx="470" cy="480" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="488" y="487" font-size="24" font-weight="600" text-anchor="start" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Leicester Sq</text>
+<circle cx="405" cy="495" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="387" y="502" font-size="24" font-weight="600" text-anchor="end" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Piccadilly Circus</text>
+<circle cx="340" cy="520" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="322" y="527" font-size="24" font-weight="600" text-anchor="end" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Green Park</text>
+<circle cx="230" cy="575" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="230" y="557" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Knightsbridge</text>
+<circle cx="820" cy="560" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="820" y="594" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Monument</text>
+<circle cx="690" cy="560" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="690" y="542" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Blackfriars</text>
+<circle cx="530" cy="560" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="540" y="594" font-size="24" font-weight="600" text-anchor="end" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Embankment</text>
+<circle cx="470" cy="640" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="470" y="674" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Westminster</text>
+<circle cx="390" cy="640" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="390" y="622" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">St James's Park</text>
+<circle cx="300" cy="640" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="300" y="674" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Victoria</text>
+<circle cx="150" cy="640" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="150" y="674" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">South Kensington</text>
+<circle cx="560" cy="740" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="560" y="774" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Waterloo</text>
+<circle cx="680" cy="740" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="680" y="722" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Southwark</text>
+<circle cx="820" cy="740" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="820" y="774" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">London Bridge</text>
+<circle cx="1120" cy="720" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="1138" y="727" font-size="24" font-weight="600" text-anchor="start" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Canary Wharf</text>
+<circle cx="1200" cy="800" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="1200" y="834" font-size="24" font-weight="600" text-anchor="middle" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">North Greenwich</text>
+<circle cx="1040" cy="860" r="11" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+<text x="1022" y="867" font-size="24" font-weight="600" text-anchor="end" fill="#1d2a44" stroke="#fffdf9" stroke-width="6" paint-order="stroke">Cutty Sark (Greenwich)</text>
+<text x="1040" y="455" font-size="19" font-weight="700" text-anchor="middle" fill="#b8402f" stroke="#fffdf9" stroke-width="6" paint-order="stroke">il nostro hotel</text>
+<text x="1060" y="590" font-size="17" text-anchor="start" fill="#1d2a44" stroke="#fffdf9" stroke-width="5" paint-order="stroke">Tower Gateway</text>
+<circle cx="1030" cy="560" r="9" fill="#fff" stroke="#1d2a44" stroke-width="4"/>
+</svg>
+  </div>
+  <div class="riquadro" style="font-size:7.8pt">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1mm 4mm">
+      <span><i style="display:inline-block;width:5mm;height:1.6mm;background:#007D32;vertical-align:middle"></i> District</span>
+      <span><i style="display:inline-block;width:5mm;height:1.6mm;background:#F4A9BE;vertical-align:middle"></i> Hammersmith &amp; City</span>
+      <span><i style="display:inline-block;width:5mm;height:1.6mm;background:#FFD329;vertical-align:middle"></i> Circle</span>
+      <span><i style="display:inline-block;width:5mm;height:1.6mm;background:#DC241F;vertical-align:middle"></i> Central</span>
+      <span><i style="display:inline-block;width:5mm;height:1.6mm;background:#6950A1;vertical-align:middle"></i> Elizabeth line</span>
+      <span><i style="display:inline-block;width:5mm;height:1.6mm;background:#A1A5A7;vertical-align:middle"></i> Jubilee</span>
+      <span><i style="display:inline-block;width:5mm;height:1.6mm;background:#000;vertical-align:middle"></i> Northern</span>
+      <span><i style="display:inline-block;width:5mm;height:1.6mm;background:#0019A8;vertical-align:middle"></i> Piccadilly</span>
+      <span><i style="display:inline-block;width:5mm;height:1.6mm;background:#0098D8;vertical-align:middle"></i> Victoria</span>
+      <span><i style="display:inline-block;width:5mm;height:1.6mm;background:#00AFAD;vertical-align:middle"></i> DLR</span>
+    </div>
+  </div>
+  <p class="piccolo spinta">Schema semplificato e non in scala, con le sole stazioni utili per la guida. La mappa completa è nell'app TfL Go e in tutte le stazioni. Tra Bank e Monument si cambia a piedi, sottoterra.</p>
+</section>
+<section class="page" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">253</div>
+  <p class="sezione">Muoversi a Londra</p>
+  <h2>Da Aldgate East a…</h2>
+  <div class="foto" style="height:34mm"><img src="img/foto/pr_aldgate.jpg" alt="L'ingresso della stazione di Aldgate East"></div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <div style="display:grid;grid-template-columns:30mm 1fr;gap:1.5mm 3mm;font-size:8pt;line-height:1.35">
+      <b>Tower of London</b><span>A piedi, 10-15 minuti. Oppure District, una fermata fino a Tower Hill.</span>
+      <b>Westminster</b><span>District, diretta: Westminster o St James's Park.</span>
+      <b>South Kensington</b><span>District, diretta: i musei sono a due passi.</span>
+      <b>St Paul's</b><span>District fino a Mansion House o Blackfriars, poi 5-10 minuti a piedi.</span>
+      <b>London Eye</b><span>District fino a Westminster, poi si attraversa il ponte a piedi.</span>
+      <b>Covent Garden</b><span>District fino a Embankment, poi 10 minuti a piedi o la Northern line fino a Leicester Square.</span>
+      <b>King's Cross</b><span>Hammersmith &amp; City, diretta. Il binario 9¾ è nell'atrio.</span>
+      <b>Baker Street</b><span>Hammersmith &amp; City, diretta.</span>
+      <b>Oxford Street</b><span>Elizabeth line da Whitechapel o Liverpool Street fino a Tottenham Court Road o Bond Street.</span>
+      <b>Canary Wharf</b><span>Elizabeth line da Whitechapel, diretta.</span>
+      <b>Greenwich</b><span>DLR fino a Cutty Sark, o Uber Boat dal molo della Tower: vedi il capitolo "Greenwich e Docklands".</span>
+      <b>Euston</b><span>Hammersmith &amp; City fino a Euston Square, poi pochi minuti a piedi. Da qui i treni per gli studi di Harry Potter.</span>
+    </div>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Le due stazioni dell'hotel</h4>
+    <p><strong>Aldgate East</strong> è a pochi minuti a piedi: District e Hammersmith &amp; City. <strong>Whitechapel</strong>, a circa un chilometro, ha in più l'Elizabeth line, la linea veloce e nuova che attraversa la città da est a ovest. Aldgate, senza East, è un'altra stazione, sulla Circle.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">254</div>
+  <p class="sezione">Muoversi a Londra</p>
+  <h2>In bus e sul fiume</h2>
+  <div class="voce">
+    <div class="n">1</div>
+    <h3>I bus rossi</h3>
+    <div class="dati"><b>£1,85 a corsa</b> dal 1° novembre 2026 · solo contactless o Oyster, niente contanti</div>
+    <div class="con-foto">
+      <p>Con l'<strong>Hopper</strong>, entro un'ora dalla prima corsa i bus successivi sono gratis, se si usa la stessa carta. Sui bus si tocca il lettore solo salendo. Il piano di sopra, davanti, è il posto migliore per vedere la città.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/pr_bus.jpg" alt="Un bus rosso a due piani per Oxford Circus"></div>
+    </div>
+  </div>
+  <div class="voce">
+    <div class="n">2</div>
+    <h3>Uber Boat by Thames Clippers</h3>
+    <div class="dati"><b>Battelli sul Tamigi</b> · ogni 10-20 minuti · Westminster, London Eye, Tower, Greenwich</div>
+    <div class="con-foto">
+      <p>Si paga con il contactless (fino a ottobre 2026: zona centrale £9,90-11,90, centro-est £11,40-13,70) o nell'app. Al molo costa di più. I ragazzi 5-15 pagano metà. <b>Il tetto giornaliero della metro non vale sul fiume</b>, e nel weekend si paga la tariffa di punta.</p>
+      <div class="foto" style="height:28mm"><img src="img/foto/pr_boat.jpg" alt="Un catamarano Thames Clippers sul Tamigi, con i vecchi colori"></div>
+    </div>
+  </div>
+  <div class="riquadro spinta">
+    <h4>Il giornaliero sul fiume</h4>
+    <p>Il biglietto hop-on hop-off di un giorno costa £29,30 online (£14,65 i ragazzi); il <strong>Family</strong>, 2 adulti e fino a 3 ragazzi, £58,70. Comprato online almeno tre giorni prima ha il 15% di sconto. Prezzi di ottobre 2026: quelli nuovi escono a novembre.</p>
+  </div>
+</section>
+<section class="page" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">255</div>
+  <p class="sezione">Muoversi a Londra</p>
+  <h2>Altri mezzi, app e taxi</h2>
+  <div class="voce">
+    <div class="n">3</div>
+    <h3>Elizabeth line</h3>
+    <div class="con-foto">
+      <p>Treni lunghi e veloci che attraversano Londra sottoterra: da Whitechapel a Liverpool Street, Farringdon, Tottenham Court Road, Bond Street e Paddington, e verso est fino a Canary Wharf. Si paga come la metro.</p>
+      <div class="foto" style="height:26mm"><img src="img/foto/pr_elizabeth.jpg" alt="Un treno della Elizabeth line"></div>
+    </div>
+  </div>
+  <div class="voce">
+    <div class="n">4</div>
+    <h3>DLR e funivia</h3>
+    <p>La <strong>DLR</strong> è il treno senza conducente che va verso Canary Wharf e Greenwich: sedersi davanti, dove non c'è la cabina, piace a tutti. La <strong>funivia</strong> IFS Cloud Cable Car attraversa il Tamigi vicino all'O2: £7 adulti e £3,50 ragazzi a tratta, andata e ritorno £13,50 e £6,75.</p>
+  </div>
+  <div class="voce">
+    <div class="n">5</div>
+    <h3>Le app</h3>
+    <p><strong>TfL Go</strong> è l'app ufficiale, gratis: mappa, treni in tempo reale, lavori e scioperi. <strong>Citymapper</strong> combina metro, bus, battelli e piedi e dice in che carrozza salire per uscire prima.</p>
+  </div>
+  <div class="voce">
+    <div class="n">6</div>
+    <h3>Taxi neri e Uber</h3>
+    <p>I <strong>black cab</strong> si fermano con la mano quando la luce gialla sul tetto è accesa; i tassisti hanno studiato anni per l'esame di <em>The Knowledge</em>. In otto servono due auto. La mancia si dà arrotondando. Funzionano anche Uber e le altre app.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="5"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i class="qui" style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">256</div>
+  <p class="sezione">Informazioni dalla A alla Z</p>
+  <h2>Documenti e dogana</h2>
+  <div class="voce">
+    <div class="n">A</div>
+    <h3>ETA, l'autorizzazione di viaggio</h3>
+    <div class="dati"><b>£20 a testa</b>, bambini compresi · obbligatoria per gli italiani dal 2 aprile 2025</div>
+    <p>Si chiede nell'app ufficiale <strong>UK ETA</strong> o su <strong>gov.uk/eta</strong>, anche per gli altri del gruppo. Di solito la risposta arriva in un giorno, al massimo in tre giorni lavorativi. Vale due anni, o fino alla scadenza del passaporto, ed è legata al passaporto con cui si chiede: si viaggia con quello. <b>Attenzione ai siti non ufficiali</b>, che fanno pagare di più.</p>
+  </div>
+  <div class="voce">
+    <div class="n">B</div>
+    <h3>Passaporto</h3>
+    <p>Serve il <strong>passaporto</strong>, valido per tutto il viaggio: la carta d'identità non è accettata. Ogni minore ha il suo passaporto personale.</p>
+  </div>
+  <div class="voce">
+    <div class="n">C</div>
+    <h3>Minori senza genitori</h3>
+    <p>Una ragazza sotto i 14 anni che viaggia senza almeno un genitore, con un altro adulto, ha bisogno della <strong>dichiarazione di accompagnamento</strong>, firmata dai genitori in Questura (si chiede online su passaportonline.poliziadistato.it). Dai 14 anni non serve.</p>
+  </div>
+  <div class="riquadro spinta" style="background:var(--mustard-tint)">
+    <h4>Cosa non portare</h4>
+    <p>Dal 12 aprile 2025 è <strong>vietato portare in Gran Bretagna carne e latticini dall'Unione europea</strong>: panini con prosciutto o salame, formaggi, latte, anche sottovuoto o comprati al duty free. Alla frontiera li sequestrano, e la multa può arrivare a £5.000. Il panino per il volo, quindi, vegetariano e senza formaggio.</p>
+  </div>
+</section>
+<section class="page" data-sez="5"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i class="qui" style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">257</div>
+  <p class="sezione">Informazioni dalla A alla Z</p>
+  <h2>Soldi e mance</h2>
+  <div class="voce">
+    <div class="n">D</div>
+    <h3>Valuta e carte</h3>
+    <p>Si paga in <strong>sterline</strong>: £1 vale circa €1,19 (BCE, 16 ottobre 2026). La carta contactless si usa quasi ovunque, anche per un caffè, e molti posti non accettano contanti, come il nostro hotel di Londra. Qualche sterlina in tasca serve solo per le piccole cose. Sulle monete nuove c'è il profilo di Carlo III, su quelle vecchie Elisabetta: valgono tutte e due.</p>
+  </div>
+  <div class="voce">
+    <div class="n">E</div>
+    <h3>Mance</h3>
+    <p>Al ristorante spesso il conto ha già un <strong>servizio del 12,5%</strong> (<em>service charge</em>), soprattutto per i gruppi: se c'è, non si aggiunge altro. È facoltativo e si può chiedere di toglierlo. Se non c'è, si lascia il 10-15%. <b>Al pub non si lascia mancia</b> al bancone, e nemmeno al takeaway. Al taxi si arrotonda.</p>
+  </div>
+  <div class="voce">
+    <div class="n">F</div>
+    <h3>Al pub</h3>
+    <p>Si ordina e si paga al bancone, anche il cibo, dicendo il numero del tavolo. Molti pub accolgono le famiglie con i ragazzi solo fino a una certa ora: in otto, meglio chiedere o prenotare.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Il conto in otto</h4>
+    <p>Dividere il conto per otto carte al tavolo si può, ma è lento. Più semplice: paga uno per tutti e poi si fanno i conti tra famiglie, oppure si chiede subito il conto separato per famiglia (<em>Can we split the bill in two, please?</em>).</p>
+  </div>
+</section>
+<section class="page sx" data-sez="6"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i class="qui" style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">258</div>
+  <p class="sezione">Informazioni dalla A alla Z</p>
+  <h2>Prese, telefono, acqua, bagni</h2>
+  <div class="voce">
+    <div class="n">G</div>
+    <h3>Prese elettriche</h3>
+    <div class="con-foto">
+      <p>Tipo <strong>G</strong>, con tre spinotti rettangolari, 230 volt come da noi. Servono gli adattatori: uno a testa, o una ciabatta italiana con un solo adattatore. Le prese inglesi hanno un interruttore: va acceso.</p>
+      <div class="foto" style="height:26mm"><img src="img/foto/pr_plug.jpg" alt="Una spina inglese tipo G"></div>
+    </div>
+  </div>
+  <div class="voce">
+    <div class="n">H</div>
+    <h3>Telefono e internet</h3>
+    <p>Il Regno Unito <strong>non è più nel roaming europeo</strong>: secondo le notizie del 2025-26 TIM, WindTre e Iliad non lo trattano più come l'Europa, e per gli altri operatori non è chiaro. Controllate con il vostro operatore prima di partire, o comprate una eSIM per il viaggio. Wi-Fi gratis in hotel, nei musei e in molte stazioni.</p>
+  </div>
+  <div class="voce">
+    <div class="n">I</div>
+    <h3>Acqua</h3>
+    <p>Quella del rubinetto si beve, e al ristorante la <em>tap water</em> è gratis. Con la borraccia: l'app <strong>Refill</strong> segna i posti dove riempirla gratis, e in città ci sono più di cento fontanelle pubbliche, anche nelle stazioni ferroviarie.</p>
+  </div>
+  <div class="voce">
+    <div class="n">L</div>
+    <h3>Bagni</h3>
+    <p>Gratis in tutte le grandi stazioni ferroviarie, come Liverpool Street, e nei musei. Quasi nessuna stazione della metro ne ha. Il trucco: andare prima di uscire dal museo.</p>
+  </div>
+</section>
+<section class="page" data-sez="6"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i class="qui" style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">259</div>
+  <p class="sezione">Informazioni dalla A alla Z</p>
+  <h2>Sicurezza, negozi e feste</h2>
+  <div class="foto" style="height:36mm"><img src="img/foto/c_chinagate.jpg" alt="La porta cinese di Chinatown, a Soho"></div>
+  <div class="voce">
+    <div class="n">M</div>
+    <h3>Borseggi e telefoni</h3>
+    <p>I borseggiatori lavorano nelle vie turistiche e sui mezzi. In più, a Londra ci sono ladri in bici o motorino che <strong>strappano il telefono di mano</strong> salendo anche sul marciapiede: su Oxford Street per terra c'è scritto <em>Mind the Grab</em>. Telefono lontano dal bordo della strada, "Trova il mio iPhone" attivo, passaporti nella cassaforte dell'hotel e una fotocopia con sé.</p>
+  </div>
+  <div class="voce">
+    <div class="n">N</div>
+    <h3>Negozi e domenica</h3>
+    <p>I grandi negozi la domenica possono aprire solo sei ore di fila tra le 10 e le 18: di solito 12-18 o 11-17, e fino a mezzogiorno spesso si guarda e basta. I negozi piccoli, le farmacie e i negozi delle stazioni non hanno limiti.</p>
+  </div>
+  <div class="voce">
+    <div class="n">O</div>
+    <h3>Feste e Capodanno cinese</h3>
+    <p>Nei nostri giorni non ci sono festività: tutto è aperto con orario normale. Il <strong>Capodanno cinese</strong> cade sabato 6 febbraio 2027, anno della Capra. A Londra la grande parata si fa di solito una domenica, da Trafalgar Square a Chinatown: il programma 2027 non è ancora uscito. Quel weekend Chinatown e Soho saranno pieni.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Prima di partire</h4>
+    <p>Registrate il viaggio su <strong>Dove siamo nel mondo</strong> o nell'app Viaggiare Sicuri della Farnesina: in caso di emergenza sanno che siete lì. Il livello di allerta per terrorismo nel Regno Unito è "severo": più controlli in stazioni, aeroporti e posti affollati.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="7"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i class="qui" style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">260</div>
+  <div class="foto al" style="height:56mm;margin-top:-14mm"><img style="object-position:50% 62%" src="img/foto/pr_rain.jpg" alt="Una strada di Londra sotto la pioggia"></div>
+  <p class="sezione">Informazioni dalla A alla Z</p>
+  <h2>Il tempo di febbraio e la valigia</h2>
+  <dl class="info">
+    <dt>Massime</dt><dd>In media 8 °C.</dd>
+    <dt>Minime</dt><dd>In media 2 °C.</dd>
+    <dt>Pioggia</dt><dd>Circa 51 mm al mese, in 10-11 giorni: più facile una pioggerella che un temporale.</dd>
+    <dt>Luce</dt><dd>Dalle 7:30 alle 17 circa: alle 17:30 è buio.</dd>
+    <dt>Previsioni</dt><dd>metoffice.gov.uk, una settimana prima.</dd>
+  </dl>
+  <div class="riquadro">
+    <h4>Cosa mettere in valigia</h4>
+    <p>Giacca calda e impermeabile, ombrello pieghevole, <strong>scarpe comode che non temono l'acqua</strong> (si cammina tanto), strati da togliere nei musei e in metro, dove fa caldo, cappello e guanti. Adattatori tipo G, una batteria per il telefono, una borraccia. E uno zainetto che stia nella misura Ryanair, 40 × 30 × 20 cm.</p>
+  </div>
+  <p class="piccolo spinta">Medie del Met Office 1991-2020. Il tramonto alle 17 aiuta a scegliere l'ora giusta per i panorami: il London Eye e lo Sky Garden verso le 16:15.</p>
+</section>
+<section class="page" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">261</div>
+  <p class="sezione">I nostri dati di viaggio</p>
+  <h2>I voli</h2>
+  <div class="foto" style="height:40mm"><img src="img/foto/pr_volo.jpg" alt="Un Boeing 737 di Ryanair in volo"></div>
+  <div class="voce">
+    <div class="n">→</div>
+    <h3>Andata · venerdì 5 febbraio 2027</h3>
+    <div class="dati"><b>Ryanair FR1906</b>, operato da Malta Air · diretto</div>
+    <p>Bari 21:35 → Londra Stansted <b>23:30</b> (ora inglese). Durata 2 ore e 55 minuti.</p>
+  </div>
+  <div class="voce">
+    <div class="n">←</div>
+    <h3>Ritorno · martedì 9 febbraio 2027</h3>
+    <div class="dati"><b>Ryanair FR1905</b> · diretto</div>
+    <p>Londra Stansted <b>16:30</b> → Bari 20:20 (ora italiana). Durata 2 ore e 50 minuti.</p>
+  </div>
+  <dl class="info">
+    <dt>Check-in</dt><dd>Online, si apre 24 ore prima: giovedì 4 alle 21:35 per l'andata, lunedì 8 alle 16:30 per il ritorno. Senza check-in online, in aeroporto si paga.</dd>
+    <dt>Bagagli</dt><dd>La tariffa base comprende solo la borsa piccola sotto il sedile. I bagagli acquistati: da controllare nella prenotazione.</dd>
+    <dt>Tempi</dt><dd>Al ritorno il banco bagagli chiude alle 15:50 e il gate alle 16:00.</dd>
+  </dl>
+  <div class="consiglio spinta">
+    <h4>Due prenotazioni</h4>
+    <p>Siamo due famiglie con due prenotazioni gemelle, volo e hotel: ognuno ha i suoi codici e la sua carta d'imbarco. I codici di prenotazione non sono in questa guida, che è pubblica: teneteli nell'app Ryanair e nella mail.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">262</div>
+  <p class="sezione">I nostri dati di viaggio</p>
+  <h2>Gli hotel</h2>
+  <div class="voce">
+    <div class="n">1</div>
+    <h3>Hampton by Hilton London Stansted Airport</h3>
+    <div class="dati"><b>Bassingbourn Road, Stansted Mountfitchet, CM24 1QW</b> · dentro l'aeroporto</div>
+    <p>Una notte, da venerdì 5 a sabato 6. Check-in dalle 15, check-out entro le 12, colazione compresa. Camera familiare con letto queen e divano letto. Si paga in hotel; accetta anche contanti. L'arrivo verso mezzanotte va segnalato.</p>
+  </div>
+  <div class="voce">
+    <div class="n">2</div>
+    <h3>Hampton by Hilton London City</h3>
+    <div class="dati"><b>12-20 Osborn Street, E1 6TE</b> · metro Aldgate East (District, Hammersmith &amp; City)</div>
+    <p>Tre notti, da sabato 6 a martedì 9. Check-in dalle 15, check-out entro le 11, colazione compresa. Camere quadruple con due letti queen, bollitore e cassaforte. Si paga in hotel, <b>solo con la carta: niente contanti</b>. Nessun parcheggio.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Al check-in</h4>
+    <p>In tutti e due gli hotel servono un <strong>documento con foto</strong> e la <strong>carta di credito</strong> della prenotazione. Le prenotazioni si gestiscono da Booking.com con il numero di prenotazione e il PIN, che sono nella mail di conferma.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Cancellazione gratuita</h4>
+    <p>Hotel di Stansted fino al <b>31 gennaio 2027</b>, hotel di Londra fino al <b>1° febbraio 2027</b>, alle 23:59 ora inglese. Dopo, Stansted fa pagare tutto e Londra la prima notte.</p>
+  </div>
+</section>
+<section class="page" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">263</div>
+  <p class="sezione">I nostri dati di viaggio</p>
+  <h2>Il calendario prima di partire</h2>
+  <div class="foto" style="height:40mm"><img src="img/foto/pr_liverpool.jpg" alt="L'atrio della stazione di Liverpool Street"></div>
+  <p class="cap">Liverpool Street, dove arriva lo Stansted Express: la prima stazione londinese del viaggio.</p>
+  <ol class="tappe" style="margin-top:1mm">
+    <li data-n="1"><b>Subito</b><br>Passaporti: controllate che ci siano e che siano validi per tutti. Visita al Parlamento per sabato 6, se la facciamo.</li>
+    <li data-n="2"><b>Novembre 2026</b><br>Biglietti Advance dello Stansted Express, se non già presi. Tour del Big Ben, a metà mese, se lo vogliamo.</li>
+    <li data-n="3"><b>Dicembre 2026</b><br>ETA per tutti e otto (£20 a testa): presto, per avere tempo in caso di problemi. Assicurazione di viaggio.</li>
+    <li data-n="4"><b>Gennaio 2027</b><br>Lunedì 11 e 18: prenotazioni dello Sky Garden. Calendario delle guardie e del Capodanno cinese. Roaming con l'operatore. Chiedere all'hotel di Londra il deposito valigie di martedì.</li>
+    <li data-n="5"><b>31 gennaio e 1° febbraio</b><br>Ultimi giorni per cancellare gratis gli hotel.</li>
+    <li data-n="6"><b>Giovedì 4 febbraio</b><br>Dalle 21:35 check-in online dell'andata. Valigie senza salumi e formaggi; adattatori; tessere sanitarie.</li>
+    <li data-n="7"><b>Lunedì 8 febbraio</b><br>Dalle 16:30 check-in online del ritorno.</li>
+  </ol>
+</section>
+<section class="page sx" data-sez="9"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i class="qui" style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">264</div>
+  <p class="sezione">Salute</p>
+  <h2>Se qualcuno sta male</h2>
+  <div class="foto" style="height:36mm"><img src="img/foto/pr_hospital.jpg" alt="Il Royal London Hospital a Whitechapel"></div>
+  <div class="testo">
+    <p class="lead">La tessera sanitaria italiana vale anche nel Regno Unito: portatela, tutti.</p>
+    <p>Sul retro della tessera sanitaria c'è la <strong>TEAM</strong>, la tessera europea. Nonostante la Brexit, in Inghilterra copre le cure che diventano necessarie durante il viaggio, anche per malattie che si avevano già, alle stesse condizioni dei residenti: per esempio si paga il ticket sulle ricette. Non copre le cure private e il rientro in Italia: per questo serve un'<strong>assicurazione di viaggio</strong>. Il pronto soccorso è gratis per tutti.</p>
+  </div>
+  <dl class="info">
+    <dt>Urgente</dt><dd><b>999</b>: ambulanza, polizia, vigili del fuoco.</dd>
+    <dt>Non urgente</dt><dd><b>111</b> o 111.nhs.uk: il servizio sanitario dice dove andare, giorno e notte.</dd>
+    <dt>Ospedale</dt><dd><b>Royal London Hospital</b>, Whitechapel Road, E1 1FR, accanto alla stazione di Whitechapel, a circa 15 minuti a piedi dall'hotel. Pronto soccorso per adulti e per bambini.</dd>
+    <dt>Farmacia</dt><dd><b>Boots</b>, 44-46 Regent Street, a Piccadilly Circus: lun-ven 8-23, sab 9-23, dom 12-18. Boots e Superdrug sono dappertutto.</dd>
+  </dl>
+  <div class="consiglio spinta">
+    <h4>Le medicine</h4>
+    <p>Portate le vostre, nelle confezioni originali: alcune che da noi si comprano liberamente lì vogliono la ricetta. Il paracetamolo si vende in confezioni da 16 compresse al supermercato e da 32 in farmacia.</p>
+  </div>
+</section>
+<section class="page" data-sez="9"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i class="qui" style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">265</div>
+  <p class="sezione">Emergenze</p>
+  <h2>Numeri utili</h2>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <div style="display:grid;grid-template-columns:30mm 1fr;gap:1.5mm 3mm;font-size:8pt;line-height:1.35">
+      <b>999</b><span>Emergenze: ambulanza, polizia, vigili del fuoco.</span>
+      <b>111</b><span>Medico, consigli sanitari non urgenti.</span>
+      <b>101</b><span>Polizia, per denunce non urgenti (furto del telefono, per esempio).</span>
+      <b>+39 06 36225</b><span>Unità di Crisi della Farnesina, 24 ore su 24, solo per emergenze gravi.</span>
+    </div>
+  </div>
+  <div class="voce">
+    <div class="n">1</div>
+    <h3>Consolato Generale d'Italia</h3>
+    <div class="dati"><b>Harp House, 83-86 Farringdon Street, EC4A 4BL</b> · conslondra.esteri.it</div>
+    <p>È il posto giusto per passaporti persi o rubati e documenti di emergenza. Centralino +44 20 7936 5900. Solo per emergenze gravi fuori orario: +44 7850 752895 (lun-ven 18-22, sab-dom 9-22).</p>
+  </div>
+  <div class="voce">
+    <div class="n">2</div>
+    <h3>Ambasciata d'Italia</h3>
+    <div class="dati"><b>4-5 Buckingham Gate, SW1E 6JP</b> · amblondra.esteri.it</div>
+    <p>Si occupa dei rapporti tra i due Paesi: per i servizi ai cittadini si va al Consolato.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Se si perde il passaporto</h4>
+    <p>Prima la denuncia alla polizia, anche online, poi il Consolato per il documento di viaggio provvisorio. Una foto del passaporto sul telefono e una fotocopia in valigia fanno risparmiare ore.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">266</div>
+  <p class="sezione">Budget</p>
+  <h2>Quanto costa, per noi 8</h2>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Le spese fisse</h4>
+    <div class="due" style="font-size:8pt">
+      <div>ETA, 8 × £20<br>Stansted Express andata e ritorno, Advance<br>… oppure con biglietto normale<br>Metro: 6 adulti × 3 giorni al tetto<br>Metro: 2 ragazze, sconto e carta<br><b>Totale trasporti e ETA</b></div>
+      <div style="text-align:right">£160<br>da £140<br>£294<br>£160<br>£48<br><b>£510-660</b></div>
+    </div>
+    <p class="piccolo" style="margin-top:1.5mm">Prezzi di ottobre 2026. La metro spesso costa meno del tetto: molti luoghi sono a piedi dall'hotel.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Mangiare, stime a testa</h4>
+    <div class="due" style="font-size:8pt">
+      <div>Panino e bibita da Pret o Tesco<br>Fish and chips, da asporto / seduti<br>Piatto al pub<br>Afternoon tea<br>Caffè</div>
+      <div style="text-align:right">£4-7<br>£10-15 / £15-22<br>£16-24<br>£35-50<br>£3-4,50</div>
+    </div>
+    <p class="piccolo" style="margin-top:1.5mm">Stime nostre, non prezzi ufficiali. Una giornata con un'entrata a pagamento, pranzo al pub e cena: circa £80-120 a testa, hotel escluso.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Biglietti dei luoghi</h4>
+    <p>Sono nei capitoli dei quartieri, con il totale per noi 8. Molti grandi musei sono gratis: British Museum, National Gallery, Natural History, V&amp;A, Science Museum. Al cambio di ottobre 2026, £100 sono circa €118.</p>
+  </div>
+</section>
+<section class="page crediti" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">267</div><p class="sezione">Crediti fotografici</p><h2>Le foto di questo capitolo</h2><p class="piccolo">Foto da Wikimedia Commons, pubblicate con licenze Creative Commons o in pubblico dominio. Mappe: Esri, HERE, Garmin e i contributori di OpenStreetMap. Linee della metro: OpenStreetMap.</p><ul class="lista-crediti"><li><b>pr_apertura</b>: TheFrog001, CC0, <span>commons.wikimedia.org/wiki/File:Bank_Capacity_Upgrade_-_Northern_line_platforms_23.jpg</span></li><li><b>pr_stansted</b>: soynanii, CC0, <span>commons.wikimedia.org/wiki/File:EI-DPI,_Boeing_737-800_of_Ryanair_at_London_Stansted_Airport,_2015.jpg</span></li><li><b>pr_express</b>: Hugh Llewelyn, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Greater_Anglia_Class_745-1_Stansted_Express_train_at_Liverpool_Street.jpg</span></li><li><b>pr_escalator</b>: Christine Matthews, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Escalator_at_Knightsbridge_Underground_Station_-_geograph.org.uk_-_5652795.jpg</span></li><li><b>pr_aldgate</b>: Keith Page, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Aldgate_East_station_entrance_2025-04-03.jpg</span></li><li><b>pr_bus</b>: Au Morandarte from London, Middlesex, England, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Stagecoach_East_London_bus_LT239_(LTZ_1239),_Regent_Street_Bus_Cavalcade_(1)_(cropped).jpg</span></li><li><b>pr_boat</b>: Acabashi, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Galaxy_Clipper_MBNA_Thames_Clippers,_east_of_Millenium_Bridge,_River_Thames.jpg</span></li><li><b>pr_elizabeth</b>: TheFrog001, CC0, <span>commons.wikimedia.org/wiki/File:345_061_passing_West_Ealing,_Platform_4.jpg</span></li><li><b>pr_plug</b>: Mrmelon2012, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:UnInsulated_BS_1363_Plug.jpg</span></li><li><b>c_chinagate</b>: Robert Lamb, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:View_of_Gerrard_Street_framed_in_the_Chinatown_arch_-_geograph.org.uk_-_4436066.jpg</span></li><li><b>pr_rain</b>: Heidi Sandstrom. sandstromfilm, CC0, <span>commons.wikimedia.org/wiki/File:Big_Ben_in_the_Rain_(Unsplash).jpg</span></li><li><b>pr_volo</b>: Colin Cooke Photo, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:EI-HGR_Boeing_737-8-200Max_Ryanair_Stansted_18.7.21.jpg</span></li><li><b>pr_liverpool</b>: Acabashi, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Liverpool_Street_Station_concourse_elevator_escalators_in_London_City_of_London_England_02.jpg</span></li><li><b>pr_hospital</b>: Bikeboy, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:The_Royal_London_Hospital,_Whitechapel_-_geograph.org.uk_-_3270857.jpg</span></li></ul></section>
+<section class="page sx appunti" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Guida pratica</span><span>Parte 6</span></div><div class="folio">268</div><p class="sezione">Appunti</p><div class="righe"></div></section>
+<script>
+// segnala le pagine troppo piene (in stampa il testo verrebbe tagliato)
+window.addEventListener('load', () => {
+  const piene = [...document.querySelectorAll('.page')].filter(p => p.scrollHeight > p.clientHeight + 2)
+    .map((p, i) => p.querySelector('.folio')?.textContent || 'apertura');
+  document.body.dataset.piene = piene.join(',');
+});
+</script>
+</body></html>

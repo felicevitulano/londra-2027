@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>St Paul&#x27;s e Bankside · Guida di Londra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>/* Guida di Londra — stile delle pagine.
+   Stampa: pagine A5 fisse (148 x 210 mm). Schermo: le stesse pagine una sotto l'altra, fluide sotto i 640 px.
+   Ogni capitolo è una "linea della metro" del suo colore (--cap) che corre sul bordo esterno,
+   con una fermata per sezione: la fermata accesa dice dove sei nel capitolo. */
+
+:root{
+  --ink:#1d2a44;        /* blu notte: testo e titoli */
+  --muted:#5f6472;
+  --paper:#fffdf9;      /* carta quasi bianca, per foto nitide */
+  --sand:#f2ebde;       /* fondi dei riquadri */
+  --red:#b8402f; --teal:#2f7272; --mustard:#c08a25; --navy:#26375c;
+  --teal-tint:#e6f0ee; --mustard-tint:#f7eedb;
+  --cap:var(--red);     /* colore del capitolo, ridefinito su ogni capitolo */
+  --f-display:"Fraunces", Georgia, serif;
+  --f-body:"Figtree", "Helvetica Neue", Arial, sans-serif;
+}
+@page{ size:148mm 210mm; margin:0 }
+*{ box-sizing:border-box }
+html{ -webkit-print-color-adjust:exact; print-color-adjust:exact }
+body{ margin:0; background:#e7e2d8; color:var(--ink); font:400 8.9pt/1.45 var(--f-body); font-variant-numeric:tabular-nums }
+img{ display:block; max-width:100% }
+a{ color:inherit }
+
+/* ---------- pagina ---------- */
+.page{ width:148mm; height:210mm; margin:0 auto 6mm; background:var(--paper); position:relative; overflow:hidden;
+  padding:14mm 17mm 15mm 13mm; break-after:page; display:flex; flex-direction:column; gap:3.2mm }
+.page.sx{ padding:14mm 13mm 15mm 17mm }               /* pagina pari: margine esterno a sinistra */
+@media print{ body{ background:none } .page{ margin:0 } }
+
+.testata{ position:absolute; top:6.5mm; left:13mm; right:17mm; display:flex; justify-content:space-between;
+  font:500 6.8pt var(--f-body); color:var(--muted) }
+.sx .testata{ left:17mm; right:13mm; flex-direction:row-reverse }
+.folio{ position:absolute; bottom:6.5mm; right:17mm; font:600 7.5pt var(--f-body); color:var(--ink) }
+.sx .folio{ right:auto; left:17mm }
+
+/* linea della metro sul bordo esterno */
+.linea{ position:absolute; top:0; bottom:0; right:5.2mm; width:2.2mm; background:var(--cap) }
+.sx .linea{ right:auto; left:5.2mm }
+.linea i{ position:absolute; left:50%; width:4.2mm; height:4.2mm; margin-left:-2.1mm; border-radius:50%;
+  background:#fff; border:.9mm solid var(--cap) }
+.linea i.qui{ width:5.6mm; height:5.6mm; margin-left:-2.8mm; background:var(--ink); border-color:#fff; box-shadow:0 0 0 .6mm var(--cap) }
+
+/* ---------- tipografia ---------- */
+h1,h2,h3,h4{ font-family:var(--f-display); margin:0; color:var(--ink); text-wrap:balance; font-optical-sizing:auto }
+h2{ font-size:21pt; line-height:1.02; font-weight:800; letter-spacing:-.01em }
+h3{ font-size:12.5pt; line-height:1.15; font-weight:700 }
+h4{ font-size:10pt; font-weight:700 }
+p{ margin:0 }
+.testo p + p{ margin-top:2.2mm }
+.testo{ hyphens:auto; -webkit-hyphens:auto }
+.lead{ font:400 11pt/1.38 var(--f-display); color:var(--ink) }
+.sezione{ font:600 8pt var(--f-body); color:var(--cap) }       /* nome della sezione sopra il titolo */
+.piccolo{ font-size:7.6pt; color:var(--muted) }
+.cap{ font-size:6.8pt; color:var(--muted); margin-top:1.2mm; font-style:italic }
+
+/* ---------- foto ---------- */
+.foto{ position:relative; overflow:hidden; border-radius:1.2mm; flex:none }
+.foto img{ width:100%; height:100%; object-fit:cover }
+.foto.al{ margin:0 -17mm 0 -13mm; border-radius:0 }            /* al vivo orizzontale */
+.sx .foto.al{ margin:0 -13mm 0 -17mm }
+
+/* ---------- apertura capitolo ---------- */
+.apertura{ padding:0 }
+.apertura > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover }
+.apertura .velo{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,28,46,.0) 35%, rgba(20,28,46,.86) 82%) }
+.apertura .titolo{ position:absolute; left:13mm; right:17mm; bottom:16mm; color:#fff }
+.apertura .num{ font:600 8pt var(--f-body); color:#fff; opacity:.85 }
+.apertura h1{ font-size:38pt; line-height:.95; font-weight:900; color:#fff; margin:2mm 0 4mm }
+.apertura .sotto{ font:400 10.5pt/1.35 var(--f-display); max-width:100mm; opacity:.95 }
+
+/* ---------- riquadri ---------- */
+.info{ background:var(--teal-tint); border-radius:1.5mm; padding:3mm 3.5mm; display:grid;
+  grid-template-columns:15mm 1fr; gap:1.1mm 3mm; font-size:7.9pt; line-height:1.35; flex:none }
+.info dt{ font-weight:700; color:var(--teal) }
+.info dd{ margin:0 }
+.consiglio{ background:var(--mustard-tint); border-radius:1.5mm; padding:3mm 3.5mm; font-size:8.4pt; flex:none }
+.consiglio h4{ color:#8a5f12; margin-bottom:1mm; display:flex; align-items:center; gap:2mm }
+.consiglio h4::before{ content:""; width:3.4mm; height:3.4mm; border-radius:50%; border:.8mm solid var(--mustard); flex:none }
+.riquadro{ background:var(--sand); border-radius:1.5mm; padding:3.2mm 3.6mm; font-size:8.4pt; flex:none }
+.riquadro h4{ margin-bottom:1.2mm }
+.top-lista{ margin:0; padding:0; list-style:none; display:grid; gap:1.4mm }
+.top-lista li{ display:grid; grid-template-columns:5mm 1fr; gap:2mm; align-items:baseline }
+.top-lista b{ font-family:var(--f-display); font-weight:800; color:var(--cap); font-size:10pt }
+
+/* ---------- schede (da vedere, mangiare...) ---------- */
+.voce{ display:grid; grid-template-columns:6.4mm 1fr; gap:0 2.6mm; break-inside:avoid }
+.voce + .voce{ padding-top:2.6mm; border-top:.25mm solid #e2dacb }
+.n{ width:6.4mm; height:6.4mm; border-radius:50%; background:var(--cap); color:#fff; font:700 7.6pt/6.4mm var(--f-body);
+  text-align:center; grid-row:span 3 }
+.n.m{ background:var(--teal) } .n.b{ background:var(--mustard) } .n.s{ background:var(--navy) }
+.voce h3{ font-size:11pt }
+.voce .dati{ font-size:7.4pt; color:var(--muted); margin:.4mm 0 1mm }
+.voce .dati b{ color:var(--ink); font-weight:600 }
+.voce .con-foto{ display:grid; grid-template-columns:1fr 30mm; gap:3mm; align-items:start }
+.voce .con-foto .foto{ height:22mm }
+.prezzo{ font-family:var(--f-body); font-weight:700; color:var(--teal); font-size:8pt; margin-left:1.5mm }
+
+/* ---------- mappa del capitolo ---------- */
+.mappa-pag{ padding:0 }
+.mappa-pag > img{ position:absolute; inset:0; width:100%; height:100% ; object-fit:cover }
+.mappa-pag .scala{ position:absolute; left:6mm; bottom:5mm; background:rgba(255,253,249,.94); border-radius:1.2mm; padding:1.6mm 2.4mm; font-size:6.6pt; color:var(--muted) }
+.legenda{ columns:2; column-gap:5mm; font-size:7.7pt; line-height:1.3 }
+.legenda h4{ font:700 8pt var(--f-body); color:var(--ink); margin:2.4mm 0 1mm; break-after:avoid; display:flex; align-items:center; gap:1.8mm }
+.legenda h4:first-child{ margin-top:0 }
+.legenda h4 i{ width:3mm; height:3mm; border-radius:50% }
+.legenda ol{ margin:0; padding:0; list-style:none }
+.legenda li{ display:grid; grid-template-columns:5mm 1fr auto; gap:1mm; padding:.45mm 0; break-inside:avoid }
+.legenda li b{ font-weight:700 }
+.legenda li span{ color:var(--muted) }
+
+/* ---------- passeggiata ---------- */
+.tappe{ margin:0; padding:0; list-style:none; position:relative }
+.tappe::before{ content:""; position:absolute; left:2.9mm; top:2mm; bottom:3mm; width:.9mm; background:var(--cap) }
+.tappe li{ position:relative; padding:0 0 2.6mm 9mm; font-size:8.4pt }
+.tappe li::before{ content:attr(data-n); position:absolute; left:0; top:-.3mm; width:6.6mm; height:6.6mm; border-radius:50%;
+  background:#fff; border:.8mm solid var(--cap); font:700 7pt/5mm var(--f-body); text-align:center; color:var(--ink) }
+.tappe b{ font-family:var(--f-display); font-size:9.8pt }
+.tappe .tempo{ color:var(--muted); font-size:7.4pt }
+
+.due{ display:grid; grid-template-columns:1fr 1fr; gap:4mm }
+.spinta{ margin-top:auto }   /* spinge un riquadro in fondo alla pagina */
+
+/* ---------- schermo stretto (sito sul telefono) ---------- */
+@media screen and (max-width: 640px){
+  body{ background:var(--paper); font-size:15px }
+  .page, .page.sx{ width:auto; height:auto; min-height:0; margin:0; padding:22px max(18px, env(safe-area-inset-right, 0px)) 26px max(18px, env(safe-area-inset-left, 0px));
+    border-bottom:1px solid #e2dacb; overflow:visible }
+  .linea, .folio, .testata{ display:none }
+  .foto.al, .sx .foto.al{ margin:0 -18px }
+  .apertura{ min-height:88vh }
+  .apertura .titolo{ left:20px; right:20px; bottom:28px }
+  .mappa-pag{ height:auto }
+  .mappa-pag > img{ position:static; height:auto }
+  .due, .voce .con-foto{ grid-template-columns:1fr }
+  .voce .con-foto .foto{ height:44vw }
+  .legenda{ columns:1 }
+  .foto[style*="height"]{ height:auto !important; aspect-ratio:3/2 }
+  /* sul telefono i caratteri in punti tipografici diventerebbero minuscoli */
+  .riquadro, .consiglio, .tappe li, .card p{ font-size:14.5px }
+  .info, .legenda, .voce .dati, .piccolo, .cap, .lista-crediti{ font-size:13px }
+  .info{ grid-template-columns:76px 1fr }
+  .lead{ font-size:18px } h2{ font-size:30px } .voce h3{ font-size:19px } h3{ font-size:19px } h4{ font-size:16px }
+  .n{ width:28px; height:28px; font-size:13px; line-height:28px }
+  .voce{ grid-template-columns:28px 1fr; gap:0 12px }
+  .riquadro [style*="font-size"]{ font-size:14px !important }
+  .riquadro [style*="grid-template-columns:13mm"]{ grid-template-columns:72px 1fr !important }
+  .riquadro [style*="grid-template-columns:24mm"]{ grid-template-columns:96px 1fr !important }
+}
+
+/* ---------- sommario e indice analitico (generati da costruisci.py) ---------- */
+.sommario{ list-style:none; margin:0; padding:0; display:grid; gap:1.6mm; font-size:9.6pt }
+.sommario li{ display:grid; grid-template-columns:3mm 1fr auto; gap:3mm; align-items:baseline; border-bottom:.25mm dotted #cfc5b2; padding-bottom:1.2mm }
+.sommario li i{ width:3mm; height:3mm; border-radius:50%; align-self:center }
+.sommario li b{ font-family:var(--f-display); font-weight:800 }
+.sommario li.parte{ display:block; border:0; margin-top:2.4mm; font:700 7.5pt var(--f-body); color:var(--muted) }
+.indice{ list-style:none; margin:0; padding:0; columns:2; column-gap:6mm; font-size:7.2pt; line-height:1.3 }
+.indice li{ display:flex; justify-content:space-between; gap:2mm; break-inside:avoid; padding:.35mm 0; border-bottom:.2mm dotted #ddd3c0 }
+.indice b{ font-weight:600; white-space:nowrap }
+@media screen and (max-width: 640px){ .sommario{ font-size:16px } .indice{ columns:1; font-size:14px } }
+
+.page{--cap:#8a5a2b}
+.lista-crediti{margin:0;padding:0;list-style:none;display:grid;gap:1.4mm;font-size:7pt;line-height:1.3}
+.lista-crediti span{color:var(--muted);word-break:break-all}
+.appunti .righe{flex:1;background:repeating-linear-gradient(transparent 0 7.4mm, #e2dacb 7.4mm 7.65mm)}
+
+.barra-web{display:none}
+@media screen{.barra-web{display:flex;gap:18px;justify-content:center;position:sticky;top:0;z-index:10;
+  padding:10px 16px;background:#1d2a44;font:600 14px var(--f-body)}.barra-web a{color:#fff;text-decoration:none}}
+@media print{.barra-web{display:none}}
+</style></head><body><nav class="barra-web"><a href="./">← Guida</a><a href="05-stpauls.pdf">Scarica il PDF</a><a href="../">Mappa</a></nav>
+<section class="page apertura" data-sez="1" data-nohead><div class="linea" aria-hidden="true"><i class="qui" style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div>
+  <img style="object-position:50% 50%" src="img/foto/s_apertura.jpg" alt="Il Millennium Bridge che porta verso la cupola di St Paul's">
+  <div class="velo"></div>
+  <div class="titolo">
+    <div class="num">Capitolo 5</div>
+    <h1>St Paul's e Bankside</h1>
+    <p class="sotto">La cupola di Wren da una parte del fiume; una centrale elettrica piena d'arte, il teatro di Shakespeare e il mercato più antico di Londra dall'altra.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="1"><div class="linea" aria-hidden="true"><i class="qui" style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">160</div>
+  <p class="sezione">Perché andarci</p>
+  <h2>Un ponte, due rive, quattro secoli di Londra</h2>
+  <div class="testo">
+    <p class="lead">Dalla cupola di St Paul's al bancone di Borough Market sono due chilometri e mezzo a piedi, quasi tutti lungo il fiume.</p>
+    <p>Sulla riva nord c'è la cattedrale di Christopher Wren, costruita dopo il Grande Incendio del 1666, con i suoi 528 gradini fino in cima alla cupola. Il Millennium Bridge, solo pedonale, porta dritto sull'altra riva: Bankside, che ai tempi di Shakespeare era il quartiere dei teatri, delle osterie e delle prigioni. Oggi ci sono la Tate Modern, la copia del Globe e, poco più in là, il mercato alimentare dove Londra fa la spesa da secoli.</p>
+    <p>È una zona perfetta per una giornata che avanza: molto è gratis, tutto è vicino, e si può accorciare o allungare a piacere.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Il meglio del quartiere</h4>
+    <ol class="top-lista">
+      <li><b>1</b><span><strong>La cupola di St Paul's</strong>, dalla Whispering Gallery fino alla Golden Gallery.</span></li>
+      <li><b>2</b><span><strong>La Tate Modern</strong>, gratis, con la terrazza del 10° piano.</span></li>
+      <li><b>3</b><span><strong>Il Millennium Bridge</strong>, quello distrutto dai Mangiamorte in Harry Potter.</span></li>
+      <li><b>4</b><span><strong>Lo Shakespeare's Globe</strong>, il teatro di legno e paglia sul fiume.</span></li>
+      <li><b>5</b><span><strong>Borough Market</strong> e i donut di Bread Ahead.</span></li>
+    </ol>
+  </div>
+  <dl class="info">
+    <dt>Arrivare</dt><dd>District line da Aldgate East a Mansion House (4 fermate) per St Paul's, o a Monument (2 fermate) per Borough Market, attraversando a piedi il London Bridge.</dd>
+    <dt>Tempo</dt><dd>Una giornata piena; mezza se si sceglie una riva sola.</dd>
+    <dt>Quando</dt><dd>Da martedì a sabato. Vedi "Che giorno andarci" a p. 163.</dd>
+    <dt>Prenotare</dt><dd>St Paul's, The Shard, il tour del Globe.</dd>
+  </dl>
+</section>
+<section class="page mappa-pag" data-sez="2" data-nohead><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div>
+  <img src="img/mappa-05-stpauls.jpg" alt="Mappa di St Paul's e Bankside con i luoghi numerati">
+  <div class="scala">Marrone: da vedere · verde: mangiare · senape: dolci e pub. Il nostro hotel è fuori mappa, a est: 4 fermate di District line da Mansion House.</div>
+</section>
+<section class="page sx" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">162</div>
+  <p class="sezione">La mappa</p>
+  <h2>Tutti i luoghi del capitolo</h2>
+  <div class="legenda">
+    <h4><i style="background:var(--cap)"></i>Top sight</h4>
+    <ol>
+      <li><b>1</b>St Paul's Cathedral<span>p. 164</span></li>
+      <li><b>2</b>Tate Modern<span>p. 166</span></li>
+      <li><b>3</b>Shakespeare's Globe<span>p. 167</span></li>
+      <li><b>4</b>Borough Market<span>p. 168</span></li>
+    </ol>
+    <h4><i style="background:var(--cap)"></i>Da vedere</h4>
+    <ol>
+      <li><b>5</b>Millennium Bridge<span>p. 169</span></li>
+      <li><b>6</b>One New Change<span>p. 169</span></li>
+      <li><b>7</b>Postman's Park<span>p. 169</span></li>
+      <li><b>8</b>London Museum<span>p. 170</span></li>
+      <li><b>9</b>Temple Bar<span>p. 170</span></li>
+      <li><b>10</b>Bank of England Museum<span>p. 170</span></li>
+      <li><b>11</b>Southwark Cathedral<span>p. 170</span></li>
+      <li><b>12</b>Golden Hinde<span>p. 171</span></li>
+      <li><b>13</b>Clink e Winchester Palace<span>p. 171</span></li>
+      <li><b>14</b>The Shard<span>p. 171</span></li>
+    </ol>
+    <h4><i style="background:var(--teal)"></i>Mangiare</h4>
+    <ol>
+      <li><b>15</b>The George Inn<span>p. 173</span></li>
+      <li><b>16</b>Roast<span>p. 173</span></li>
+      <li><b>17</b>Padella<span>p. 173</span></li>
+      <li><b>18</b>Flat Iron London Bridge<span>p. 173</span></li>
+      <li><b>19</b>The Swan at the Globe<span>p. 173</span></li>
+      <li><b>20</b>Côte St Paul's<span>p. 173</span></li>
+    </ol>
+    <h4><i style="background:var(--mustard)"></i>Dolci e pub</h4>
+    <ol>
+      <li><b>21</b>Bread Ahead<span>p. 174</span></li>
+      <li><b>22</b>The Anchor Bankside<span>p. 174</span></li>
+    </ol>
+  </div>
+</section>
+<section class="page" data-sez="3"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i class="qui" style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">163</div>
+  <p class="sezione">Orientarsi</p>
+  <h2>Il ponte al centro</h2>
+  <div class="testo">
+    <p><strong>A nord del fiume</strong> c'è la City: la cattedrale su una piccola collina, Ludgate Hill, con intorno il centro commerciale di One New Change, Paternoster Square e, poco più su, il giardino di Postman's Park. La metro più vicina è St Paul's (Central line); dall'hotel conviene Mansion House, sulla District line, a 8 minuti a piedi.</p>
+    <p><strong>A sud del fiume</strong> c'è Bankside: dal Millennium Bridge si va a est lungo la riva, tra la Tate Modern, il Globe, i vicoli di Clink Street e il veliero di Drake, fino a Southwark Cathedral e a Borough Market, sotto i binari di London Bridge. Lo Shard è lì sopra, impossibile da perdere.</p>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Che giorno andarci</h4>
+    <div style="display:grid;grid-template-columns:15mm 1fr;gap:1.4mm 3mm;font-size:8pt;line-height:1.35">
+      <b>Mar-ven</b><span>Tutto aperto. Il Bank of England Museum solo nei giorni feriali.</span>
+      <b>Sabato</b><span>Il giorno migliore per il mercato: apre alle 9 e ci sono tutti i banchi. La Tate Modern resta aperta fino alle 21.</span>
+      <b>Domenica</b><span>St Paul's <b>solo per le funzioni</b>: niente visita e niente cupola (vespri cantati alle 15, gratis). Mercato aperto 10-16, ma alcuni banchi restano chiusi.</span>
+      <b>Lunedì</b><span><b>Borough Market chiuso.</b> St Paul's, Tate, Globe e Shard aperti.</span>
+    </div>
+  </div>
+  <div class="riquadro">
+    <h4>Gratis in questo quartiere</h4>
+    <p>La Tate Modern con la Turbine Hall e la terrazza del 10° piano, il Millennium Bridge, la terrazza di One New Change, Postman's Park, Southwark Cathedral, il rosone di Winchester Palace, il nuovo London Museum e i vespri cantati a St Paul's. Si paga solo per salire sulla cupola o sullo Shard.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>In battello</h4>
+    <p>Il molo di Bankside è davanti al Globe. L'Uber Boat da Tower Pier, a 15 minuti dall'hotel, passa sotto Tower Bridge e London Bridge: costa circa £11,70 a testa online, metà per i ragazzi fino a 15 anni. La metro costa molto meno; il battello vale per la vista.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">164</div>
+  <div class="foto al" style="height:78mm;margin-top:-14mm"><img src="img/foto/s_stpauls.jpg" alt="La facciata ovest di St Paul's Cathedral"></div>
+  <p class="sezione">Top sight · 1</p>
+  <h2>St Paul's Cathedral</h2>
+  <div class="testo">
+    <p class="lead">La cupola che dal 1710 domina la City, costruita da un solo architetto in 35 anni.</p>
+    <p>La cattedrale medievale bruciò nel Grande Incendio del 1666. Christopher Wren posò la prima pietra della nuova il 21 giugno 1675, senza nessuna cerimonia, e la vide finita nel 1710. Qui si sono sposati Carlo e Diana nel 1981. Nella cripta ci sono le tombe di Nelson, l'ammiraglio di Trafalgar, e di Wellington, il vincitore di Waterloo; quella di Wren è una semplice lastra di pietra, con accanto la scritta in latino lasciata dal figlio: "Lettore, se cerchi il suo monumento, guardati intorno".</p>
+  </div>
+  <div class="riquadro spinta">
+    <h4>Lo sapevi?</h4>
+    <p>La notte del 29 dicembre 1940 le bombe tedesche incendiarono la City. Il fotografo Herbert Mason scattò la cupola che emergeva intatta dal fumo: "St Paul's Survives" diventò l'immagine simbolo di Londra sotto il Blitz. Il sarcofago di Nelson, invece, era stato fatto per un altro: il cardinale Wolsey, morto in disgrazia nel 1530.</p>
+  </div>
+</section>
+<section class="page" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">165</div>
+  <div class="due">
+    <div class="foto" style="height:42mm"><img src="img/foto/s_stpauls_in.jpg" alt="L'interno della cupola di St Paul's"></div>
+    <div class="foto" style="height:42mm"><img src="img/foto/s_whispering.jpg" alt="La Whispering Gallery vista dall'alto"></div>
+  </div>
+  <div class="testo">
+    <p>Si sale solo a piedi, niente ascensore. Dopo <strong>257 gradini</strong> c'è la <strong>Whispering Gallery</strong>, all'interno, a circa 30 metri: se una delle ragazze sussurra contro il muro, le altre la sentono dall'altra parte della cupola. A <strong>376 gradini</strong> si esce all'aperto sulla <strong>Stone Gallery</strong>; a <strong>528</strong>, per scale sempre più strette, si arriva alla <strong>Golden Gallery</strong>, a circa 85 metri, sotto la lanterna. Sconsigliato a chi soffre di vertigini o di spazi stretti.</p>
+  </div>
+  <dl class="info">
+    <dt>Orari</dt><dd>Lun-sab 8:30-16:30, ultimo ingresso 16:00. Gallerie della cupola dalle 9:30, ultimo ingresso 16:15. <b>Domenica solo funzioni.</b></dd>
+    <dt>Prezzi</dt><dd>Adulti £27, ragazzi 6-17 anni £10,50: la ragazza di 16 anni paga ridotto. Famiglia (2 adulti e 3 ragazzi) £64,50. Per noi 8, una famiglia più 3 adulti: <b>£145,50</b>. Compresi cripta, gallerie e audioguida.</dd>
+    <dt>Prenotare</dt><dd>Online, con l'orario d'ingresso: stpauls.co.uk. Niente guardaroba: zaini piccoli.</dd>
+    <dt>Metro</dt><dd>St Paul's (Central), 3 min; Mansion House (District), 8 min.</dd>
+  </dl>
+  <div class="consiglio spinta">
+    <h4>Il trucco</h4>
+    <p>Entrate alle 9:30 e salite subito alla cupola, prima dei gruppi. Le ragazze nelle gallerie devono stare con un adulto. La domenica, o se non volete pagare, ci sono i <b>vespri cantati</b> (Evensong): alle 17 nei giorni feriali, alle 15 la domenica, gratis, circa 45 minuti. Gli orari di febbraio escono più avanti.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="5"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i class="qui" style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">166</div>
+  <div class="foto al" style="height:62mm;margin-top:-14mm"><img style="object-position:50% 2%" src="img/foto/s_tate.jpg" alt="La ciminiera della Tate Modern"></div>
+  <p class="sezione">Top sight · 2</p>
+  <h2>Tate Modern</h2>
+  <div class="testo">
+    <p class="lead">Una centrale elettrica a carbone trasformata in museo d'arte moderna. Gratis.</p>
+    <p>L'edificio è la vecchia Bankside Power Station di Giles Gilbert Scott, lo stesso architetto della cabina telefonica rossa; la ciminiera è alta 99 metri. Chiusa la centrale nel 1981, il museo ha aperto nel maggio 2000. Si entra dalla <strong>Turbine Hall</strong>, la sala delle turbine, alta come un palazzo: fino all'11 aprile 2027 c'è <em>Hold</em> di Tarek Atoui, un'installazione di suoni fatta di canne di bambù, tamburi e corni che suonano col vento. Ci si può sedere sulle pietre del pavimento e sentirle vibrare.</p>
+  </div>
+  <dl class="info">
+    <dt>Orari</dt><dd>Dom-gio 10-18, ven-sab 10-21.</dd>
+    <dt>Prezzi</dt><dd>Collezione e Turbine Hall gratis; solo le mostre temporanee si pagano.</dd>
+    <dt>Metro</dt><dd>Blackfriars (District), 10 min lungo il fiume; o St Paul's e il Millennium Bridge.</dd>
+  </dl>
+  <div class="consiglio spinta">
+    <h4>Il trucco: il 10° piano</h4>
+    <p>Nell'edificio nuovo, il Blavatnik, l'ascensore porta al <b>Level 10</b>: terrazza panoramica gratuita, con St Paul's proprio di fronte. Si vede su tre lati, perché il quarto guarda dentro le case dei vicini, che nel 2023 hanno vinto una causa alla Corte Suprema. Dom-gio 10-17, ven-sab fino alle 21: dopo il tramonto, verso le 17, la città si accende.</p>
+  </div>
+</section>
+<section class="page" data-sez="6"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i class="qui" style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">167</div>
+  <div class="foto al" style="height:62mm;margin-top:-14mm"><img src="img/foto/s_globe.jpg" alt="Lo Shakespeare's Globe sul lungofiume di Bankside"></div>
+  <p class="sezione">Top sight · 3</p>
+  <h2>Shakespeare's Globe</h2>
+  <div class="testo">
+    <p class="lead">L'unico tetto di paglia permesso a Londra dal Grande Incendio del 1666.</p>
+    <p>Il primo Globe fu costruito nel 1599 dalla compagnia di Shakespeare, poco lontano da qui. Il 29 giugno 1613, durante l'<em>Enrico VIII</em>, un colpo di cannone di scena incendiò la paglia del tetto e in un paio d'ore il teatro bruciò: nessun morto. Quello di oggi, ricostruito in legno di quercia, è nato dalla testardaggine dell'attore americano Sam Wanamaker, che ci lavorò per oltre vent'anni e morì nel 1993, quattro anni prima dell'apertura.</p>
+  </div>
+  <dl class="info">
+    <dt>Tour</dt><dd>Visita guidata di 50 minuti più la mostra, circa un'ora e mezza; in parte all'aperto. Tutti i giorni fino al 31 gennaio; <b>le date di febbraio non sono ancora uscite</b>. In inverno l'ultimo tour è verso le 15:45.</dd>
+    <dt>Prezzi</dt><dd>Adulti £31 con la commissione, sotto i 16 anni £14: la ragazza di 16 anni paga intero. Per noi 8 <b>circa £200-215</b>.</dd>
+    <dt>Prenotare</dt><dd>shakespearesglobe.com</dd>
+  </dl>
+  <div class="riquadro spinta">
+    <h4>A teatro a lume di candela</h4>
+    <p>Accanto al Globe c'è il <strong>Sam Wanamaker Playhouse</strong>, un piccolo teatro coperto illuminato solo da candele. A febbraio 2027 ci sono <em>Giulio Cesare</em> (fino al 14) e <em>Il gabbiano</em> di Čechov, in inglese. Orari e prezzi da verificare.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="7"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i class="qui" style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">168</div>
+  <div class="foto al" style="height:64mm;margin-top:-14mm"><img style="object-position:50% 0%" src="img/foto/s_borough.jpg" alt="I banchi di Borough Market sotto la tettoia"></div>
+  <p class="sezione">Top sight · 4</p>
+  <h2>Borough Market</h2>
+  <div class="testo">
+    <p class="lead">Un mercato che per legge non si può vendere, chiudere né spostare.</p>
+    <p>Qui, all'imbocco del London Bridge, si vende cibo almeno dal Duecento. Nel 1754 il Parlamento lo chiuse perché intralciava il traffico; gli abitanti della parrocchia raccolsero £6.000 e comprarono il terreno dove sta ancora oggi, sotto le arcate della ferrovia. Al numero 7 di Stoney Street è stato girato l'ingresso del Paiolo Magico in <em>Harry Potter e il prigioniero di Azkaban</em>, anche se la vetrina oggi è cambiata.</p>
+  </div>
+  <dl class="info">
+    <dt>Orari</dt><dd>Mar-ven 10-17, sab 9-17, dom 10-16. <b>Lunedì chiuso.</b></dd>
+    <dt>Assaggi</dt><dd><b>Kappacasein</b>, 1 Stoney Street: raclette con patate e un toast con quattro formaggi, porri e cipolle; solo gio-sab. <b>Monmouth Coffee</b>, Park Street: chiuso la domenica.</dd>
+    <dt>Metro</dt><dd>London Bridge (Jubilee e Northern), accanto al mercato.</dd>
+  </dl>
+  <div class="consiglio spinta">
+    <h4>Il trucco: Bread Ahead</h4>
+    <p>Il panificio di Bread Ahead, su Cathedral Street, ha un banco solo per i <b>donut</b> ripieni, come quello alla crème brûlée. Mar-sab 9-17, dom 10-16. In otto, mandate due persone in coda e gli altri a prendere i posti in piedi intorno a Southwark Cathedral. Arrivare prima delle 11 il sabato: dopo c'è la folla.</p>
+  </div>
+</section>
+<section class="page" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">169</div>
+  <p class="sezione">Da vedere</p>
+  <div class="voce">
+    <div class="n">5</div>
+    <h3>Millennium Bridge</h3>
+    <div class="dati"><b>Da St Paul's alla Tate Modern</b> · gratis, sempre aperto</div>
+    <div class="con-foto">
+      <p>Il ponte pedonale d'acciaio, lungo 325 metri, fu inaugurato dalla regina il 10 giugno 2000 e chiuso pochi giorni dopo: oscillava sotto i passi della folla, e i londinesi lo chiamarono "Wobbly Bridge". Riaprì nel 2002 con 91 ammortizzatori. Nel 2009 i Mangiamorte lo distruggono nella prima scena di <em>Harry Potter e il principe mezzosangue</em>.</p>
+      <div class="foto" style="height:30mm"><img src="img/foto/s_millennium.jpg" alt="Il Millennium Bridge con la cupola di St Paul's"></div>
+    </div>
+    <div class="dati" style="grid-column:2">La foto classica: dal lato della Tate, con il ponte che punta dritto alla cupola.</div>
+  </div>
+  <div class="voce">
+    <div class="n">6</div>
+    <h3>One New Change</h3>
+    <div class="dati"><b>1 New Change</b>, dietro la cattedrale · terrazza gratis</div>
+    <div class="con-foto">
+      <p>Un centro commerciale di vetro scuro, con un ascensore panoramico che sale alla <strong>terrazza del 6° piano</strong>: la cupola di St Paul's è lì, quasi da toccare, all'altezza degli occhi. Non si prenota. Gli orari ufficiali non sono pubblicati e la terrazza chiude col maltempo: da verificare sul posto. Vietati i bastoni per selfie.</p>
+      <div class="foto" style="height:30mm"><img src="img/foto/s_onenewchange.jpg" alt="La cupola di St Paul's dalla terrazza di One New Change"></div>
+    </div>
+  </div>
+  <div class="voce">
+    <div class="n">7</div>
+    <h3>Postman's Park</h3>
+    <div class="dati"><b>King Edward Street</b>, 5 min a nord di St Paul's · gratis, 8:00 fino al tramonto</div>
+    <div class="con-foto">
+      <p>Un piccolo giardino con un muro di 54 piastrelle di ceramica: ognuna racconta una persona comune morta per salvarne un'altra, in un incendio, in un fiume, davanti a un cavallo imbizzarrito. Lo volle il pittore G. F. Watts nel 1900. È al centro del film <em>Closer</em> del 2004. Bastano dieci minuti, e le ragazze se lo ricordano.</p>
+      <div class="foto" style="height:30mm"><img src="img/foto/s_postman.jpg" alt="Le piastrelle del memoriale di Postman's Park"></div>
+    </div>
+  </div>
+</section>
+<section class="page sx" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">170</div>
+  <div class="voce">
+    <div class="n">8</div>
+    <h3>London Museum</h3>
+    <div class="dati"><b>West Smithfield</b>, nei vecchi mercati della carne · metro Farringdon o Barbican · gratis</div>
+    <p>Il nuovo museo della storia di Londra apre il <strong>28 novembre 2026</strong> nei padiglioni vittoriani del mercato di Smithfield, a 10 minuti a piedi da St Paul's. Prende il posto del Museum of London, chiuso nel 2022. Orari e biglietti a tempo non sono ancora pubblicati: da ricontrollare a gennaio. Il London Museum Docklands, invece, è a Canary Wharf, nel capitolo di Greenwich.</p>
+  </div>
+  <div class="voce">
+    <div class="n">9</div>
+    <h3>Temple Bar</h3>
+    <div class="dati"><b>Paternoster Square</b>, accanto alla cattedrale · gratis</div>
+    <p>Un arco di pietra del 1672 che segnava il confine tra la City e Westminster, su Fleet Street. Nel 1878 fu smontato perché bloccava il traffico; un birraio lo ricostruì come cancello della sua villa in campagna, e nel 2004 è tornato qui, pietra per pietra.</p>
+  </div>
+  <div class="voce">
+    <div class="n">10</div>
+    <h3>Bank of England Museum</h3>
+    <div class="dati"><b>Bartholomew Lane</b> · metro Bank · gratis, lun-ven 10-17</div>
+    <p>Il museo della banca centrale: banconote, monete e la storia della sterlina. È sulla strada a piedi tra l'hotel e St Paul's, passando per Cheapside. Chiuso il sabato e la domenica.</p>
+  </div>
+  <div class="voce">
+    <div class="n">11</div>
+    <h3>Southwark Cathedral</h3>
+    <div class="dati"><b>London Bridge</b>, accanto al mercato · gratis · lun-sab 9-18, dom 8:30-17</div>
+    <div class="con-foto">
+      <p>Una chiesa gotica a due passi dal mercato. C'è la statua di Shakespeare sdraiato, sotto una vetrata con i personaggi delle sue opere; suo fratello Edmund, attore, è sepolto qui dal 1607. Nello stesso anno fu battezzato John Harvard, il fondatore dell'università americana. Dal 2020 la chiesa ha un gatto, Hodge.</p>
+      <div class="foto" style="height:30mm"><img src="img/foto/s_southwark.jpg" alt="Southwark Cathedral"></div>
+    </div>
+  </div>
+</section>
+<section class="page" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">171</div>
+  <div class="voce">
+    <div class="n">12</div>
+    <h3>Golden Hinde</h3>
+    <div class="dati"><b>St Mary Overie Dock</b> · tutti i giorni 10-17 · £6 a testa, famiglia di 4 £20</div>
+    <div class="con-foto">
+      <p>La copia a grandezza naturale del galeone con cui Francis Drake fece il giro del mondo tra il 1577 e il 1580, il primo inglese a riuscirci. Varata nel 1973, ha davvero attraversato l'oceano fino a San Francisco. Si visita da soli con l'audioguida, in mezz'ora: ponti bassi, cannoni e la cabina del capitano.</p>
+      <div class="foto" style="height:30mm"><img src="img/foto/s_hinde.jpg" alt="Il Golden Hinde nel suo bacino"></div>
+    </div>
+    <div class="dati" style="grid-column:2">Per noi 8 da £40 (due biglietti famiglia) a £48.</div>
+  </div>
+  <div class="voce">
+    <div class="n">13</div>
+    <h3>Clink Prison Museum e Winchester Palace</h3>
+    <div class="dati"><b>1 Clink Street</b> · tutti i giorni 10-18 · adulti £10, sotto i 16 anni £8, famiglia (2+2) £29</div>
+    <div class="con-foto">
+      <p>La prigione dei vescovi di Winchester, bruciata nel 1780 e mai ricostruita: da lei viene il modo di dire inglese "in the clink", in galera. Si toccano ceppi e strumenti di tortura: crudo, ma per le nostre ragazze va bene. A pochi passi, in strada, resta la parete del palazzo dei vescovi con il suo rosone, gratis.</p>
+      <div class="foto" style="height:30mm"><img src="img/foto/s_clink.jpg" alt="Il rosone di Winchester Palace su Clink Street"></div>
+    </div>
+    <div class="dati" style="grid-column:2">Per noi 8 circa £69. I prezzi sul sito sembrano vecchi: da ricontrollare.</div>
+  </div>
+  <div class="voce">
+    <div class="n">14</div>
+    <h3>The View from The Shard</h3>
+    <div class="dati"><b>Joiner Street</b> · metro London Bridge · da £28 dai 13 anni, da £10 per 4-12 anni</div>
+    <div class="con-foto">
+      <p>Il grattacielo di Renzo Piano, 310 metri, il più alto del Regno Unito. Si sale ai piani 68 e 69, al chiuso, e allo Skydeck all'aperto del 72°, a 244 metri. Attenzione alle fasce d'età: qui pagano intero anche le ragazze di 16 e 13 anni. Per noi 8 <strong>da £206</strong>, e il prezzo cambia con la data e l'ora.</p>
+      <div class="foto" style="height:30mm"><img src="img/foto/s_shard.jpg" alt="The Shard visto dal basso"></div>
+    </div>
+    <div class="dati" style="grid-column:2">Se non si vede niente per la nebbia, si chiede al Duty Manager un biglietto gratuito per tornare entro tre mesi. Orari di febbraio da verificare.</div>
+  </div>
+</section>
+<section class="page sx" data-sez="9"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i class="qui" style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">172</div>
+  <p class="sezione">Passeggiata</p>
+  <h2>Dalla cupola al mercato</h2>
+  <p class="piccolo">Circa 2,5 km · una giornata con le soste · da martedì a sabato, quando sono aperti sia St Paul's sia il mercato</p>
+  <div class="foto al" style="height:40mm"><img style="object-position:50% 60%" src="img/foto/s_globe_in.jpg" alt="Il palco e le gallerie di legno dello Shakespeare's Globe"></div>
+  <ol class="tappe">
+    <li data-n="1"><b>St Paul's Cathedral</b> <span class="tempo">2 ore</span><br>Alle 9:30, cupola per prima. Metro Mansion House dall'hotel.</li>
+    <li data-n="2"><b>One New Change</b> <span class="tempo">20 min</span><br>La terrazza del 6° piano, dietro l'abside: la cupola che avete appena scalato.</li>
+    <li data-n="3"><b>Millennium Bridge</b> <span class="tempo">10 min</span><br>Da Peter's Hill si scende al ponte; fermatevi a metà per Tower Bridge e lo Shard.</li>
+    <li data-n="4"><b>Tate Modern</b> <span class="tempo">1 ora e mezza</span><br>Turbine Hall, una galleria a scelta, poi il Level 10 per la foto di St Paul's.</li>
+    <li data-n="5"><b>Shakespeare's Globe</b> <span class="tempo">1 ora e mezza</span><br>Con il tour prenotato a inizio pomeriggio; o solo la facciata e il pranzo al Swan.</li>
+    <li data-n="6"><b>Clink Street</b> <span class="tempo">30 min</span><br>Dopo l'Anchor, il vicolo sotto i binari: il rosone di Winchester Palace e la prigione.</li>
+    <li data-n="7"><b>Golden Hinde e Southwark Cathedral</b> <span class="tempo">40 min</span><br>Il galeone, poi la statua di Shakespeare.</li>
+    <li data-n="8"><b>Borough Market</b> <span class="tempo">1 ora</span><br>Merenda da Bread Ahead prima delle 17 (sabato) o delle 16 (domenica).</li>
+  </ol>
+  <div class="consiglio spinta">
+    <h4>Per tornare</h4>
+    <p>Da London Bridge a piedi fino a Monument, poi District line per Aldgate East: due fermate. Oppure lo Shard al tramonto, verso le 17, prima di rientrare.</p>
+  </div>
+</section>
+<section class="page" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">173</div>
+  <p class="sezione">Mangiare</p>
+  <h2>Dove mangiare in otto</h2>
+  <p class="piccolo">£ meno di £12 a testa · ££ £15-30 · £££ oltre £40. Tutti aperti anche la domenica.</p>
+  <div class="voce">
+    <div class="n m">15</div>
+    <h3>The George Inn <span class="prezzo">££</span></h3>
+    <div class="dati"><b>77 Borough High Street</b> · cucina tutti i giorni 11-22</div>
+    <p>Una locanda del Seicento con le balconate di legno sul cortile, oggi del National Trust. Cucina da pub e Sunday roast, famiglie benvenute. Si prenota online.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">16</div>
+    <h3>Roast <span class="prezzo">£££</span></h3>
+    <div class="dati"><b>Floral Hall, Stoney Street</b> · lun-sab 11:45-22, dom 11:45-18:30</div>
+    <p>Cucina inglese in una serra di ferro e vetro sopra il mercato. Il Sunday roast è il piatto forte, con un'opzione halal. Si prenota.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">17</div>
+    <h3>Padella <span class="prezzo">£-££</span></h3>
+    <div class="dati"><b>6 Southwark Street</b> · pranzo tutti i giorni 11:30-15:45</div>
+    <p>Pasta fresca fatta a mano, da £9,50 a £16,50 il piatto. Non prende prenotazioni e siede al massimo 6 persone per tavolo: in 8 si fanno due tavoli e si entra in coda virtuale con il QR code alla porta.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">18</div>
+    <h3>Flat Iron London Bridge <span class="prezzo">££</span></h3>
+    <div class="dati"><b>112-116 Tooley Street</b> · tutti i giorni da mezzogiorno</div>
+    <p>Una bistecca sola, la flat iron, a £15, con contorni da £3,50. Semplice e veloce. Si prenota online, e c'è una saletta per 12.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">19</div>
+    <h3>The Swan at the Globe <span class="prezzo">££</span></h3>
+    <div class="dati"><b>21 New Globe Walk</b> · ristorante a pranzo e a cena, bar tutto il giorno</div>
+    <p>Dentro il Globe, con le finestre su St Paul's. Fish and chips al bar, pranzo della domenica al ristorante. Per i gruppi si scrive a enquiries@swanlondon.co.uk.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">20</div>
+    <h3>Côte St Paul's <span class="prezzo">££</span></h3>
+    <div class="dati"><b>26 Ludgate Hill</b> · tutti i giorni dalle 7:30, nel weekend dalle 8</div>
+    <p>Brasserie francese a due passi dalla cattedrale: comoda per colazione prima della cupola o per un pranzo senza sorprese. Prenotazione online.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">174</div>
+  <p class="sezione">Dolci, pub e prima di partire</p>
+  <div class="voce">
+    <div class="n b">21</div>
+    <h3>Bread Ahead <span class="prezzo">£</span></h3>
+    <div class="dati"><b>Cathedral Street, Borough Market</b> · mar-sab 9-17, dom 10-16</div>
+    <p>Donut ripieni e pane a lievitazione naturale. Nei video di TikTok quello alla crème brûlée costa circa £4,50: prezzo da verificare.</p>
+  </div>
+  <div class="voce">
+    <div class="n b">22</div>
+    <h3>The Anchor Bankside <span class="prezzo">££</span></h3>
+    <div class="dati"><b>34 Park Street</b>, sul fiume</div>
+    <p>Un pub storico sul Tamigi, accanto a Southwark Bridge, aperto alle famiglie. La terrazza sul fiume non si prenota; per la sala, telefonate prima.</p>
+  </div>
+  <div class="consiglio">
+    <h4>Il consiglio di TikTok</h4>
+    <p>La terrazza di One New Change al tramonto, con la cupola illuminata, e il giro Millennium Bridge → St Paul's → terrazza (@volga_londonstories, @spensierati.in.viaggio). Il donut di Bread Ahead è tra le "cose sotto le £10" di @andreaelaura.</p>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Cosa prenotare</h4>
+    <ol class="tappe" style="margin-top:1mm">
+      <li data-n="1"><b>Dicembre-gennaio</b><br>St Paul's (fascia delle 9:30) e The Shard, che costa meno prenotato presto.</li>
+      <li data-n="2"><b>Gennaio 2027</b><br>Le date di febbraio del tour del Globe, gli orari dei vespri a St Paul's, gli orari e i biglietti del London Museum.</li>
+    </ol>
+  </div>
+  <div class="riquadro spinta">
+    <h4>Biglietti del quartiere, per noi 8</h4>
+    <div class="due" style="font-size:8pt">
+      <div>St Paul's (famiglia + 3 adulti)<br>The Shard, da<br>Globe, tour guidato<br>Clink Prison Museum<br>Golden Hinde<br><b>Totale se facciamo tutto</b></div>
+      <div style="text-align:right">£145,50<br>£206<br>circa £200<br>£69<br>£40<br><b>circa £660</b></div>
+    </div>
+    <p class="piccolo" style="margin-top:1.5mm">Tate Modern, Millennium Bridge, One New Change, Southwark Cathedral e London Museum sono gratis. Prezzi di ottobre 2026.</p>
+  </div>
+</section>
+<section class="page crediti" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">175</div><p class="sezione">Crediti fotografici</p><h2>Le foto di questo capitolo</h2><p class="piccolo">Foto da Wikimedia Commons, pubblicate con licenze Creative Commons o in pubblico dominio. Mappe: Esri, HERE, Garmin e i contributori di OpenStreetMap. Linee della metro: OpenStreetMap.</p><ul class="lista-crediti"><li><b>s_apertura</b>: Telemaque MySon, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Millennium_Bridge_London.jpg</span></li><li><b>s_stpauls</b>: Acabashi, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:St_Paul&#x27;s_Cathedral_West_Front_City_of_London_England_02.jpg</span></li><li><b>s_stpauls_in</b>: Diliff, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:St_Paul&#x27;s_Cathedral_Interior_Dome_2,_London,_UK_-_Diliff.jpg</span></li><li><b>s_whispering</b>: JackPeasePhotography, CC BY 2.0, <span>commons.wikimedia.org/wiki/File:St_Paul&#x27;s_Cathedral_–_Whispering_Gallery.jpg</span></li><li><b>s_tate</b>: Diego Delso, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Tate_Modern,_Londres,_Inglaterra,_2014-08-11,_DD_124.JPG</span></li><li><b>s_globe</b>: Miacara76, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Shakespeare&#x27;s_Globe_Theatre_2013.JPG</span></li><li><b>s_borough</b>: Jeremy Keith from Brighton &amp;amp; Hove, United Kingdom, CC BY 2.0, <span>commons.wikimedia.org/wiki/File:Borough_Market_(4701274756).jpg</span></li><li><b>s_millennium</b>: King of Hearts, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Millennium_Bridge_London_June_2016_001.jpg</span></li><li><b>s_onenewchange</b>: Colin, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:St_Paul&#x27;s_Cathedral_Dome_from_One_New_Change_-_Square_Crop.jpg</span></li><li><b>s_postman</b>: Acabashi, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:George_Frederic_Watts_Postman&#x27;s_Park_memorial,_City_of_London,_England.jpg</span></li><li><b>s_southwark</b>: Acabashi, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Southwark_Cathedral_from_Montague_Close.jpg</span></li><li><b>s_hinde</b>: Oxfordian Kissuth, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Golden_Hinde,_galleon,_Southwark.jpg</span></li><li><b>s_clink</b>: Oxfordian Kissuth, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Rose_window,_Southwark.jpg</span></li><li><b>s_shard</b>: Lewis Hulbert, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:The_Shard_from_Southwark_Bridge,_2017-05-27.jpg</span></li><li><b>s_globe_in</b>: Steve Collis from Melbourne, Australia, CC BY 2.0, <span>commons.wikimedia.org/wiki/File:Shakespeare´s_Globe_(HDR)_(8162131756).jpg</span></li></ul></section>
+<section class="page sx appunti" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>St Paul&#x27;s e Bankside</span><span>Quartieri</span></div><div class="folio">176</div><p class="sezione">Appunti</p><div class="righe"></div></section>
+<script>
+// segnala le pagine troppo piene (in stampa il testo verrebbe tagliato)
+window.addEventListener('load', () => {
+  const piene = [...document.querySelectorAll('.page')].filter(p => p.scrollHeight > p.clientHeight + 2)
+    .map((p, i) => p.querySelector('.folio')?.textContent || 'apertura');
+  document.body.dataset.piene = piene.join(',');
+});
+</script>
+</body></html>

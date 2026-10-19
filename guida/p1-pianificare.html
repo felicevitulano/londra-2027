@@ -1,0 +1,1178 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pianificare · Guida di Londra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>/* Guida di Londra — stile delle pagine.
+   Stampa: pagine A5 fisse (148 x 210 mm). Schermo: le stesse pagine una sotto l'altra, fluide sotto i 640 px.
+   Ogni capitolo è una "linea della metro" del suo colore (--cap) che corre sul bordo esterno,
+   con una fermata per sezione: la fermata accesa dice dove sei nel capitolo. */
+
+:root{
+  --ink:#1d2a44;        /* blu notte: testo e titoli */
+  --muted:#5f6472;
+  --paper:#fffdf9;      /* carta quasi bianca, per foto nitide */
+  --sand:#f2ebde;       /* fondi dei riquadri */
+  --red:#b8402f; --teal:#2f7272; --mustard:#c08a25; --navy:#26375c;
+  --teal-tint:#e6f0ee; --mustard-tint:#f7eedb;
+  --cap:var(--red);     /* colore del capitolo, ridefinito su ogni capitolo */
+  --f-display:"Fraunces", Georgia, serif;
+  --f-body:"Figtree", "Helvetica Neue", Arial, sans-serif;
+}
+@page{ size:148mm 210mm; margin:0 }
+*{ box-sizing:border-box }
+html{ -webkit-print-color-adjust:exact; print-color-adjust:exact }
+body{ margin:0; background:#e7e2d8; color:var(--ink); font:400 8.9pt/1.45 var(--f-body); font-variant-numeric:tabular-nums }
+img{ display:block; max-width:100% }
+a{ color:inherit }
+
+/* ---------- pagina ---------- */
+.page{ width:148mm; height:210mm; margin:0 auto 6mm; background:var(--paper); position:relative; overflow:hidden;
+  padding:14mm 17mm 15mm 13mm; break-after:page; display:flex; flex-direction:column; gap:3.2mm }
+.page.sx{ padding:14mm 13mm 15mm 17mm }               /* pagina pari: margine esterno a sinistra */
+@media print{ body{ background:none } .page{ margin:0 } }
+
+.testata{ position:absolute; top:6.5mm; left:13mm; right:17mm; display:flex; justify-content:space-between;
+  font:500 6.8pt var(--f-body); color:var(--muted) }
+.sx .testata{ left:17mm; right:13mm; flex-direction:row-reverse }
+.folio{ position:absolute; bottom:6.5mm; right:17mm; font:600 7.5pt var(--f-body); color:var(--ink) }
+.sx .folio{ right:auto; left:17mm }
+
+/* linea della metro sul bordo esterno */
+.linea{ position:absolute; top:0; bottom:0; right:5.2mm; width:2.2mm; background:var(--cap) }
+.sx .linea{ right:auto; left:5.2mm }
+.linea i{ position:absolute; left:50%; width:4.2mm; height:4.2mm; margin-left:-2.1mm; border-radius:50%;
+  background:#fff; border:.9mm solid var(--cap) }
+.linea i.qui{ width:5.6mm; height:5.6mm; margin-left:-2.8mm; background:var(--ink); border-color:#fff; box-shadow:0 0 0 .6mm var(--cap) }
+
+/* ---------- tipografia ---------- */
+h1,h2,h3,h4{ font-family:var(--f-display); margin:0; color:var(--ink); text-wrap:balance; font-optical-sizing:auto }
+h2{ font-size:21pt; line-height:1.02; font-weight:800; letter-spacing:-.01em }
+h3{ font-size:12.5pt; line-height:1.15; font-weight:700 }
+h4{ font-size:10pt; font-weight:700 }
+p{ margin:0 }
+.testo p + p{ margin-top:2.2mm }
+.testo{ hyphens:auto; -webkit-hyphens:auto }
+.lead{ font:400 11pt/1.38 var(--f-display); color:var(--ink) }
+.sezione{ font:600 8pt var(--f-body); color:var(--cap) }       /* nome della sezione sopra il titolo */
+.piccolo{ font-size:7.6pt; color:var(--muted) }
+.cap{ font-size:6.8pt; color:var(--muted); margin-top:1.2mm; font-style:italic }
+
+/* ---------- foto ---------- */
+.foto{ position:relative; overflow:hidden; border-radius:1.2mm; flex:none }
+.foto img{ width:100%; height:100%; object-fit:cover }
+.foto.al{ margin:0 -17mm 0 -13mm; border-radius:0 }            /* al vivo orizzontale */
+.sx .foto.al{ margin:0 -13mm 0 -17mm }
+
+/* ---------- apertura capitolo ---------- */
+.apertura{ padding:0 }
+.apertura > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover }
+.apertura .velo{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,28,46,.0) 35%, rgba(20,28,46,.86) 82%) }
+.apertura .titolo{ position:absolute; left:13mm; right:17mm; bottom:16mm; color:#fff }
+.apertura .num{ font:600 8pt var(--f-body); color:#fff; opacity:.85 }
+.apertura h1{ font-size:38pt; line-height:.95; font-weight:900; color:#fff; margin:2mm 0 4mm }
+.apertura .sotto{ font:400 10.5pt/1.35 var(--f-display); max-width:100mm; opacity:.95 }
+
+/* ---------- riquadri ---------- */
+.info{ background:var(--teal-tint); border-radius:1.5mm; padding:3mm 3.5mm; display:grid;
+  grid-template-columns:15mm 1fr; gap:1.1mm 3mm; font-size:7.9pt; line-height:1.35; flex:none }
+.info dt{ font-weight:700; color:var(--teal) }
+.info dd{ margin:0 }
+.consiglio{ background:var(--mustard-tint); border-radius:1.5mm; padding:3mm 3.5mm; font-size:8.4pt; flex:none }
+.consiglio h4{ color:#8a5f12; margin-bottom:1mm; display:flex; align-items:center; gap:2mm }
+.consiglio h4::before{ content:""; width:3.4mm; height:3.4mm; border-radius:50%; border:.8mm solid var(--mustard); flex:none }
+.riquadro{ background:var(--sand); border-radius:1.5mm; padding:3.2mm 3.6mm; font-size:8.4pt; flex:none }
+.riquadro h4{ margin-bottom:1.2mm }
+.top-lista{ margin:0; padding:0; list-style:none; display:grid; gap:1.4mm }
+.top-lista li{ display:grid; grid-template-columns:5mm 1fr; gap:2mm; align-items:baseline }
+.top-lista b{ font-family:var(--f-display); font-weight:800; color:var(--cap); font-size:10pt }
+
+/* ---------- schede (da vedere, mangiare...) ---------- */
+.voce{ display:grid; grid-template-columns:6.4mm 1fr; gap:0 2.6mm; break-inside:avoid }
+.voce + .voce{ padding-top:2.6mm; border-top:.25mm solid #e2dacb }
+.n{ width:6.4mm; height:6.4mm; border-radius:50%; background:var(--cap); color:#fff; font:700 7.6pt/6.4mm var(--f-body);
+  text-align:center; grid-row:span 3 }
+.n.m{ background:var(--teal) } .n.b{ background:var(--mustard) } .n.s{ background:var(--navy) }
+.voce h3{ font-size:11pt }
+.voce .dati{ font-size:7.4pt; color:var(--muted); margin:.4mm 0 1mm }
+.voce .dati b{ color:var(--ink); font-weight:600 }
+.voce .con-foto{ display:grid; grid-template-columns:1fr 30mm; gap:3mm; align-items:start }
+.voce .con-foto .foto{ height:22mm }
+.prezzo{ font-family:var(--f-body); font-weight:700; color:var(--teal); font-size:8pt; margin-left:1.5mm }
+
+/* ---------- mappa del capitolo ---------- */
+.mappa-pag{ padding:0 }
+.mappa-pag > img{ position:absolute; inset:0; width:100%; height:100% ; object-fit:cover }
+.mappa-pag .scala{ position:absolute; left:6mm; bottom:5mm; background:rgba(255,253,249,.94); border-radius:1.2mm; padding:1.6mm 2.4mm; font-size:6.6pt; color:var(--muted) }
+.legenda{ columns:2; column-gap:5mm; font-size:7.7pt; line-height:1.3 }
+.legenda h4{ font:700 8pt var(--f-body); color:var(--ink); margin:2.4mm 0 1mm; break-after:avoid; display:flex; align-items:center; gap:1.8mm }
+.legenda h4:first-child{ margin-top:0 }
+.legenda h4 i{ width:3mm; height:3mm; border-radius:50% }
+.legenda ol{ margin:0; padding:0; list-style:none }
+.legenda li{ display:grid; grid-template-columns:5mm 1fr auto; gap:1mm; padding:.45mm 0; break-inside:avoid }
+.legenda li b{ font-weight:700 }
+.legenda li span{ color:var(--muted) }
+
+/* ---------- passeggiata ---------- */
+.tappe{ margin:0; padding:0; list-style:none; position:relative }
+.tappe::before{ content:""; position:absolute; left:2.9mm; top:2mm; bottom:3mm; width:.9mm; background:var(--cap) }
+.tappe li{ position:relative; padding:0 0 2.6mm 9mm; font-size:8.4pt }
+.tappe li::before{ content:attr(data-n); position:absolute; left:0; top:-.3mm; width:6.6mm; height:6.6mm; border-radius:50%;
+  background:#fff; border:.8mm solid var(--cap); font:700 7pt/5mm var(--f-body); text-align:center; color:var(--ink) }
+.tappe b{ font-family:var(--f-display); font-size:9.8pt }
+.tappe .tempo{ color:var(--muted); font-size:7.4pt }
+
+.due{ display:grid; grid-template-columns:1fr 1fr; gap:4mm }
+.spinta{ margin-top:auto }   /* spinge un riquadro in fondo alla pagina */
+
+/* ---------- schermo stretto (sito sul telefono) ---------- */
+@media screen and (max-width: 640px){
+  body{ background:var(--paper); font-size:15px }
+  .page, .page.sx{ width:auto; height:auto; min-height:0; margin:0; padding:22px max(18px, env(safe-area-inset-right, 0px)) 26px max(18px, env(safe-area-inset-left, 0px));
+    border-bottom:1px solid #e2dacb; overflow:visible }
+  .linea, .folio, .testata{ display:none }
+  .foto.al, .sx .foto.al{ margin:0 -18px }
+  .apertura{ min-height:88vh }
+  .apertura .titolo{ left:20px; right:20px; bottom:28px }
+  .mappa-pag{ height:auto }
+  .mappa-pag > img{ position:static; height:auto }
+  .due, .voce .con-foto{ grid-template-columns:1fr }
+  .voce .con-foto .foto{ height:44vw }
+  .legenda{ columns:1 }
+  .foto[style*="height"]{ height:auto !important; aspect-ratio:3/2 }
+  /* sul telefono i caratteri in punti tipografici diventerebbero minuscoli */
+  .riquadro, .consiglio, .tappe li, .card p{ font-size:14.5px }
+  .info, .legenda, .voce .dati, .piccolo, .cap, .lista-crediti{ font-size:13px }
+  .info{ grid-template-columns:76px 1fr }
+  .lead{ font-size:18px } h2{ font-size:30px } .voce h3{ font-size:19px } h3{ font-size:19px } h4{ font-size:16px }
+  .n{ width:28px; height:28px; font-size:13px; line-height:28px }
+  .voce{ grid-template-columns:28px 1fr; gap:0 12px }
+  .riquadro [style*="font-size"]{ font-size:14px !important }
+  .riquadro [style*="grid-template-columns:13mm"]{ grid-template-columns:72px 1fr !important }
+  .riquadro [style*="grid-template-columns:24mm"]{ grid-template-columns:96px 1fr !important }
+}
+
+/* ---------- sommario e indice analitico (generati da costruisci.py) ---------- */
+.sommario{ list-style:none; margin:0; padding:0; display:grid; gap:1.6mm; font-size:9.6pt }
+.sommario li{ display:grid; grid-template-columns:3mm 1fr auto; gap:3mm; align-items:baseline; border-bottom:.25mm dotted #cfc5b2; padding-bottom:1.2mm }
+.sommario li i{ width:3mm; height:3mm; border-radius:50%; align-self:center }
+.sommario li b{ font-family:var(--f-display); font-weight:800 }
+.sommario li.parte{ display:block; border:0; margin-top:2.4mm; font:700 7.5pt var(--f-body); color:var(--muted) }
+.indice{ list-style:none; margin:0; padding:0; columns:2; column-gap:6mm; font-size:7.2pt; line-height:1.3 }
+.indice li{ display:flex; justify-content:space-between; gap:2mm; break-inside:avoid; padding:.35mm 0; border-bottom:.2mm dotted #ddd3c0 }
+.indice b{ font-weight:600; white-space:nowrap }
+@media screen and (max-width: 640px){ .sommario{ font-size:16px } .indice{ columns:1; font-size:14px } }
+
+.page{--cap:#1d2a44}
+.lista-crediti{margin:0;padding:0;list-style:none;display:grid;gap:1.4mm;font-size:7pt;line-height:1.3}
+.lista-crediti span{color:var(--muted);word-break:break-all}
+.appunti .righe{flex:1;background:repeating-linear-gradient(transparent 0 7.4mm, #e2dacb 7.4mm 7.65mm)}
+
+.barra-web{display:none}
+@media screen{.barra-web{display:flex;gap:18px;justify-content:center;position:sticky;top:0;z-index:10;
+  padding:10px 16px;background:#1d2a44;font:600 14px var(--f-body)}.barra-web a{color:#fff;text-decoration:none}}
+@media print{.barra-web{display:none}}
+</style></head><body><nav class="barra-web"><a href="./">← Guida</a><a href="p1-pianificare.pdf">Scarica il PDF</a><a href="../">Mappa</a></nav>
+<section class="page apertura" data-sez="1" data-nohead><div class="linea" aria-hidden="true"><i class="qui" style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div>
+  <img src="img/foto/pi_apertura.jpg" alt="L'ingresso della metro di Piccadilly Circus all'ora blu, con i lampioni accesi">
+  <div class="velo"></div>
+  <div class="titolo">
+    <div class="num">Parte 1</div>
+    <h1>Pianificare</h1>
+    <p class="sotto">Le esperienze da non lasciarsi scappare, le scadenze da segnare sul calendario e tutto quello che serve sapere prima di salire sull'aereo.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="1"><div class="linea" aria-hidden="true"><i class="qui" style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">6</div>
+  <p class="sezione">Benvenuti a Londra</p>
+  <h2>Una città che si gira a piedi e in metro</h2>
+  <div class="foto al" style="height:62mm"><img src="img/foto/pi_bus.jpg" alt="Piccadilly Circus di sera, con gli schermi accesi e la folla"></div>
+  <div class="testo">
+    <p class="lead">Londra è enorme, ma quello che ci interessa sta quasi tutto lungo il Tamigi, tra la Torre e Westminster: cinque chilometri di fiume con mille anni di storia sulle due rive.</p>
+    <p>Dormiamo ad Aldgate East, all'estremità orientale della City. Da lì la District line corre dritta fino a Westminster e a South Kensington, senza cambi: in venti minuti si è sotto il Big Ben. La Torre e Tower Bridge sono a un quarto d'ora a piedi.</p>
+    <p>A febbraio Londra non è al suo meglio per il tempo: fa freddo, il cielo è spesso coperto e alle cinque è buio. In compenso le code sono più corte che d'estate, i grandi musei sono gratis e al coperto, e la sera la città accesa dall'alto, dal London Eye o dallo Sky Garden, è uno spettacolo.</p>
+  </div>
+  <div class="riquadro spinta" style="background:var(--teal-tint)">
+    <h4>La mappa sul telefono</h4>
+    <p>Tutti i luoghi di questa guida, con le linee della metro e il programma giorno per giorno, sono anche sulla mappa online del viaggio: <b>felicevitulano.github.io/londra-2027</b>. Sul telefono si apre come una pagina web, senza installare niente.</p>
+  </div>
+</section>
+<section class="page" data-sez="1"><div class="linea" aria-hidden="true"><i class="qui" style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">7</div>
+  <p class="sezione">Benvenuti a Londra</p>
+  <h2>Quattro giorni, otto persone</h2>
+  <div class="testo">
+    <p>Arriviamo venerdì 5 febbraio a mezzanotte a Stansted e ripartiamo martedì 9 nel pomeriggio: restano tre giornate piene e una mattina. Non si vede tutto, e va bene così. Questa parte della guida serve a scegliere, a prenotare in tempo e a non avere sorprese.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Come è fatta la guida</h4>
+    <div style="display:grid;grid-template-columns:24mm 1fr;gap:1.2mm 3mm;font-size:8pt">
+      <b>Parte 1</b><span>Pianificare: le esperienze top, le scadenze, i consigli per tema, per i ragazzi e per spendere poco.</span>
+      <b>Parte 2</b><span>L'itinerario giorno per giorno: è l'unica parte che cambia se cambiamo il programma.</span>
+      <b>Quartieri</b><span>Un capitolo per zona, con mappa, luoghi, orari, prezzi e dove mangiare in otto.</span>
+      <b>Gite</b><span>Harry Potter Studios e Windsor.</span>
+      <b>Parti 5 e 6</b><span>Capire Londra (storia, famiglia reale, cibo) e la guida pratica: aeroporto, metro, emergenze.</span>
+    </div>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Tre regole per questo viaggio</h4>
+    <ol class="top-lista">
+      <li><b>1</b><span><strong>Prenotare per tempo.</strong> In otto non si improvvisa: biglietti a orario e ristoranti vanno fissati prima. Le date sono a p. 29.</span></li>
+      <li><b>2</b><span><strong>Fuori la mattina, dentro il pomeriggio.</strong> Le visite all'aperto prima delle 16:30; dopo, musei, panorami e cena.</span></li>
+      <li><b>3</b><span><strong>Una carta contactless a testa per gli adulti.</strong> Si paga così la metro, e quasi tutto il resto.</span></li>
+    </ol>
+  </div>
+  <dl class="info spinta">
+    <dt>Valuta</dt><dd>Sterlina (£). Cambio indicativo: 1 £ = 1,17 € (agosto 2026).</dd>
+    <dt>Ora</dt><dd>Un'ora indietro rispetto all'Italia.</dd>
+    <dt>Entrare</dt><dd>Passaporto ed ETA per tutti, ragazze comprese (p. 23).</dd>
+    <dt>Prese</dt><dd>Tipo G, a tre poli: serve l'adattatore.</dd>
+    <dt>Emergenze</dt><dd>999 o 112.</dd>
+  </dl>
+</section>
+<section class="page sx" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">8</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/pi_tower.jpg" alt="La White Tower al centro della Tower of London"></div>
+  <p class="sezione">Le 15 esperienze top · 1</p>
+  <h2>I gioielli della Tower of London</h2>
+  <div class="testo">
+    <p class="lead">Una fortezza normanna di quasi mille anni, con dentro la collezione di gioielli più famosa del mondo.</p>
+    <p>È stata palazzo reale, prigione, zecca e perfino zoo. Oggi custodisce i <strong>Crown Jewels</strong>, con il Cullinan I nello scettro reale, e la sorvegliano gli Yeoman Warder, i "Beefeater", che fanno tour pieni di storie di prigionieri e decapitazioni. E poi i corvi: la leggenda dice che se lasciano la Torre cade il regno, così ce ne sono sempre almeno sei.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Prezzi</dt><dd>Adulti £38, 5-17 anni £19: per noi 8, £247.</dd>
+    <dt>Il trucco</dt><dd>Entrare all'apertura e andare subito ai gioielli, prima della coda.</dd>
+    <dt>Vedi</dt><dd>Tower, City e Aldgate, p. 76</dd>
+  </dl>
+</section>
+<section class="page" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">9</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/pi_towerbridge.jpg" alt="Tower Bridge e le sue due torri sul Tamigi"></div>
+  <p class="sezione">Le 15 esperienze top · 2</p>
+  <h2>Camminare sul vetro di Tower Bridge</h2>
+  <div class="testo">
+    <p class="lead">Quarantadue metri sopra il Tamigi, con gli autobus rossi che passano sotto i piedi.</p>
+    <p>Il ponte del 1894 si attraversa gratis, ma il biglietto porta sulle passerelle alte tra le due torri, con tratti di pavimento trasparente, e giù nella sala macchine vittoriana che alzava i bracci a vapore. Il ponte si apre ancora centinaia di volte l'anno per le navi alte: gli orari sono sul sito, ed esserci sopra in quel momento è il colpo di fortuna della visita.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Prezzi</dt><dd>Adulti £18, 16-17 anni £13,50, 5-15 anni £9: per noi £121,50.</dd>
+    <dt>Il trucco</dt><dd>La foto migliore della Torre si fa dal lato sud del ponte.</dd>
+    <dt>Vedi</dt><dd>Tower, City e Aldgate, p. 78</dd>
+  </dl>
+</section>
+<section class="page sx" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">10</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/pi_skygarden.jpg" alt="Il giardino coperto dello Sky Garden con la vista su Londra"></div>
+  <p class="sezione">Le 15 esperienze top · 3</p>
+  <h2>Il tramonto dallo Sky Garden</h2>
+  <div class="testo">
+    <p class="lead">Un giardino tropicale al 35° piano, sotto una cupola di vetro, e tutta Londra che si accende intorno. Gratis.</p>
+    <p>È in cima al Walkie Talkie, il grattacielo che si allarga verso l'alto. Si entra con un biglietto a orario e si resta al massimo un'ora. I biglietti escono il lunedì mattina, tre settimane prima: chi arriva tardi trova tutto esaurito. Il piano B è <strong>Horizon 22</strong>, al 58° piano di un grattacielo vicino, anche questo gratis e senza limite di tempo.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Prezzi</dt><dd>Gratis, con prenotazione.</dd>
+    <dt>Il trucco</dt><dd>La fascia delle 16:00-16:45 nel weekend: si vede la città passare dal giorno alla notte.</dd>
+    <dt>Vedi</dt><dd>Tower, City e Aldgate, p. 80</dd>
+  </dl>
+</section>
+<section class="page" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">11</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/pi_abbey.jpg" alt="La facciata gotica di Westminster Abbey"></div>
+  <p class="sezione">Le 15 esperienze top · 4</p>
+  <h2>Westminster Abbey</h2>
+  <div class="testo">
+    <p class="lead">Dal 1066 qui sono stati incoronati tutti i re e le regine d'Inghilterra, e una trentina vi sono sepolti.</p>
+    <p>Elisabetta I e Maria Stuarda, cugine e nemiche, riposano a pochi metri l'una dall'altra. Nel Poets' Corner ci sono Chaucer e Dickens, poco più in là Isaac Newton e Stephen Hawking. Sulla Coronation Chair, il trono di legno del 1308, si leggono ancora le scritte incise a coltello dagli scolari del Settecento.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Prezzi</dt><dd>Adulti £32, 6-17 anni £14: per noi £202.</dd>
+    <dt>Il trucco</dt><dd>La domenica non si visita, ma alle 15 i vespri cantati sono gratis.</dd>
+    <dt>Vedi</dt><dd>Westminster e South Bank, p. 100</dd>
+  </dl>
+</section>
+<section class="page sx" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">12</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/pi_parliament.jpg" style="object-position:50% 25%" alt="Il Palazzo di Westminster e il Big Ben visti dal Tamigi"></div>
+  <p class="sezione">Le 15 esperienze top · 5</p>
+  <h2>Dentro il Parlamento, sotto il Big Ben</h2>
+  <div class="testo">
+    <p class="lead">Il palazzo dove si governa il Regno Unito si visita solo il sabato, e la campana più famosa del mondo si raggiunge salendo 334 gradini.</p>
+    <p>La visita passa per la Westminster Hall del 1097, dove fu processato Guy Fawkes, la Camera dei Lord con il trono e la Camera dei Comuni, dove il re non può entrare dal 1642. Il <strong>tour del Big Ben</strong> è aperto dagli 11 anni, quindi a tutte le ragazze, ma i biglietti finiscono in poche ore.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Prezzi</dt><dd>Visita guidata: per noi £270. Audioguida in italiano: circa £191. Big Ben: £380.</dd>
+    <dt>Quando</dt><dd>A febbraio 2027 visite il 6, 20 e 27: è già prenotabile.</dd>
+    <dt>Vedi</dt><dd>Westminster e South Bank, p. 102</dd>
+  </dl>
+</section>
+<section class="page" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">13</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/pi_guard.jpg" alt="Le guardie con il colbacco durante il Cambio della Guardia"></div>
+  <p class="sezione">Le 15 esperienze top · 6</p>
+  <h2>Il Cambio della Guardia</h2>
+  <div class="testo">
+    <p class="lead">Giubbe rosse, colbacchi di pelo d'orso alti 45 centimetri e una banda militare davanti a Buckingham Palace. Gratis.</p>
+    <p>Le guardie sono soldati veri dei reggimenti della Household Division. La cerimonia completa, con la banda, dura circa 45 minuti e si fa il lunedì, il mercoledì e il venerdì alle 11; la domenica alle 10 c'è una parata più breve. Il calendario di febbraio esce a gennaio, e con la pioggia forte la cerimonia può saltare.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Arrivare</dt><dd>Almeno 45 minuti prima, sui gradini del Victoria Memorial.</dd>
+    <dt>Il trucco</dt><dd>Senza folla: la vecchia guardia che si forma a Friary Court verso le 10:45.</dd>
+    <dt>Vedi</dt><dd>Westminster e South Bank, p. 105</dd>
+  </dl>
+</section>
+<section class="page sx" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">14</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/pi_eye.jpg" alt="Il London Eye illuminato di sera"></div>
+  <p class="sezione">Le 15 esperienze top · 7</p>
+  <h2>Un giro sul London Eye</h2>
+  <div class="testo">
+    <p class="lead">Mezz'ora per un giro completo, 135 metri sopra il Tamigi, con il Parlamento sotto i piedi.</p>
+    <p>Doveva restare in piedi cinque anni, per il Duemila; è diventato il simbolo della Londra moderna. Le capsule sono 32, ma numerate fino a 33: la 13 non c'è, per scaramanzia. Girano così piano che si sale e si scende senza fermare la ruota. Con il vento forte si ferma, e il biglietto viene spostato.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Prezzi</dt><dd>Online da £29 adulti e £26 fino a 15 anni: per noi circa £226. Alla cassa costa di più.</dd>
+    <dt>Il trucco</dt><dd>Salire tra le 16:15 e le 16:45: si parte con la luce e si scende con la città illuminata.</dd>
+    <dt>Vedi</dt><dd>Westminster e South Bank, p. 106</dd>
+  </dl>
+</section>
+<section class="page" data-sez="2"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i class="qui" style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">15</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/pi_warrooms.jpg" alt="La sala riunioni del gabinetto di guerra nelle Churchill War Rooms"></div>
+  <p class="sezione">Le 15 esperienze top · 8</p>
+  <h2>Il bunker di Churchill</h2>
+  <div class="testo">
+    <p class="lead">Sotto i ministeri di Whitehall, le stanze da cui Churchill guidò la guerra sono rimaste come il giorno della vittoria.</p>
+    <p>Nella <strong>Map Room</strong> ci sono ancora le puntine sulle carte e i telefoni colorati. C'è la camera da letto di Churchill, e una porta con la scritta "toilette" che nascondeva la linea diretta con la Casa Bianca. Il museo racconta la sua vita con oggetti, lettere e video: alle ragazze piace più di quanto si pensi.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Prezzi</dt><dd>Adulti £34, 5-15 anni £17 (la ragazza di 16 anni paga intero): per noi £238.</dd>
+    <dt>Il trucco</dt><dd>La prima fascia, alle 9:30: i corridoi sono stretti e si riempiono presto.</dd>
+    <dt>Vedi</dt><dd>Westminster e South Bank, p. 108</dd>
+  </dl>
+</section>
+<section class="page sx" data-sez="3"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i class="qui" style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">16</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/pi_bm.jpg" alt="La Great Court del British Museum con la copertura di vetro"></div>
+  <p class="sezione">Le 15 esperienze top · 9</p>
+  <h2>Il mondo intero al British Museum</h2>
+  <div class="testo">
+    <p class="lead">Due milioni di anni di storia umana sotto lo stesso tetto, e non si paga il biglietto.</p>
+    <p>Qui c'è la <strong>stele di Rosetta</strong>, la pietra con lo stesso testo in tre scritture che ha permesso di decifrare i geroglifici. Ci sono le mummie egizie, con i loro sarcofagi dipinti, e le sculture del Partenone, che la Grecia chiede indietro da decenni. Si entra nella <strong>Great Court</strong>, il cortile coperto da un tetto di vetro e acciaio, il più grande d'Europa: da lì si sceglie una sala e si lascia perdere il resto. Tutto in un giorno è impossibile.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Prezzi</dt><dd>Gratis. Conviene prenotare un ingresso a orario, anche quello gratuito. Le mostre temporanee si pagano.</dd>
+    <dt>Il trucco</dt><dd>Il venerdì resta aperto fino alle 20:30. Gli altri giorni 10-17.</dd>
+    <dt>Vedi</dt><dd>Altri quartieri: Bloomsbury.</dd>
+  </dl>
+</section>
+<section class="page" data-sez="3"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i class="qui" style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">17</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/pi_nhm.jpg" style="object-position:50% 55%" alt="La balenottera azzurra appesa nella Hintze Hall del Natural History Museum"></div>
+  <p class="sezione">Le 15 esperienze top · 10</p>
+  <h2>Dinosauri e balene al Natural History Museum</h2>
+  <div class="testo">
+    <p class="lead">Una cattedrale vittoriana in terracotta, con lo scheletro di una balenottera azzurra appeso sopra l'ingresso.</p>
+    <p>Si chiama <strong>Hope</strong>, è lunga 25 metri ed è appesa nella Hintze Hall dal 2017, al posto del vecchio diplodoco. Poi ci sono i dinosauri, con un tirannosauro che si muove, e la galleria dei vulcani e dei terremoti, dove si entra in un supermercato giapponese che trema come durante il terremoto di Kobe del 1995. Accanto ci sono lo Science Museum e il V&amp;A, anche loro gratis.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Prezzi</dt><dd>Gratis, tutti i giorni 10-17:50. Il biglietto gratuito a orario non è obbligatorio, ma nel weekend evita la coda.</dd>
+    <dt>Il trucco</dt><dd>Prenotare l'ingresso gratuito e andare per primi ai dinosauri, la galleria più affollata.</dd>
+    <dt>Vedi</dt><dd>South Kensington e Hyde Park.</dd>
+  </dl>
+</section>
+<section class="page sx" data-sez="3"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i class="qui" style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">18</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/pi_covent.jpg" alt="Le bancarelle dell'Apple Market sotto la copertura di Covent Garden"></div>
+  <p class="sezione">Le 15 esperienze top · 11</p>
+  <h2>Gli artisti di strada di Covent Garden</h2>
+  <div class="testo">
+    <p class="lead">Acrobati e giocolieri davanti alla chiesa, quartetti d'archi nel cortile del mercato, e intorno i teatri del West End.</p>
+    <p>Il vecchio mercato della frutta e dei fiori è diventato una piazza coperta di negozi e bancarelle. Sul lato ovest, davanti a St Paul's Church, si esibiscono gli artisti di strada: i posti si assegnano ogni mattina, e il cappello è tutta la loro paga. Nel cortile sotto il mercato suonano musicisti classici che hanno passato un'audizione. Fu qui, nel 1662, che Samuel Pepys vide il primo spettacolo di Punch and Judy d'Inghilterra.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Prezzi</dt><dd>Gratis. Qualche moneta o il contactless per il cappello degli artisti.</dd>
+    <dt>Il trucco</dt><dd>Guardare i musicisti dalla balaustra del piano di sopra.</dd>
+    <dt>Vedi</dt><dd>Covent Garden, Soho e Chinatown, p. 126</dd>
+  </dl>
+</section>
+<section class="page" data-sez="3"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i class="qui" style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">19</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/pi_chinatown.jpg" alt="Il portale cinese e le lanterne del Capodanno su Wardour Street"></div>
+  <p class="sezione">Le 15 esperienze top · 12</p>
+  <h2>Chinatown e il Capodanno cinese</h2>
+  <div class="testo">
+    <p class="lead">Sabato 6 febbraio 2027 comincia l'anno della Capra. Londra lo festeggia il giorno dopo, domenica 7: siamo qui proprio quel weekend.</p>
+    <p>Le lanterne rosse sono appese sopra Gerrard Street e le strade intorno. Nel 2026 la festa è cominciata alle 10 con la parata da Trafalgar Square a Chinatown, poi danze del leone, bancarelle e un palco in Trafalgar Square fino al tardo pomeriggio. Il programma del 2027 non è ancora uscito. Una cosa è certa: ci sarà una folla enorme, e i ristoranti di Chinatown vanno prenotati.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Prezzi</dt><dd>La festa è gratis. Bun al vapore e corn dog coreani per pochi pound.</dd>
+    <dt>Il trucco</dt><dd>Il programma 2027 uscirà su chinatown.co.uk e london.gov.uk: controllatelo a gennaio.</dd>
+    <dt>Vedi</dt><dd>Covent Garden, Soho e Chinatown, p. 130</dd>
+  </dl>
+</section>
+<section class="page sx" data-sez="3"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i class="qui" style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">20</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/g_cuttysark.jpg" alt="Il Cutty Sark a Greenwich"></div>
+  <p class="sezione">Le 15 esperienze top · 13</p>
+  <h2>Greenwich, dal fiume al colle</h2>
+  <div class="testo">
+    <p class="lead">Un'ora di battello lungo il Tamigi, un veliero dell'Ottocento e il colle da cui si vede tutta Londra.</p>
+    <p>Giù al fiume c'è il <strong>Cutty Sark</strong>, il veliero più veloce del suo tempo, sollevato dal suolo: si cammina sotto la sua chiglia. Intorno ci sono il collegio navale di Christopher Wren, il National Maritime Museum (gratis) e un grande parco reale. Dal colle del parco si vedono i grattacieli di Canary Wharf e, nelle giornate limpide, tutta la città.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Attenzione: l'Osservatorio è chiuso</h4>
+    <p>Il Royal Observatory, con la famosa linea del meridiano zero, chiude per lavori dal 2 novembre 2026 e riapre nell'estate 2027: durante il viaggio non si visita. Restano aperti il Cutty Sark, i musei e il parco.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Prezzi</dt><dd>Cutty Sark: adulti £22, 4-15 anni £11 (la ragazza di 16 anni paga intero). Non comprate il Day Pass con l'Osservatorio.</dd>
+    <dt>Il trucco</dt><dd>Andarci in battello lungo il Tamigi: si passa sotto Tower Bridge e davanti ai grattacieli di Canary Wharf.</dd>
+    <dt>Vedi</dt><dd>Greenwich e Docklands.</dd>
+  </dl>
+</section>
+<section class="page" data-sez="3"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i class="qui" style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">21</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/pi_hp.jpg" alt="Il plastico di Hogwarts al Warner Bros Studio Tour"></div>
+  <p class="sezione">Le 15 esperienze top · 14</p>
+  <h2>Harry Potter Studios</h2>
+  <div class="testo">
+    <p class="lead">I set veri degli otto film, dalla Sala Grande a Diagon Alley, negli studi dove sono stati girati.</p>
+    <p>Gli studi sono a Leavesden, fuori Londra. Si entra nella <strong>Sala Grande</strong>, si cammina lungo Diagon Alley, si sale sul treno al binario 9¾ e si finisce davanti a un plastico di Hogwarts enorme, usato per le riprese dall'alto. In mezzo ci sono costumi, bacchette, la Burrobirra e la Foresta Proibita. Servono una mezza giornata e il biglietto comprato molto prima: è la gita che più piacerebbe alle ragazze, ma costa quanto due giorni di visite in città.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Prezzi</dt><dd>Prezzi 2027: dai 16 anni £61, 5-15 anni £48. Per noi 8 circa £462; con un biglietto famiglia (£192) si risparmia qualcosa.</dd>
+    <dt>Arrivare</dt><dd>Treno da Euston a Watford Junction (circa 20 minuti), poi la navetta, inclusa nel biglietto.</dd>
+    <dt>Vedi</dt><dd>Gite fuori Londra.</dd>
+  </dl>
+</section>
+<section class="page sx" data-sez="3"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i class="qui" style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">22</div>
+  <div class="foto al" style="height:100mm;margin-top:-14mm"><img src="img/foto/pi_borough.jpg" alt="L'ingresso di Borough Market, con lo Shard sullo sfondo"></div>
+  <p class="sezione">Le 15 esperienze top · 15</p>
+  <h2>Assaggiare tutto a Borough Market</h2>
+  <div class="testo">
+    <p class="lead">Il mercato alimentare più famoso di Londra, sotto i binari della ferrovia accanto a London Bridge.</p>
+    <p>Ha origini medievali, e oggi conta più di cento banchi: formaggi, salumi, pane, ostriche e cucine di strada di mezzo mondo. Si pranza in piedi, a pezzi: un toast al formaggio fuso, un'empanada, una paella, e per finire un <strong>bombolone alla crème brûlée</strong> di Bread Ahead, il dolce più fotografato del mercato. Il sabato a mezzogiorno è pieno da non camminare: meglio arrivare per le 11.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Orari</dt><dd>Mar-ven 10-17, sab 9-17, dom 10-16. Chiuso il lunedì. Si entra gratis.</dd>
+    <dt>Il trucco</dt><dd>Dividersi: ognuno sceglie il suo banco e ci si ritrova a un punto fisso.</dd>
+    <dt>Vedi</dt><dd>St Paul's e Bankside.</dd>
+  </dl>
+</section>
+<section class="page" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">23</div>
+  <p class="sezione">Da sapere · Documenti</p>
+  <h2>Passaporto ed ETA, per tutti e otto</h2>
+  <div class="testo">
+    <p class="lead">Dal 2025 per entrare nel Regno Unito gli italiani hanno bisogno di due cose: il passaporto e un'autorizzazione elettronica, l'ETA. Senza, non si sale sull'aereo.</p>
+    <p>La <strong>carta d'identità non basta più</strong>: vale solo per chi vive o lavora nel Regno Unito. Ognuno, ragazze comprese, deve avere il suo passaporto valido per tutto il viaggio e il suo ETA, collegato proprio a quel passaporto. Se si rinnova il passaporto, l'ETA va rifatto.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Come si chiede l'ETA</h4>
+    <ol class="tappe" style="margin-top:2mm">
+      <li data-n="1"><b>App "UK ETA"</b><br>Si fotografa il passaporto e si fa un selfie. Un adulto può fare la domanda anche per gli altri, se sono presenti. In alternativa, sul sito gov.uk.</li>
+      <li data-n="2"><b>Si pagano £20 a testa</b><br>Con carta, Apple Pay o Google Pay. Per noi 8, £160. Non si rimborsano.</li>
+      <li data-n="3"><b>Si aspetta la mail</b><br>Di solito arriva entro un giorno, al massimo in tre giorni lavorativi, e per ognuno in un momento diverso.</li>
+    </ol>
+  </div>
+  <dl class="info">
+    <dt>Durata</dt><dd>Due anni, o fino alla scadenza del passaporto se arriva prima. Vale per più viaggi.</dd>
+    <dt>Attenzione</dt><dd>Ci sono siti che sembrano ufficiali e fanno pagare il doppio: solo l'app UK ETA o gov.uk/eta.</dd>
+  </dl>
+  <div class="consiglio spinta">
+    <h4>Se una ragazza viaggia senza i genitori</h4>
+    <p>Sotto i 14 anni, chi viaggia senza almeno uno dei genitori ha bisogno della <b>dichiarazione di accompagnamento</b>: si chiede online alla Polizia di Stato e si ritira in Questura, con circa 15 giorni di tempo. Riguarda le ragazze di 12 e 13 anni solo se volano con un altro adulto del gruppo.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">24</div>
+  <p class="sezione">Da sapere · Soldi</p>
+  <h2>Si paga con la carta, quasi sempre</h2>
+  <div class="testo">
+    <p class="lead">A Londra il contante serve poco: negozi, musei, mercati, pub e metro accettano le carte contactless, e alcuni locali non prendono più monete e banconote.</p>
+    <p>Il nostro hotel di Londra, per esempio, <strong>non accetta contanti</strong>. Qualche sterlina in tasca è utile solo per il cappello degli artisti di strada e qualche banco di mercato. Prima di partire controllate che la carta non abbia commissioni sui pagamenti in sterline: con molte banche si paga l'1-3% in più a ogni acquisto.</p>
+  </div>
+  <div class="riquadro">
+    <h4>La metro con la carta</h4>
+    <p>Non serve comprare la Oyster: basta appoggiare la <b>stessa carta</b> (o lo stesso telefono) al tornello all'ingresso e all'uscita. Il sistema calcola la tariffa e si ferma a un tetto giornaliero: <b>£8,90 al giorno</b> per un adulto nelle zone 1-2, quanto basta per tutto il centro. Un telefono e una carta della stessa persona sono due "passeggeri" diversi: non mescolateli.</p>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>E le ragazze?</h4>
+    <p>La ragazza di 16 anni paga come un adulto. Quelle di 12 e 13 anni hanno diritto al <b>Young Visitor discount</b>, metà prezzo: va caricato su una Visitor Oyster da un impiegato in una stazione della metro, con la ragazza presente. Dettagli nella Guida pratica.</p>
+  </div>
+  <dl class="info spinta">
+    <dt>Cambio</dt><dd>1 £ = circa 1,17 € (agosto 2026). Una pinta di birra costa in media £6,50 (sondaggio di maggio 2026).</dd>
+    <dt>Bancomat</dt><dd>Si chiamano cashpoint. Quelli delle banche di solito non fanno pagare commissioni; alcuni nei negozi sì, e lo scrivono sullo schermo.</dd>
+  </dl>
+</section>
+<section class="page" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">25</div>
+  <p class="sezione">Da sapere · Telefono e prese</p>
+  <h2>Il Regno Unito non è più "come a casa"</h2>
+  <div class="testo">
+    <p class="lead">Dopo la Brexit il Regno Unito è fuori dalle regole europee del roaming: ogni operatore decide se e quanto far pagare.</p>
+    <p>Iliad, per esempio, dal 1° gennaio 2026 non include più il Regno Unito tra i Paesi in cui si usa il telefono come in Italia. Prima di partire ognuno controlli nell'app del suo operatore: spesso c'è un'opzione estero da attivare per pochi giorni. L'alternativa sono le <strong>eSIM di viaggio</strong>, che si comprano online e si installano prima di partire.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Prese a tre poli</h4>
+    <p>Le prese inglesi sono di <b>tipo G</b>, con tre spinotti rettangolari: serve un adattatore, almeno uno a testa per i telefoni. La corrente è a 230 volt come da noi, quindi caricabatterie e piastre funzionano senza trasformatore. In bagno di solito c'è solo la presa per il rasoio.</p>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Chiamare</h4>
+    <p>Il prefisso del Regno Unito è <b>+44</b>; i numeri fissi di Londra cominciano con 020. Per chiamare l'Italia da Londra si fa +39 e il numero, come da qualsiasi altro Paese. Con la connessione dati, le chiamate su WhatsApp tra noi costano solo il traffico internet.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Il trucco</h4>
+    <p>Scaricate prima le mappe offline di Londra e le app che servono: TfL Go per la metro, Uber Boat per il battello, UK ETA, Citymapper. Il wi-fi è gratis in hotel, nei musei e in molte stazioni della metro.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">26</div>
+  <p class="sezione">Da sapere · Meteo</p>
+  <h2>Febbraio: freddo, grigio, buio presto</h2>
+  <div class="testo">
+    <p class="lead">È uno dei mesi più freddi dell'anno, ma raramente gela davvero: il problema è l'umidità, con il vento sul fiume che taglia la faccia.</p>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Febbraio a Londra, in media</h4>
+    <div style="display:grid;grid-template-columns:24mm 1fr;gap:1.2mm 3mm;font-size:8pt">
+      <b>Massima</b><span>9 °C</span>
+      <b>Minima</b><span>2,7 °C, con circa 6 notti di gelo nel mese</span>
+      <b>Pioggia</b><span>9-10 giorni al mese, spesso pioggerella più che acquazzoni</span>
+      <b>Sole</b><span>meno di 3 ore al giorno</span>
+      <b>Alba</b><span>verso le 7:30</span>
+      <b>Tramonto</b><span>verso le 17:00; alle 17:30 è notte</span>
+    </div>
+    <p class="piccolo" style="margin-top:1.6mm">Medie 1991-2020 del Met Office, stazione di Heathrow. Alba e tramonto calcolati per il 5-9 febbraio.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Cosa mettere in valigia</h4>
+    <ul style="margin:0;padding-left:4mm;display:grid;gap:1mm">
+      <li><strong>Vestirsi a strati</strong>: fuori fa freddo, ma metro, musei e negozi sono molto riscaldati.</li>
+      <li>Una giacca impermeabile con il cappuccio vale più dell'ombrello, che con il vento si rompe.</li>
+      <li>Scarpe comode e impermeabili: si camminano facilmente 15-20 mila passi al giorno.</li>
+      <li>Cappello, sciarpa e guanti per i panorami all'aperto e il battello.</li>
+    </ul>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Le giornate corte</h4>
+    <p>Con il buio alle 17, le visite all'aperto (Cambio della Guardia, parchi, Greenwich, Tower Bridge da fuori) vanno fatte entro il primo pomeriggio. Dopo, musei, panorami illuminati, teatro e cena.</p>
+  </div>
+</section>
+<section class="page" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">27</div>
+  <p class="sezione">Da sapere · Sicurezza e salute</p>
+  <h2>Una città sicura, con qualche borseggiatore</h2>
+  <div class="testo">
+    <p class="lead">Londra è tranquilla per una famiglia, anche la sera nelle zone centrali. Il rischio vero sono i borseggi nella folla.</p>
+    <p>La polizia di Londra segnala come zone calde le strade dello shopping del West End (Oxford Street, Regent Street, Piccadilly) e i posti affollati. Spesso lavorano in coppia: uno distrae, l'altro ruba. Borsa chiusa e davanti, telefono non appoggiato sul tavolo, niente borse appese alla sedia.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Attraversare la strada</h4>
+    <p>Si guida a sinistra: le auto arrivano <b>da destra</b>. Agli incroci è scritto per terra, LOOK RIGHT o LOOK LEFT. Con le ragazze, ripassatelo il primo giorno: è l'errore più comune dei turisti.</p>
+  </div>
+  <dl class="info">
+    <dt>999 o 112</dt><dd>Emergenze: polizia, ambulanza, vigili del fuoco.</dd>
+    <dt>111</dt><dd>Servizio sanitario (NHS) per problemi di salute non urgenti, anche di notte.</dd>
+    <dt>101</dt><dd>Polizia, per denunce non urgenti (un furto, un oggetto perso).</dd>
+    <dt>Tessera</dt><dd>La tessera sanitaria europea (TEAM) vale per le cure che diventano necessarie durante il viaggio. Non copre il rimpatrio né la sanità privata: conviene un'assicurazione di viaggio.</dd>
+  </dl>
+  <div class="consiglio spinta">
+    <h4>Un punto di ritrovo</h4>
+    <p>In otto ci si perde facilmente nella folla, nei mercati e in metro. Ogni ragazza abbia in tasca un foglietto con l'indirizzo dell'hotel e i numeri degli adulti, e un patto chiaro: se si resta indietro sul binario, si scende alla fermata successiva e si aspetta lì.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="4"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i class="qui" style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">28</div>
+  <p class="sezione">Da sapere · Mance e buone maniere</p>
+  <h2>Mance, code e scale mobili</h2>
+  <div class="riquadro">
+    <h4>Le mance</h4>
+    <ul style="margin:0;padding-left:4mm;display:grid;gap:1mm">
+      <li><strong>Ristoranti con servizio al tavolo</strong>: spesso il conto ha già un "service charge" del 12,5%. È facoltativo, ma si paga quasi sempre. Se c'è, non serve altro; se non c'è, si lascia il 10-12,5%.</li>
+      <li><strong>Pub, caffè e banconi</strong>: si ordina e si paga al banco, e la mancia non si usa.</li>
+      <li><strong>Taxi</strong>: si arrotonda, o circa il 10%.</li>
+      <li>Per legge le mance, anche quelle pagate con la carta, vanno tutte al personale.</li>
+    </ul>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Le regole non scritte</h4>
+    <ul style="margin:0;padding-left:4mm;display:grid;gap:1mm">
+      <li><strong>In coda non si passa avanti</strong>: alla fermata del bus, al banco, al bagno. Gli inglesi lo notano subito.</li>
+      <li><strong>Sulle scale mobili della metro si sta a destra</strong>; la sinistra è per chi cammina. In otto, in fila indiana.</li>
+      <li>In metro si lascia scendere prima di salire, e lo zaino si toglie dalle spalle.</li>
+      <li>"Sorry" si dice di continuo, anche quando la colpa è dell'altro. "Cheers" vale grazie, ciao e salute.</li>
+      <li>Si fa la fila anche per salire sull'autobus, e si saluta l'autista.</li>
+    </ul>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Lo sapevi?</h4>
+    <p>Nei locali che vendono alcol l'acqua del rubinetto, la "tap water", si può chiedere gratis: è una delle condizioni della licenza. Basta dire "tap water, please".</p>
+  </div>
+</section>
+<section class="page" data-sez="5"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i class="qui" style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">29</div>
+  <p class="sezione">Scadenze e prenotazioni</p>
+  <h2>Il calendario prima della partenza</h2>
+  <p class="piccolo">Da spuntare. Le date dei biglietti sono quelle annunciate a ottobre 2026: ricontrollatele sul sito di ognuno.</p>
+  <div class="riquadro">
+    <h4>Subito (ottobre 2026)</h4>
+    <div style="display:grid;grid-template-columns:5mm 1fr;gap:1.3mm 1.5mm;font-size:8.2pt">
+      <span>☐</span><span><b>Passaporti</b>: controllare che quelli di tutti e otto siano validi fino a dopo il 9 febbraio. Rifarli richiede tempo.</span>
+      <span>☐</span><span><b>ETA</b> per tutti, £20 a testa, solo app UK ETA o gov.uk (p. 23).</span>
+      <span>☐</span><span><b>Visita al Parlamento</b> per sabato 6 febbraio: è l'unica data utile, ed è già prenotabile su tickets.parliament.uk.</span>
+      <span>☐</span><span><b>Harry Potter Studios</b>, se decidiamo di andarci: i biglietti 2027 sono già in vendita.</span>
+      <span>☐</span><span><b>Cena da Dishoom</b> in otto: si prenota fino a quattro mesi prima.</span>
+      <span>☐</span><span><b>Teatro</b>, se lo vogliamo: otto posti vicini si trovano solo con largo anticipo.</span>
+      <span>☐</span><span><b>Dichiarazione di accompagnamento</b> per le ragazze sotto i 14 anni, solo se volano senza un genitore.</span>
+    </div>
+  </div>
+  <div class="riquadro">
+    <h4>Novembre e dicembre</h4>
+    <div style="display:grid;grid-template-columns:5mm 1fr;gap:1.3mm 1.5mm;font-size:8.2pt">
+      <span>☐</span><span><b>Tour del Big Ben</b>: i biglietti escono tre mesi prima, il secondo mercoledì del mese alle 10 (ora inglese). Per febbraio dovrebbe essere <b>mercoledì 11 novembre 2026</b>: finiscono in poche ore.</span>
+      <span>☐</span><span><b>Tower of London</b> per la mattina di martedì 9, entrata alle 9.</span>
+      <span>☐</span><span><b>Westminster Abbey, Churchill War Rooms, London Eye</b>: le fasce migliori (War Rooms alle 9:30, Eye tra le 16:15 e le 16:45) finiscono per prime.</span>
+      <span>☐</span><span><b>Stansted Express</b> per sabato 6: i biglietti Advance costano molto meno di quelli comprati il giorno stesso.</span>
+      <span>☐</span><span><b>Ryanair</b>: controllare quali bagagli sono inclusi e aggiungere quelli che mancano, che in aeroporto costano di più.</span>
+      <span>☐</span><span><b>Telefoni</b>: scegliere l'opzione estero o l'eSIM per ognuno (p. 25).</span>
+    </div>
+  </div>
+</section>
+<section class="page sx" data-sez="5"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i class="qui" style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">30</div>
+  <p class="sezione">Scadenze e prenotazioni</p>
+  <h2>Gennaio e i giorni prima</h2>
+  <div class="riquadro">
+    <h4>Gennaio 2027</h4>
+    <div style="display:grid;grid-template-columns:5mm 1fr;gap:1.3mm 1.5mm;font-size:8.2pt">
+      <span>☐</span><span><b>Inizio gennaio · Horizon 22</b>, se lo vogliamo: gratis, fino a 9 persone per prenotazione.</span>
+      <span>☐</span><span><b>Lunedì 11 gennaio · Sky Garden</b> per sabato 6 e domenica 7: escono il lunedì mattina, tre settimane prima.</span>
+      <span>☐</span><span><b>Metà gennaio</b>: esce il calendario del Cambio della Guardia di febbraio, su householddivision.org.uk.</span>
+      <span>☐</span><span><b>Lunedì 18 gennaio · Sky Garden</b> per lunedì 8 e martedì 9, se serve.</span>
+      <span>☐</span><span><b>Fine gennaio</b>: ricontrollare orari e prezzi (in questa guida sono di ottobre 2026), il programma del Capodanno cinese e gli orari in cui si apre Tower Bridge.</span>
+    </div>
+  </div>
+  <div class="riquadro" style="background:var(--mustard-tint)">
+    <h4>Le scadenze degli hotel</h4>
+    <div style="display:grid;grid-template-columns:5mm 1fr;gap:1.3mm 1.5mm;font-size:8.2pt">
+      <span>☐</span><span><b>Domenica 31 gennaio, 23:59 (ora inglese)</b>: ultimo momento per cancellare gratis l'hotel di Stansted.</span>
+      <span>☐</span><span><b>Lunedì 1 febbraio, 23:59 (ora inglese)</b>: ultimo momento per cancellare gratis l'hotel di Londra. Dopo si paga la prima notte.</span>
+    </div>
+  </div>
+  <div class="riquadro">
+    <h4>I giorni del viaggio</h4>
+    <div style="display:grid;grid-template-columns:5mm 1fr;gap:1.3mm 1.5mm;font-size:8.2pt">
+      <span>☐</span><span><b>Giovedì 4 febbraio, 21:35</b>: si apre il check-in online gratuito del volo di andata, 24 ore prima. La carta d'imbarco è solo nell'app Ryanair; il check-in in aeroporto si paga.</span>
+      <span>☐</span><span><b>Prima di partire</b>: avvisare l'hotel di Stansted che arriviamo verso mezzanotte.</span>
+      <span>☐</span><span><b>Lunedì 8 febbraio, 16:30 (ora inglese)</b>: si apre il check-in del ritorno.</span>
+    </div>
+  </div>
+  <div class="consiglio spinta">
+    <h4>In valigia, da non dimenticare</h4>
+    <p>Passaporto (lo stesso usato per l'ETA), carta contactless e una di riserva, adattatori tipo G, caricabatterie portatile, giacca impermeabile, scarpe comode, borraccia.</p>
+  </div>
+</section>
+<section class="page" data-sez="6"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i class="qui" style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">31</div>
+  <p class="sezione">Se ti piace…</p>
+  <h2>I panorami</h2>
+  <p class="piccolo">Londra è piatta: per vederla bisogna salire. I tre più belli sono gratis.</p>
+  <div class="legenda" style="columns:1;font-size:8.5pt;line-height:1.4">
+    <ol>
+      <li><b>1</b>Sky Garden, 35° piano, giardino e terrazza, gratis<span>p. 80</span></li>
+      <li><b>2</b>Horizon 22, 58° piano, gratis e senza limite di tempo<span>p. 81</span></li>
+      <li><b>3</b>One New Change, la terrazza del centro commerciale davanti a St Paul's, gratis<span>St Paul's e Bankside</span></li>
+      <li><b>4</b>London Eye, 135 metri, mezz'ora di giro<span>p. 106</span></li>
+      <li><b>5</b>Le passerelle di Tower Bridge, con il pavimento di vetro<span>p. 78</span></li>
+      <li><b>6</b>The Monument, 311 gradini e un balcone sulla City<span>p. 82</span></li>
+      <li><b>7</b>Il tour del Big Ben, 334 gradini fino alla campana<span>p. 103</span></li>
+      <li><b>8</b>Il campanile di Westminster Cathedral, 64 metri, con l'ascensore<span>p. 112</span></li>
+      <li><b>9</b>Il colle di Greenwich Park, con i grattacieli di Canary Wharf di fronte<span>Greenwich e Docklands</span></li>
+    </ol>
+  </div>
+  <div class="consiglio">
+    <h4>Il trucco</h4>
+    <p>A febbraio il sole tramonta verso le 17. Un panorama prenotato tra le 16 e le 16:45 vale due visite: la città di giorno e quella illuminata.</p>
+  </div>
+  <p class="sezione" style="margin-top:1mm">Se ti piace…</p>
+  <h2>Le foto</h2>
+  <div class="legenda" style="columns:1;font-size:8.5pt;line-height:1.4">
+    <ol>
+      <li><b>1</b>Il colonnato di Trinity Square, la mattina presto<span>p. 83</span></li>
+      <li><b>2</b>St Dunstan in the East, la chiesa diventata giardino<span>p. 82</span></li>
+      <li><b>3</b>Il Big Ben da Westminster Bridge e da Abingdon Street<span>p. 109</span></li>
+      <li><b>4</b>Buckingham Palace dal Blue Bridge di St James's Park<span>p. 109</span></li>
+      <li><b>5</b>I graffiti di Leake Street e i murales di Brick Lane<span>p. 110</span></li>
+    </ol>
+  </div>
+</section>
+<section class="page sx" data-sez="6"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i class="qui" style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">32</div>
+  <p class="sezione">Se ti piace…</p>
+  <h2>Harry Potter</h2>
+  <div class="foto" style="height:50mm"><img src="img/foto/pi_platform.jpg" style="object-position:50% 50%" alt="Il cartello del binario 9¾ sul muro di mattoni della stazione di King's Cross"></div>
+  <p class="cap">Il binario 9¾ a King's Cross. Accanto, nel negozio, c'è il carrello che sparisce nel muro, per la foto con la sciarpa della propria casa.</p>
+  <div class="legenda" style="columns:1;font-size:8.5pt;line-height:1.4">
+    <ol>
+      <li><b>1</b>Warner Bros Studio Tour, i set veri dei film<span>Gite fuori Londra</span></li>
+      <li><b>2</b>Il binario 9¾ e il negozio a King's Cross, gratis<span>Altri quartieri</span></li>
+      <li><b>3</b>Leadenhall Market, l'ingresso del Paiolo Magico nel primo film<span>p. 82</span></li>
+      <li><b>4</b>House of MinaLima, lo studio grafico dei film: Mappa del Malandrino, Gazzetta del Profeta<span>p. 134</span></li>
+      <li><b>5</b>La statua di Harry sulla scopa a Leicester Square<span>p. 133</span></li>
+      <li><b>6</b>Harry Potter e la maledizione dell'erede, a teatro<span>p. 134</span></li>
+      <li><b>7</b>Il Millennium Bridge, distrutto dai Mangiamorte nel sesto film<span>St Paul's e Bankside</span></li>
+    </ol>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Lo sapevi?</h4>
+    <p>Cecil Court e Goodwin's Court, due vicoli vicino a Leicester Square, sono indicati dai fan come l'ispirazione di Diagon Alley. J.K. Rowling ha detto che Diagon Alley non è basata su un posto vero: è una teoria dei fan, ma i vicoli con i lampioni a gas meritano lo stesso la deviazione.</p>
+  </div>
+</section>
+<section class="page" data-sez="6"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i class="qui" style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">33</div>
+  <p class="sezione">Se ti piace…</p>
+  <h2>I musei</h2>
+  <p class="piccolo">I grandi musei nazionali sono gratis. Due ore per museo bastano: meglio due musei brevi che uno lungo.</p>
+  <div class="legenda" style="columns:1;font-size:8.5pt;line-height:1.4">
+    <ol>
+      <li><b>1</b>British Museum: la stele di Rosetta, le mummie, il Partenone<span>Altri quartieri</span></li>
+      <li><b>2</b>Natural History Museum: dinosauri, balena, terremoti<span>South Kensington</span></li>
+      <li><b>3</b>Science Museum: razzi, aerei, giochi interattivi<span>South Kensington</span></li>
+      <li><b>4</b>National Gallery: i Girasoli di Van Gogh, il teschio nascosto di Holbein<span>p. 128</span></li>
+      <li><b>5</b>Imperial War Museum: uno Spitfire appeso nell'atrio<span>p. 111</span></li>
+      <li><b>6</b>Tate Modern, l'arte contemporanea in una centrale elettrica<span>St Paul's e Bankside</span></li>
+      <li><b>7</b>London Transport Museum, a pagamento, gratis sotto i 18 anni<span>p. 132</span></li>
+    </ol>
+  </div>
+  <div class="consiglio">
+    <h4>Il trucco</h4>
+    <p>Gratis non vuol dire senza prenotazione: allo Science Museum il biglietto gratuito a orario è obbligatorio, al British Museum e al Natural History Museum è consigliato, e nel weekend evita la coda all'ingresso.</p>
+  </div>
+  <p class="sezione" style="margin-top:2mm">Se ti piace…</p>
+  <h2>Re, regine e prigionieri</h2>
+  <div class="legenda" style="columns:1;font-size:8.5pt;line-height:1.4">
+    <ol>
+      <li><b>1</b>Tower of London, i gioielli e la Traitors' Gate<span>p. 76</span></li>
+      <li><b>2</b>Westminster Abbey, incoronazioni e tombe reali<span>p. 100</span></li>
+      <li><b>3</b>Westminster Hall, dove fu processato Carlo I<span>p. 102</span></li>
+      <li><b>4</b>Banqueting House, la finestra da cui Carlo I uscì sul patibolo<span>p. 109</span></li>
+      <li><b>5</b>Buckingham Palace e il Cambio della Guardia<span>p. 104</span></li>
+      <li><b>6</b>Il castello di Windsor<span>Gite fuori Londra</span></li>
+    </ol>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Lo sapevi?</h4>
+    <p>Ogni sera, da circa 700 anni, la Tower of London viene chiusa con la Ceremony of the Keys, alle 21:53 in punto. Si racconta che non sia mai saltata: nel 1941, sotto le bombe, arrivò soltanto in ritardo.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="6"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i class="qui" style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">34</div>
+  <p class="sezione">Se ti piace…</p>
+  <h2>I mercati</h2>
+  <div class="foto" style="height:46mm"><img src="img/foto/pi_camden.jpg" alt="I tetti e i cortili di Camden Lock Market"></div>
+  <div class="legenda" style="columns:1;font-size:8.5pt;line-height:1.4">
+    <ol>
+      <li><b>1</b>Borough Market, il mercato del cibo, chiuso il lunedì<span>St Paul's e Bankside</span></li>
+      <li><b>2</b>Old Spitalfields Market, moda e design, a 10 minuti dall'hotel<span>p. 84</span></li>
+      <li><b>3</b>Brick Lane e la birreria Truman: vintage e cucine di strada<span>p. 84</span></li>
+      <li><b>4</b>Petticoat Lane, il mercato dei vestiti, solo la domenica mattina<span>p. 84</span></li>
+      <li><b>5</b>Covent Garden: Apple Market e Jubilee Market<span>p. 126</span></li>
+      <li><b>6</b>Camden Market, punk, vintage e cibo da tutto il mondo<span>Altri quartieri</span></li>
+      <li><b>7</b>Greenwich Market, artigianato e cibo<span>Greenwich e Docklands</span></li>
+      <li><b>8</b>Southbank Book Market, libri e stampe sotto il ponte<span>p. 110</span></li>
+    </ol>
+  </div>
+  <div class="riquadro spinta" style="background:var(--teal-tint)">
+    <h4>Se ti piace… non spendere</h4>
+    <p>Musei nazionali, Cambio della Guardia, Sky Garden e Horizon 22, i vespri in abbazia, i parchi reali, gli artisti di Covent Garden, Leake Street: Londra gratis è lunga una settimana. Tutte le idee a p. 39.</p>
+  </div>
+</section>
+<section class="page" data-sez="7"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i class="qui" style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">35</div>
+  <p class="sezione">Londra con i ragazzi</p>
+  <h2>A 12, 13 e 16 anni</h2>
+  <div class="testo">
+    <p class="lead">Tre ragazze, tre età diverse: quello che diverte la più piccola può annoiare la più grande. Con qualche scelta furba, la città piace a tutte.</p>
+    <p>Funzionano le cose che si toccano, si fotografano e si raccontano agli amici: un pavimento di vetro a 42 metri, un bunker di guerra, un supermercato che trema, un binario che non esiste. Funzionano meno le sale piene di quadri e le visite lunghe: due ore per museo sono il limite, poi si esce, si mangia e si cambia aria.</p>
+  </div>
+  <div class="riquadro">
+    <h4>I successi sicuri</h4>
+    <ol class="top-lista">
+      <li><b>1</b><span><strong>Harry Potter</strong>: gli Studios, il binario 9¾, House of MinaLima, la statua a Leicester Square (p. 32).</span></li>
+      <li><b>2</b><span><strong>I panorami al tramonto</strong>: Sky Garden, London Eye, Horizon 22.</span></li>
+      <li><b>3</b><span><strong>Lo shopping</strong>: Covent Garden, Carnaby Street, i mercati vintage di Brick Lane e Camden, i negozi M&amp;M's e LEGO a Leicester Square.</span></li>
+      <li><b>4</b><span><strong>Il cibo da strada</strong>: i bun di Chinatown, i bomboloni di Bread Ahead, i bagel caldi di Brick Lane.</span></li>
+      <li><b>5</b><span><strong>Le foto</strong>: i graffiti di Leake Street, le guardie col colbacco, il Big Ben dal ponte.</span></li>
+    </ol>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Cosa le annoia</h4>
+    <p>Le code lunghe al freddo, le audioguide di due ore, le sale piene di quadri tutti uguali, i pranzi lunghi al ristorante a metà giornata. Si evita tutto prenotando gli orari, scegliendo tre o quattro cose per museo e pranzando in piedi ai mercati.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Il trucco</h4>
+    <p>Lasciate a ognuna delle ragazze la scelta di una tappa al giorno, da questa guida. Chi ha scelto fa da guida al gruppo per quella tappa: legge le schede, trova la strada, racconta il "lo sapevi?".</p>
+  </div>
+</section>
+<section class="page sx" data-sez="7"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i class="qui" style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">36</div>
+  <p class="sezione">Londra con i ragazzi</p>
+  <h2>Chi paga cosa</h2>
+  <p class="piccolo">Le fasce d'età cambiano da un posto all'altro: la ragazza di 16 anni a volte paga ridotto, più spesso intero. Prezzi di ottobre 2026 (Harry Potter: 2027).</p>
+  <div class="riquadro" style="font-size:7.9pt">
+    <div style="display:grid;grid-template-columns:1fr 17mm 17mm 17mm;gap:1.2mm 2mm">
+      <b></b><b>Adulti</b><b>16 anni</b><b>12-13</b>
+      <span>Tower of London</span><span>£38</span><span>£19</span><span>£19</span>
+      <span>Tower Bridge</span><span>£18</span><span>£13,50</span><span>£9</span>
+      <span>Westminster Abbey</span><span>£32</span><span>£14</span><span>£14</span>
+      <span>Parlamento, visita guidata</span><span>£40</span><span>£30</span><span>£20</span>
+      <span>Tour del Big Ben</span><span>£55</span><span>£35</span><span>£35</span>
+      <span>Churchill War Rooms</span><span>£34</span><span>£34</span><span>£17</span>
+      <span>London Eye, online</span><span>da £29</span><span>da £29</span><span>da £26</span>
+      <span>Cutty Sark</span><span>£22</span><span>£22</span><span>£11</span>
+      <span>Harry Potter Studios</span><span>£61</span><span>£61</span><span>£48</span>
+      <span>Metro (tetto zone 1-2)</span><span>£8,90</span><span>£8,90</span><span>metà</span>
+    </div>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Gratis per tutte</h4>
+    <p>I musei nazionali, Sky Garden e Horizon 22, il Cambio della Guardia, i mercati. Il London Transport Museum è gratis sotto i 18 anni, quindi anche per la sedicenne.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Portate un documento</h4>
+    <p>Per i biglietti ridotti a volte chiedono l'età, e allo Sky Garden gli adulti devono mostrare un documento. Il passaporto delle ragazze resti con un genitore; basta una foto sul telefono per le verifiche veloci.</p>
+  </div>
+</section>
+<section class="page" data-sez="7"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i class="qui" style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">37</div>
+  <p class="sezione">Londra con i ragazzi</p>
+  <h2>Una sera a teatro</h2>
+  <div class="testo">
+    <p>Il West End è il Broadway di Londra, e un musical è il ricordo che resta. Attenzione al giorno: <strong>la domenica sera i grandi musical non vanno in scena</strong>, ci sono solo le matinée del pomeriggio. La sera giusta è il sabato.</p>
+  </div>
+  <div class="voce">
+    <div class="n s">1</div>
+    <h3>Harry Potter e la maledizione dell'erede</h3>
+    <div class="dati"><b>Palace Theatre</b> · dagli 8 anni · da circa £30</div>
+    <p>Dal 9 ottobre 2026 è in un'unica parte, di quasi tre ore. Mar-sab alle 19, mercoledì e sabato anche alle 13, domenica solo alle 14:30. Sotto i 15 anni si entra con un adulto.</p>
+  </div>
+  <div class="voce">
+    <div class="n s">2</div>
+    <h3>The Lion King, Wicked, Matilda</h3>
+    <div class="dati"><b>Lyceum, Apollo Victoria, Cambridge Theatre</b></div>
+    <p>I classici per famiglie, con le matinée della domenica pomeriggio. Le date di febbraio 2027 non sono ancora tutte in vendita: controllate a novembre.</p>
+  </div>
+  <div class="voce">
+    <div class="n s">3</div>
+    <h3>The Witness for the Prosecution</h3>
+    <div class="dati"><b>County Hall</b> · dai 10 anni · da £20</div>
+    <p>Un giallo di Agatha Christie recitato nella vera aula del consiglio di Londra. Con i posti della giuria si sta sul palco e si vota il verdetto (p. 111).</p>
+  </div>
+  <div class="riquadro spinta">
+    <h4>I biglietti scontati</h4>
+    <p>Il chiosco ufficiale <b>TKTS</b> a Leicester Square vende biglietti per lo stesso giorno e la settimana dopo, con sconti fino al 55% (lun-sab 10:30-18, dom 11-16). È l'unico vero: gli altri chioschi "half price" intorno alla piazza non lo sono. In otto, però, trovare posti vicini all'ultimo è difficile.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="7"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i class="qui" style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">38</div>
+  <p class="sezione">Londra con i ragazzi</p>
+  <h2>Regole e attenzioni</h2>
+  <div class="riquadro">
+    <h4>Cosa dice la legge, cosa dicono i posti</h4>
+    <ul style="margin:0;padding-left:4mm;display:grid;gap:1.1mm">
+      <li><strong>Sky Garden</strong>: un adulto può accompagnare al massimo tre ragazzi sotto i 16 anni, e sotto i 16 anni non si entra dopo le 18 nei giorni feriali.</li>
+      <li><strong>Pub</strong>: sotto i 16 anni si entra solo con un adulto, e ogni locale decide fino a che ora. A 16-17 anni, con un adulto e durante un pasto al tavolo, si può bere birra, vino o sidro; comprare alcol è vietato sotto i 18 anni.</li>
+      <li><strong>Big Ben</strong>: il tour è aperto dagli 11 anni, va bene per tutte.</li>
+      <li><strong>Imperial War Museum</strong>: le gallerie sull'Olocausto sono sconsigliate sotto i 14 anni.</li>
+      <li><strong>Ryanair</strong>: chi viaggia con un bambino sotto i 12 anni deve pagare il posto per almeno un adulto. La più piccola ne ha già 12: non dovrebbe servire, ma controllatelo quando fate il check-in.</li>
+    </ul>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Le sfide del viaggio</h4>
+    <ul style="margin:0;padding-left:4mm;display:grid;gap:1mm">
+      <li>Trovare il teschio nascosto negli Ambasciatori di Holbein, alla National Gallery.</li>
+      <li>Attraversare la Burlington Arcade senza correre, fischiare né aprire l'ombrello: sono ancora vietati dal 1819.</li>
+      <li>Contare i corvi della Torre: devono essere almeno sei.</li>
+      <li>Passare sotto la chiglia del Cutty Sark, un veliero del 1869 sollevato da terra.</li>
+      <li>Scoprire perché sul London Eye manca la capsula 13.</li>
+    </ul>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Quando si stancano</h4>
+    <p>Una pausa ogni due ore, qualcosa di caldo da bere, e un piano B al coperto vicino: per le giornate di pioggia i musei di South Kensington sono la soluzione più comoda.</p>
+  </div>
+</section>
+<section class="page" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">39</div>
+  <p class="sezione">Londra low cost</p>
+  <h2>Il meglio è gratis</h2>
+  <div class="testo">
+    <p class="lead">Londra è cara, ma i suoi musei nazionali non fanno pagare il biglietto dal 2001, e molte delle cose più belle si vedono dalla strada.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Musei gratis</h4>
+    <p style="font-size:8.1pt">British Museum · Natural History Museum · Science Museum (il biglietto gratuito va prenotato) · V&amp;A · National Gallery · National Portrait Gallery · Tate Modern e Tate Britain · Imperial War Museum. Si pagano solo le mostre temporanee, e un'offerta all'ingresso è gradita.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Panorami e cerimonie gratis</h4>
+    <ul style="margin:0;padding-left:4mm;display:grid;gap:1mm;font-size:8.1pt">
+      <li>Sky Garden e Horizon 22, con prenotazione; la terrazza di One New Change, senza.</li>
+      <li>Il Cambio della Guardia e l'ispezione delle 16 a Horse Guards.</li>
+      <li>I vespri cantati a Westminster Abbey, la domenica alle 15.</li>
+      <li>I dibattiti in Parlamento dalle gallerie del pubblico, quando c'è seduta.</li>
+    </ul>
+  </div>
+  <div class="riquadro">
+    <h4>Strade, parchi e mercati</h4>
+    <ul style="margin:0;padding-left:4mm;display:grid;gap:1mm;font-size:8.1pt">
+      <li>Attraversare Tower Bridge e Westminster Bridge a piedi.</li>
+      <li>St James's Park con i pellicani, Hyde Park, Greenwich Park.</li>
+      <li>Gli artisti di strada di Covent Garden, i graffiti di Leake Street e di Brick Lane.</li>
+      <li>I mercati: si entra gratis, si spende solo se si vuole.</li>
+      <li>Il binario 9¾ a King's Cross, e la statua di Harry a Leicester Square.</li>
+    </ul>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Il trucco</h4>
+    <p>Mettete una cosa a pagamento e una gratis in ogni mezza giornata: la Torre la mattina e Leadenhall Market dopo pranzo, il London Eye al tramonto e Covent Garden la sera.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">40</div>
+  <p class="sezione">Londra low cost</p>
+  <h2>Muoversi spendendo poco</h2>
+  <div class="riquadro">
+    <h4>Metro e bus</h4>
+    <ul style="margin:0;padding-left:4mm;display:grid;gap:1.1mm;font-size:8.1pt">
+      <li><strong>Contactless</strong>: si paga al massimo <b>£8,90 al giorno</b> a adulto nelle zone 1-2, anche con dieci corse.</li>
+      <li><strong>Autobus</strong>: dal 1° novembre 2026 la corsa costa £1,85, e con la stessa carta si cambia bus gratis entro un'ora. Il tetto giornaliero solo bus è £5,55. Dal piano di sopra di un bus a due piani si vede la città meglio che da un bus turistico.</li>
+      <li><strong>Le ragazze di 12 e 13 anni</strong> pagano metà con il Young Visitor discount su una Visitor Oyster.</li>
+      <li><strong>Orari di punta</strong>: la metro costa un po' di più dal lunedì al venerdì, 6:30-9:30 e 16:00-19:00.</li>
+    </ul>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Il battello al posto del bus turistico</h4>
+    <p>L'<b>Uber Boat</b> sul Tamigi è un battello di linea, non una crociera: passa sotto Tower Bridge, davanti al Parlamento, a Canary Wharf e a Greenwich. Pagando con la carta contactless costa meno che al molo (in ottobre 2026, £9,90 fuori dall'ora di punta contro £16,40 al molo), e i ragazzi 5-15 pagano metà. Le tariffe cambiano dal 1° novembre 2026: ricontrollare.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Da e per Stansted</h4>
+    <p>Lo Stansted Express arriva a Liverpool Street in circa 50 minuti. I biglietti <b>Advance</b>, comprati in anticipo per un treno preciso, partono da £9,90; il giorno stesso costano molto di più.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>2 per 1 con il biglietto del treno</h4>
+    <p>Con un biglietto ferroviario di carta o elettronico con il marchio National Rail, compreso lo Stansted Express, molte attrazioni fanno entrare due persone al prezzo di una (programma "Days Out Guide"). Non vale con contactless e Oyster. Le attrazioni aderenti e le condizioni sono su daysoutguide.co.uk: da controllare prima di comprare i biglietti online.</p>
+  </div>
+</section>
+<section class="page" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">41</div>
+  <p class="sezione">Londra low cost</p>
+  <h2>Mangiare con poco</h2>
+  <div class="testo">
+    <p>La colazione è inclusa in tutti e due gli hotel: partire ben sazi aiuta. Per il pranzo, i londinesi che lavorano mangiano veloce e spendono poco; basta fare come loro.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">1</div>
+    <h3>Il meal deal <span class="prezzo">£</span></h3>
+    <div class="dati"><b>Tesco, Sainsbury's, Boots</b> · circa £4-5</div>
+    <p>Panino, snack e bibita a prezzo fisso: è il pranzo nazionale inglese. Da Tesco nel 2026 costava £4,25, meno con la tessera fedeltà; da Boots a Londra £4,99. Supermercati piccoli ci sono a ogni angolo, anche vicino all'hotel.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">2</div>
+    <h3>Mercati e food hall <span class="prezzo">£-££</span></h3>
+    <div class="dati"><b>Borough, Upmarket a Brick Lane, Seven Dials, Southbank</b> · £8-15 a piatto</div>
+    <p>Ognuno sceglie quello che vuole e si spende quanto si decide. Per noi otto è la formula più semplice anche per mettersi d'accordo.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">3</div>
+    <h3>Gli spuntini da pochi pound <span class="prezzo">£</span></h3>
+    <div class="dati"><b>Beigel Bake, Chinatown</b></div>
+    <p>Un bagel caldo a Brick Lane, aperto giorno e notte; un bun al vapore o un corn dog coreano a Chinatown.</p>
+  </div>
+  <div class="riquadro spinta" style="background:var(--teal-tint)">
+    <h4>L'acqua è gratis</h4>
+    <p>Portate una borraccia: l'acqua del rubinetto è buona, ci sono fontanelle in molti musei e stazioni (le trova l'app Refill), e nei locali che vendono alcol la "tap water" si deve dare gratis a chi la chiede. In otto, risparmiare sulle bottigliette fa una bella differenza.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="8"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i class="qui" style="top:149mm"></i><i style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">42</div>
+  <p class="sezione">Londra low cost</p>
+  <h2>Quanto costa, per noi otto</h2>
+  <p class="piccolo">5 adulti, una ragazza di 16 anni e due di 12 e 13. Prezzi online di ottobre 2026, Harry Potter 2027.</p>
+  <div class="riquadro" style="font-size:8pt">
+    <div style="display:grid;grid-template-columns:1fr 20mm;gap:1.1mm 2mm">
+      <span>Tower of London</span><span style="text-align:right">£247</span>
+      <span>Tower Bridge</span><span style="text-align:right">£121,50</span>
+      <span>Westminster Abbey</span><span style="text-align:right">£202</span>
+      <span>Parlamento, visita guidata</span><span style="text-align:right">£270</span>
+      <span>Churchill War Rooms</span><span style="text-align:right">£238</span>
+      <span>London Eye</span><span style="text-align:right">circa £226</span>
+      <span>Sky Garden, Horizon 22, musei, Guardia</span><span style="text-align:right">gratis</span>
+      <b>Le visite del programma</b><b style="text-align:right">circa £1.305</b>
+      <span>In più, se scegliamo Harry Potter Studios</span><span style="text-align:right">circa £462</span>
+      <span>Oppure Greenwich (Observatory)</span><span style="text-align:right">£168</span>
+      <span>Tour del Big Ben</span><span style="text-align:right">£380</span>
+    </div>
+  </div>
+  <div class="riquadro">
+    <h4>Dove si risparmia davvero</h4>
+    <ul style="margin:0;padding-left:4mm;display:grid;gap:1mm">
+      <li><strong>Online, non alla cassa</strong>: il London Eye costa £29 invece di £39, l'Uber Boat molto meno che al molo.</li>
+      <li><strong>Audioguida al Parlamento</strong> invece della visita guidata: circa £80 in meno per noi otto, e c'è in italiano.</li>
+      <li><strong>Un panorama gratis</strong> invece di uno a pagamento: lo Sky Garden e Horizon 22 non hanno niente da invidiare.</li>
+      <li><strong>Pranzo al mercato, cena al ristorante</strong>: una sola spesa grossa al giorno.</li>
+    </ul>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Il trucco</h4>
+    <p>Prima di comprare un biglietto, guardate se c'è un prezzo famiglia o un pacchetto: agli Harry Potter Studios il biglietto famiglia fa risparmiare circa £26. A Greenwich invece non serve il Day Pass: l'Osservatorio sarà chiuso.</p>
+  </div>
+</section>
+<section class="page" data-sez="9"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i class="qui" style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">43</div>
+  <div class="foto al" style="height:70mm;margin-top:-14mm"><img src="img/foto/pi_fishchips.jpg" alt="Fish and chips con limone, servito nella carta di giornale"></div>
+  <p class="sezione">Mangiare a Londra</p>
+  <h2>La cucina inglese, senza pregiudizi</h2>
+  <div class="testo">
+    <p class="lead">La fama è pessima, ma i piatti tradizionali fatti bene sono cibo di casa, sostanzioso e perfetto per il freddo di febbraio.</p>
+    <p>E poi Londra è una delle città del mondo dove si mangia meglio la cucina degli altri: indiana, cinese, mediorientale, giapponese. Il curry è così diffuso che il <strong>chicken tikka masala</strong> viene spesso chiamato il piatto nazionale. In quattro giorni conviene assaggiare un po' di tutto: un fish and chips, un roast la domenica, un curry nell'East End e uno spuntino a Chinatown.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Il trucco</h4>
+    <p>Per la pizza e la pasta non serve venire a Londra: tenetele per la sera in cui le ragazze non vogliono provare niente di nuovo.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="9"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i class="qui" style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">44</div>
+  <p class="sezione">Mangiare a Londra · Cosa</p>
+  <h2>I piatti da provare</h2>
+  <div class="voce">
+    <div class="n m">1</div>
+    <h3>Fish and chips</h3>
+    <p>Merluzzo o eglefino in pastella, fritto, con patatine spesse, aceto di malto, salsa tartara e <em>mushy peas</em>, una purea di piselli. Si mangia anche da asporto, nella carta.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">2</div>
+    <h3>Sunday roast</h3>
+    <p>La domenica a pranzo: arrosto di manzo, pollo o agnello con patate al forno, verdure, salsa <em>gravy</em> e lo <em>Yorkshire pudding</em>, una specie di soufflé salato. I pub lo servono di solito dalle 12 alle 17, e finisce presto.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">3</div>
+    <h3>Pie and mash</h3>
+    <p>Torta salata ripiena di carne, con purè di patate e gravy. È il piatto storico dei quartieri popolari dell'East End; le versioni di oggi hanno anche ripieni di pollo, verdure o pesce.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">4</div>
+    <h3>Full English breakfast</h3>
+    <p>Uova, bacon, salsicce, fagioli in salsa di pomodoro, funghi, pomodoro grigliato e toast. Chi lo prova in hotel la mattina, a pranzo non ha fame.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">5</div>
+    <h3>Curry e salt beef bagel</h3>
+    <p>I due sapori dell'East End, dove dormiamo: il curry delle famiglie bengalesi di Brick Lane e il bagel caldo con manzo salato e senape lasciato dalla comunità ebraica.</p>
+  </div>
+  <div class="voce">
+    <div class="n m">6</div>
+    <h3>Bangers and mash, scotch egg</h3>
+    <p>Salsicce con purè e salsa di cipolle; un uovo sodo avvolto nella carne di salsiccia, impanato e fritto. Cibo da pub.</p>
+  </div>
+</section>
+<section class="page" data-sez="9"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i class="qui" style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">45</div>
+  <p class="sezione">Mangiare a Londra · Cosa</p>
+  <h2>Dolci, tè e merende</h2>
+  <div class="foto" style="height:50mm"><img src="img/foto/pi_tea.jpg" style="object-position:50% 60%" alt="L'alzatina dell'afternoon tea, con tramezzini, scone e dolci"></div>
+  <div class="voce">
+    <div class="n b">7</div>
+    <h3>Afternoon tea</h3>
+    <p>Il tè del pomeriggio, verso le 15-17: su un'alzatina a tre piani, tramezzini senza crosta, <em>scone</em> con clotted cream e marmellata, pasticcini. È un rito più che un pasto, e negli hotel eleganti costa caro: in otto si prenota con largo anticipo.</p>
+  </div>
+  <div class="voce">
+    <div class="n b">8</div>
+    <h3>Sticky toffee pudding e crumble</h3>
+    <p>Il dolce caldo al caramello che chiude quasi ogni menu di pub, e il crumble di mele con la crema pasticcera calda, la <em>custard</em>.</p>
+  </div>
+  <div class="voce">
+    <div class="n b">9</div>
+    <h3>I dolci dei social</h3>
+    <p>I bomboloni di Bread Ahead a Borough Market, i cookie di Crème a Soho, i dolci di Chinatown: le ragazze li conoscono già dai video.</p>
+  </div>
+  <div class="riquadro spinta">
+    <h4>Il piccolo dizionario del menu</h4>
+    <div style="display:grid;grid-template-columns:24mm 1fr;gap:1mm 3mm;font-size:8pt">
+      <b>Chips / crisps</b><span>patatine fritte / patatine in busta</span>
+      <b>Starter, main</b><span>antipasto, piatto principale</span>
+      <b>Pudding</b><span>il dolce, qualunque dolce</span>
+      <b>Still / sparkling</b><span>acqua naturale / frizzante</span>
+      <b>Takeaway</b><span>da asporto</span>
+    </div>
+  </div>
+</section>
+<section class="page sx" data-sez="9"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i class="qui" style="top:168mm"></i><i style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">46</div>
+  <p class="sezione">Mangiare a Londra · Dove</p>
+  <h2>I posti già scelti, quartiere per quartiere</h2>
+  <p class="piccolo">£ meno di £12 a testa · ££ £15-30 · £££ oltre £40. Le schede complete sono nei capitoli.</p>
+  <div class="legenda" style="columns:1;font-size:8.5pt;line-height:1.4">
+    <h4><i style="background:var(--teal)"></i>Vicino all'hotel</h4>
+    <ol>
+      <li><b>1</b><em style="font-style:normal">Dishoom Shoreditch, il "caffè di Bombay" amato da tutti <strong class="prezzo">££</strong></em><span>p. 88</span></li>
+      <li><b>2</b><em style="font-style:normal">Poppies, fish and chips anni '50 <strong class="prezzo">££</strong></em><span>p. 88</span></li>
+      <li><b>3</b><em style="font-style:normal">Tayyabs, cucina punjabi a Whitechapel <strong class="prezzo">£</strong></em><span>p. 89</span></li>
+      <li><b>4</b><em style="font-style:normal">Upmarket ed Ely's Yard, cucine di strada a Brick Lane <strong class="prezzo">£</strong></em><span>p. 89</span></li>
+      <li><b>5</b><em style="font-style:normal">Hawksmoor Spitalfields, bistecche e roast <strong class="prezzo">£££</strong></em><span>p. 88</span></li>
+    </ol>
+    <h4><i style="background:var(--teal)"></i>Westminster e South Bank</h4>
+    <ol>
+      <li><b>6</b><em style="font-style:normal">Market Halls Victoria, prenota per gruppi da 8 <strong class="prezzo">£</strong></em><span>p. 115</span></li>
+      <li><b>7</b><em style="font-style:normal">Southbank Centre Food Market, nel weekend <strong class="prezzo">£</strong></em><span>p. 115</span></li>
+      <li><b>8</b><em style="font-style:normal">The Red Lion, il pub dei deputati <strong class="prezzo">££</strong></em><span>p. 116</span></li>
+    </ol>
+    <h4><i style="background:var(--teal)"></i>Covent Garden, Soho e Chinatown</h4>
+    <ol>
+      <li><b>9</b><em style="font-style:normal">Mother Mash, pie and mash <strong class="prezzo">£</strong></em><span>p. 136</span></li>
+      <li><b>10</b><em style="font-style:normal">Flat Iron, bistecca a prezzo fisso <strong class="prezzo">£</strong></em><span>p. 136</span></li>
+      <li><b>11</b><em style="font-style:normal">Seven Dials Market, food hall al coperto <strong class="prezzo">£</strong></em><span>p. 136</span></li>
+      <li><b>12</b><em style="font-style:normal">Rules, il ristorante più antico di Londra, dal 1798 <strong class="prezzo">£££</strong></em><span>p. 136</span></li>
+    </ol>
+    <h4><i style="background:var(--teal)"></i>Altrove</h4>
+    <ol>
+      <li><b>13</b><em style="font-style:normal">Borough Market e i suoi banchi <strong class="prezzo">£</strong></em><span>St Paul's e Bankside</span></li>
+      <li><b>14</b><em style="font-style:normal">Dishoom King's Cross, menu di gruppo da 8 persone <strong class="prezzo">££</strong></em><span>Altri quartieri</span></li>
+    </ol>
+  </div>
+  <div class="riquadro spinta">
+    <h4>Come prenotare in otto</h4>
+    <p>Quasi tutti i ristoranti prenotano online, ma spesso il sistema si ferma a 6 persone: per gli 8 c'è un modulo per i gruppi o un indirizzo email. Scrivete giorno, ora e "8 persone, di cui tre ragazze di 12-16 anni". Per i gruppi alcuni locali propongono un menu fisso: il "Group Feast" di Dishoom King's Cross costava £42 a testa a pranzo e £55 a cena, bevande e servizio esclusi.</p>
+  </div>
+</section>
+<section class="page" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">47</div>
+  <p class="sezione">Mangiare a Londra · Quanto e come</p>
+  <h2>Mangiare in otto</h2>
+  <div class="testo">
+    <p class="lead">In otto non si entra all'improvviso in un ristorante con servizio al tavolo, la sera, nel weekend. Si prenota, oppure si va dove non serve.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Quello che abbiamo scoperto</h4>
+    <ul style="margin:0;padding-left:4mm;display:grid;gap:1.1mm">
+      <li><strong>Dishoom</strong>, dopo le 18, prende prenotazioni solo per gruppi da 6 in su: per noi è un vantaggio. A King's Cross c'è un menu di gruppo da almeno 8 persone.</li>
+      <li><strong>Market Halls Victoria</strong> prenota tavoli per gruppi da 8.</li>
+      <li><strong>Padella</strong> a Borough Market non accetta gruppi di più di 6, e <strong>Bancone</strong> prenota online solo fino a 4: in otto ci si divide in due tavoli o si va altrove.</li>
+      <li><strong>Homeslice</strong> a Neal's Yard non prende prenotazioni, ma le sue pizze da 46 cm si dividono in tre.</li>
+    </ul>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Quanto si spende</h4>
+    <div style="display:grid;grid-template-columns:30mm 1fr;gap:1.1mm 3mm;font-size:8pt">
+      <b>Meal deal</b><span>£4-5 a testa</span>
+      <b>Street food al mercato</b><span>£10-15 a testa</span>
+      <b>Fish and chips seduti</b><span>£15-20 a testa</span>
+      <b>Dishoom, pub, curry</b><span>£20-30 a testa</span>
+      <b>Bistecca, ristorante storico</b><span>£40-60 e oltre</span>
+    </div>
+    <p class="piccolo" style="margin-top:1.5mm">Per noi otto, una cena da £25 a testa con le bevande fa £200; un pranzo al mercato, circa £100.</p>
+  </div>
+  <div class="consiglio spinta">
+    <h4>Il conto</h4>
+    <p>Dividere il conto in due famiglie è normale: ditelo quando chiedete il conto ("can we split the bill?"). Controllate se c'è già il service charge prima di aggiungere la mancia.</p>
+  </div>
+</section>
+<section class="page sx" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">48</div>
+  <p class="sezione">Mangiare a Londra · Orari e regole</p>
+  <h2>A che ora si mangia</h2>
+  <div class="riquadro">
+    <h4>La giornata inglese</h4>
+    <div style="display:grid;grid-template-columns:24mm 1fr;gap:1.2mm 3mm;font-size:8pt">
+      <b>Colazione</b><span>7-10, in hotel. I caffè aprono presto, per chi lavora.</span>
+      <b>Pranzo</b><span>12-14, spesso veloce. Nella City nel weekend molti locali sono chiusi.</span>
+      <b>Tè</b><span>15-17, l'afternoon tea.</span>
+      <b>Cena</b><span>18-21. Dopo le 21:30 molte cucine chiudono, soprattutto la domenica.</span>
+    </div>
+  </div>
+  <div class="riquadro" style="background:var(--teal-tint)">
+    <h4>Nei pub con le ragazze</h4>
+    <p>Sotto i 16 anni si entra in un pub solo con un adulto, e ogni locale decide se accettare i ragazzi e fino a che ora: di giorno e per mangiare quasi sempre sì, la sera spesso no. Chiedete al banco prima di sedervi. Nei pub si ordina e si paga al banco, anche il cibo, dando il numero del tavolo.</p>
+  </div>
+  <div class="riquadro">
+    <h4>Mance, in breve</h4>
+    <p>Al tavolo, 10-12,5% se il service charge non è già nel conto. Al banco del pub e nei caffè, niente. Le mance pagate con la carta arrivano tutte al personale: lo dice la legge.</p>
+  </div>
+  <div class="consiglio">
+    <h4>Allergie e intolleranze</h4>
+    <p>I ristoranti sono obbligati a dire quali dei 14 allergeni principali ci sono in ogni piatto: basta chiedere "Do you have an allergen menu?".</p>
+  </div>
+  <div class="riquadro spinta" style="background:var(--mustard-tint)">
+    <h4>Prenotare per tempo</h4>
+    <p>Dishoom si prenota fino a quattro mesi prima, i roast della domenica e i ristoranti di Chinatown nel weekend del Capodanno cinese il prima possibile. Le date sono a p. 29.</p>
+  </div>
+</section>
+<section class="page crediti" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">49</div><p class="sezione">Crediti fotografici</p><h2>Le foto di questo capitolo</h2><p class="piccolo">Foto da Wikimedia Commons, pubblicate con licenze Creative Commons o in pubblico dominio. Mappe: Esri, HERE, Garmin e i contributori di OpenStreetMap. Linee della metro: OpenStreetMap.</p><ul class="lista-crediti"><li><b>pi_apertura</b>: Julian Herzog (Website), CC BY 4.0, <span>commons.wikimedia.org/wiki/File:Piccadilly_Circus_Tube_Station_West_Entrance_2020.jpg</span></li><li><b>pi_bus</b>: Thomas Dahlstrøm Nielsen, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Piccadilly_Circus_at_night,_2023.jpg</span></li><li><b>pi_tower</b>: Bernard Gagnon, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Tower_of_London_White_Tower.jpg</span></li><li><b>pi_towerbridge</b>: Diego Delso, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Puente_de_la_Torre,_Londres,_Inglaterra,_2014-08-11,_DD_092.JPG</span></li><li><b>pi_skygarden</b>: The wub, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Sky_Garden,_London_-_2015-01-13_(3).jpg</span></li><li><b>pi_abbey</b>: Steve Cadman from London, U.K., CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Westminster_Abbey_west_facade.jpg</span></li><li><b>pi_parliament</b>: Dietmar Rabich, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:London,_Palace_of_Westminster_--_2016_--_4800.jpg</span></li><li><b>pi_guard</b>: Diliff, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Band_of_the_Welsh_Guards,_Buckingham_Palace,_London_-_Diliff.jpg</span></li><li><b>pi_eye</b>: Photograph by Mike Peel (www.mikepeel.net)., CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:London_Eye_at_night_2.jpg</span></li><li><b>pi_warrooms</b>: Frankemann, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Churchill_War_Rooms_-_meeting_room.JPG</span></li><li><b>pi_bm</b>: Eric Pouhier, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:British_Museum_Dome.jpg</span></li><li><b>pi_nhm</b>: MrsEllacott, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:Hintze_Hall_Natural_History_Museum_2.jpg</span></li><li><b>pi_covent</b>: MrsEllacott, CC BY-SA 3.0, <span>commons.wikimedia.org/wiki/File:Covent_Garden_Interior_Shot.jpg</span></li><li><b>pi_chinatown</b>: Robert Lamb, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:View_of_a_Chinese_arch_and_Chinese_New_Year_lanterns_on_Wardour_Street_-_geograph.org.uk_-_4834616.jpg</span></li><li><b>g_cuttysark</b>: PAUL FARMER, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:The_Cutty_Sark,_Greenwich_-_geograph.org.uk_-_3150174.jpg</span></li><li><b>pi_hp</b>: Karen Roe, CC BY 2.0, <span>commons.wikimedia.org/wiki/File:Hogwarts_model_studio_tour.jpg</span></li><li><b>pi_borough</b>: Stephen Armstrong, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Borough_Market_-_geograph.org.uk_-_3200051.jpg</span></li><li><b>pi_platform</b>: Bert Seghers, CC0, <span>commons.wikimedia.org/wiki/File:Platform934_in_2013.JPG</span></li><li><b>pi_camden</b>: Mr Ignavy, CC BY-SA 2.0, <span>commons.wikimedia.org/wiki/File:Camden_Lock_Market_-_geograph.org.uk_-_8002344.jpg</span></li><li><b>pi_fishchips</b>: LearningLark from United States, CC BY 2.0, <span>commons.wikimedia.org/wiki/File:Modern_fish_and_chips_(8368723726).jpg</span></li><li><b>pi_tea</b>: Ji-Elle, CC BY-SA 4.0, <span>commons.wikimedia.org/wiki/File:London-Liberty-Afternoon_tea_(2).jpg</span></li></ul></section>
+<section class="page sx appunti" data-sez="10"><div class="linea" aria-hidden="true"><i style="top:16mm"></i><i style="top:35mm"></i><i style="top:54mm"></i><i style="top:73mm"></i><i style="top:92mm"></i><i style="top:111mm"></i><i style="top:130mm"></i><i style="top:149mm"></i><i style="top:168mm"></i><i class="qui" style="top:187mm"></i></div><div class="testata"><span>Pianificare</span><span>Parte 1</span></div><div class="folio">50</div><p class="sezione">Appunti</p><div class="righe"></div></section>
+<script>
+// segnala le pagine troppo piene (in stampa il testo verrebbe tagliato)
+window.addEventListener('load', () => {
+  const piene = [...document.querySelectorAll('.page')].filter(p => p.scrollHeight > p.clientHeight + 2)
+    .map((p, i) => p.querySelector('.folio')?.textContent || 'apertura');
+  document.body.dataset.piene = piene.join(',');
+});
+</script>
+</body></html>
